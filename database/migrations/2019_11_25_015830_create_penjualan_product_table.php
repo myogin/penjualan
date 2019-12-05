@@ -13,7 +13,7 @@ class CreatePennjualanProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('pennjualan_product', function (Blueprint $table) {
+        Schema::create('penjualan_product', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('penjualan_id')->unsigned();
             $table->integer('product_id')->unsigned();

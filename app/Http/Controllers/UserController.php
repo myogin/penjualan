@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Yajra\DataTables\Datatables;
 
 class UserController extends Controller
 {
@@ -47,11 +48,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
+        $validation = \Validator::make($request->all(),[
+            "name" => "required|min:5|max:100",
+            "username" => "required|min:5|max:20|unique:users",
+            "roles" => "required",
+            "phone" => "required|digits_between:10,12",
+            "address" => "required|min:20|max:200",
+            "avatar" => "required",
+            "email" => "required|email|unique:users",
+            "password" => "required",
+            "password2" => "required|same:password"
+        ])->validate();
+
         $new_user = new \App\User;
         $new_user->name = $request->get('name');
         $new_user->username = $request->get('username');
         $new_user->roles = json_encode($request->get('roles'));
-        $new_user->name = $request->get('name');
         $new_user->address = $request->get('address');
         $new_user->phone = $request->get('phone');
         $new_user->email = $request->get('email');
@@ -63,7 +75,10 @@ class UserController extends Controller
 
         $new_user->save();
 
-        return redirect()->route('users.index')->with('status', 'User successfully created.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -89,7 +104,7 @@ class UserController extends Controller
     {
         //
         $user = \App\User::findOrFail($id);
-        return view('users.edit', ['user' => $user]);
+        return $user;
     }
 
     /**
@@ -102,12 +117,18 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $validation = \Validator::make($request->all(),[
+            "name" => "required|min:5|max:100",
+            "roles" => "required",
+            "phone" => "required|digits_between:10,12",
+            "address" => "required|min:20|max:200"
+        ])->validate();
+
         $user = \App\User::findOrFail($id);
         $user->name = $request->get('name');
         $user->roles = json_encode($request->get('roles'));
         $user->address = $request->get('address');
         $user->phone = $request->get('phone');
-        $user->status = $request->get('status');
 
         if ($request->file('avatar')) {
             if ($user->avatar && file_exists(storage_path('app/public/' . $user->avatar))) {
@@ -116,8 +137,11 @@ class UserController extends Controller
             $file = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $file;
         }
-        $user->save();
-        return redirect()->route('users.edit', ['id' => $id])->with('status', 'User succesfully updated');
+        $user->update();
+        return response()->json([
+            'success' => true,
+            'message' => 'User Created'
+        ]);
     }
 
     /**
@@ -130,13 +154,38 @@ class UserController extends Controller
     {
         //
         $user = \App\User::findOrFail($id);
+        if ($user->avatar != NULL){
+            unlink(storage_path('app/public/' . $user->avatar));
+        }
+
         $user->delete();
-        return redirect()->route('users.index')->with('status', 'User successfully delete');
+        return response()->json([
+            'success' => true,
+            'message' => 'Contact Deleted'
+        ]);
+
     }
     public function ajaxSearch(Request $request)
     {
         $keyword = $request->get('q');
         $users = \App\User::where("name", "LIKE", "%$keyword%")->get();
         return $users;
+    }
+    public function apiuser()
+    {
+        $user = \App\User::all();
+        return Datatables::of($user)
+            ->addColumn('show_photo', function($user){
+                if ($user->avatar == NULL){
+                    return 'No Image';
+                }
+                return '<img src="'.asset('storage/'.$user->avatar).'" width="120px" /><br>';
+            })
+            ->addColumn('action', function($user){
+                return '' .
+                       '<a onclick="editForm('. $user->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' .
+                       '<a onclick="deleteData('. $user->id .')" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> Delete</a>';
+            })
+            ->rawColumns(['show_photo', 'action'])->make(true);
     }
 }

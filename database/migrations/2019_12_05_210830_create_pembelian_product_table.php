@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePennjualanProductTable extends Migration
+class CreatePembelianProductTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreatePennjualanProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('penjualan_product', function (Blueprint $table) {
+        Schema::create('pembelian_product', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('penjualan_id')->unsigned();
+            $table->integer('pembelian_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('qty');
             $table->timestamps();
 
-            $table->foreign('penjualan_id')->references('id')->on('penjualans');
+            $table->foreign('pembelian_id')->references('id')->on('pembelians');
             $table->foreign('product_id')->references('id')->on('products');
         });
     }
@@ -32,6 +32,6 @@ class CreatePennjualanProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pennjualan_product');
+        Schema::dropIfExists('pembelian_product');
     }
 }

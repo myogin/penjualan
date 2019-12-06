@@ -10,11 +10,10 @@
     <section class="content-header">
         <h1>
         Users
-        <small>preview of simple tables</small>
+        <small>preview of tables</small>
         </h1>
         <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
         <li class="active">Simple</li>
         </ol>
     </section>
@@ -31,77 +30,44 @@
             </div>
             @endif
             <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">Data User</h3>
-
-                <div class="box-tools">
-                <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-
-                    <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                    <div class="box-header">
+                        <h4>Category list
+                            <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Category</a>
+                        </h4>
                     </div>
-                </div>
-                </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body table-responsive no-padding">
-                <table class="table table-hover">
-                <tr>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Avatar</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    @foreach($users as $user)
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tabel-users" class="table table-bordered table-striped">
+                        <thead>
                         <tr>
-                        <td>{{$user->name}}</td>
-                        <td>{{$user->username}}</td>
-                        <td>{{$user->email}}</td>
-                        <td>
-                            @if($user->avatar)
-                            <img src="{{asset('storage/'.$user->avatar)}}" width="70px" />
-                            @else
-                            N/A
-                            @endif
-                        </td>
-                        <td>
-                            @if($user->status == "ACTIVE")
-                            <span class="badge badge-success">
-                                {{$user->status}}</span>
-                            @else
-                            <span class="badge badge-danger">
-                                {{$user->status}}</span>
-                            @endif
-                        </td>
-                        <td style="display: flex;">
-                            <a class="btn btn-info btn-sm" href="{{route('users.edit',['id'=>$user->id])}}">Edit</a>
-                                <form onsubmit="return confirm('Delete this user permanently?')" class="d-inline"
-                                    action="{{route('users.destroy', ['id' => $user->id ])}}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="submit" value="Delete" class="btn btn-danger btn-sm" style="margin-left: 2px;">
-                                </form>
-                            <a   href="{{route('users.show', ['id' => $user->id])}}"class="btn bg-maroon btn-sm" style="margin-left: 2px;">Detail</a>
-                        </td>
-                    @endforeach
-                </tr>
-                </table>
-            </div>
-            <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">
-                Create Users
-            </button>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Avatar</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-            <span class="pull-right">
-                {{$users->appends(Request::all())->links()}}
-            </span>
-
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Avatar</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
         </div>
         </div>
         <div class="modal fade" id="modal-default">
@@ -112,17 +78,18 @@
                 <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Default Modal</h4>
             </div>
-            <form role="form" enctype="multipart/form-data" action="{{route('users.store')}}" method="POST">
+            <form role="form" id="sectionForm" enctype="multipart/form-data" action="{{route('users.store')}}" method="POST">
             <div class="modal-body">
 
-                    @csrf
+                    {{ csrf_field() }} {{ method_field('POST') }}
+                    <input type="hidden" id="id" name="id">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" autofocus required>
                     </div>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
                     </div>
                     <div class="form-group" >
                         <label>Role</label>
@@ -141,23 +108,23 @@
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <textarea id="address" name="address" class="form-control" rows="4"></textarea>
+                        <textarea id="address" name="address" class="form-control" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Enter email">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
+                        <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password2" class="form-control" id="exampleInputPassword1" name="password2" placeholder="Konfirm Password">
+                        <input type="password" class="form-control" id="exampleInputPassword1" name="password2" placeholder="Konfirm Password" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputFile">Avatar</label>
@@ -182,5 +149,126 @@
     <!-- /.content -->
 @endsection
 @section('js')
+<script type="text/javascript">
 
+    var table = $('#tabel-users').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('api.user') }}",
+        columns: [
+        {data: 'id', name: 'id'},
+        {data: 'name', name: 'name'},
+        {data: 'username', name: 'username'},
+        {data: 'email', name: 'email'},
+        {data: 'show_photo', name: 'show_photo'},
+        {data: 'status', name: 'status'},
+        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        ]
+    });
+    function addForm() {
+        save_method = "add";
+        $('input[name=_method]').val('POST');
+        $('#modal-default').modal('show');
+        $('#modal-default form')[0].reset();
+        $('.modal-title').text('Add user');
+    }
+
+    function editForm(id) {
+        save_method = 'edit';
+        $('input[name=_method]').val('PATCH');
+        $('#modal-default form')[0].reset();
+        $.ajax({
+            url: "{{ url('users') }}" + '/' + id + "/edit",
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+            $('#modal-default').modal('show');
+            $('.modal-title').text('Edit user');
+
+            $('#id').val(data.id);
+            $('#name').val(data.name);
+            $('#username').val(data.username);
+            $('#phone').val(data.phone);
+            $('#address').val(data.address);
+            $('#email').val(data.email);
+            $('#status').val(data.status);
+            },
+            error : function() {
+                alert("Nothing Data");
+            }
+        });
+        }
+    function deleteData(id){
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function () {
+            $.ajax({
+                url : "{{ url('users') }}" + '/' + id,
+                type : "POST",
+                data : {'_method' : 'DELETE', '_token' : csrf_token},
+                success : function(data) {
+                    table.ajax.reload();
+                    swal({
+                        title: 'Success!',
+                        text: data.message,
+                        type: 'success',
+                        timer: '1500'
+                    })
+                },
+                error : function () {
+                    swal({
+                        title: 'Oops...',
+                        text: data.message,
+                        type: 'error',
+                        timer: '1500'
+                    })
+                }
+            });
+        });
+        }
+    $(function(){
+            $('#modal-default form').validator().on('submit', function (e) {
+                if (!e.isDefaultPrevented()){
+                    var id = $('#id').val();
+                    if (save_method == 'add') url = "{{ url('users') }}";
+                    else url = "{{ url('users') . '/' }}" + id;
+
+                    $.ajax({
+                        url : url,
+                        type : "POST",
+                        // data : $('#modal-default form').serialize(),
+                        data: new FormData($("#modal-default form")[0]),
+                        contentType: false,
+                        processData: false,
+                        success : function(data) {
+                            $('#modal-default').modal('hide');
+                            table.ajax.reload();
+                            swal({
+                                title: 'Success!',
+                                text: data.message,
+                                type: 'success',
+                                timer: '1500'
+                            })
+                        },
+                        error : function(data){
+                            swal({
+                                title: 'Oops...',
+                                text: data.message,
+                                type: 'error',
+                                timer: '1500'
+                            })
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
 @endsection

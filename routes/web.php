@@ -24,12 +24,14 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/ajax/users/search', 'UserController@ajaxSearch')->name("usersSearch");
 Route::resource("users", "UserController");
+Route::get("/api/user", "UserController@apiuser")->name("api.user");
 
 Route::resource("customers", "CustomerController");
 Route::resource("suppliers", "SupplierController");
 
 Route::get('/ajax/categories/search', 'CategoryController@categorySearch')->name("categorySearch");
 Route::resource("categories", "CategoryController");
+Route::get("/api/category", "CategoryController@apicategory")->name("api.category");
 
 Route::get('/ajax/products/search', 'ProductController@productSearch')->name("productSearch");
 Route::resource("products", "ProductController");
@@ -37,3 +39,5 @@ Route::resource("products", "ProductController");
 Route::resource("stocks", "StockController");
 
 Route::resource("penjualans", "PenjualanController");
+
+Route::resource("pembelians", "PembelianController");

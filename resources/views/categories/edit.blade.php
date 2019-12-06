@@ -40,6 +40,7 @@
                     <input type="hidden" value="PUT" name="_method">
 
                     <div class="box-body">
+                        <input type="hidden" id="id" name="id">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" value="{{$category->name}}" class="form-control" id="name" name="name" placeholder="Full Name">

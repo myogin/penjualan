@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Yajra\DataTables\Datatables;
+use App\Category;
 class CategoryController extends Controller
 {
     /**
@@ -39,6 +40,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $validation = \Validator::make($request->all(),[
+            "name" => "required|min:5|max:100",
+            "image" => "required"
+        ])->validate();
+
+        // Validate the input and return correct response
+
 
         $name = $request->get('name');
         $new_category = new \App\Category;
@@ -56,7 +64,11 @@ class CategoryController extends Controller
 
         $new_category->save();
 
-        return redirect()->route('categories.index')->with('status', 'Categorysuccessfully created');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -82,7 +94,7 @@ class CategoryController extends Controller
     {
         //
         $category_to_edit = \App\Category::findOrFail($id);
-        return view('categories.edit', ['category' => $category_to_edit]);
+        return $category_to_edit;
     }
 
     /**
@@ -95,14 +107,15 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $validation = \Validator::make($request->all(),[
+            "name" => "required|min:5|max:100"
+        ])->validate();
+
         $name = $request->get('name');
-        $slug = $request->get('slug');
 
         $category = \App\Category::findOrFail($id);
 
         $category->name = $name;
-        $category->slug = $slug;
-
         if ($request->file('image')) {
             if ($category->image && file_exists(storage_path('app/public/' . $category->image))) {
                 \Storage::delete('public/' . $category->name);
@@ -112,8 +125,11 @@ class CategoryController extends Controller
         }
         $category->updated_by = \Auth::user()->id;
         $category->slug = str_slug($name);
-        $category->save();
-        return redirect()->route('categories.edit', ['id' => $id])->with('status', 'Category succesfully update');
+        $category->update();
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -126,13 +142,41 @@ class CategoryController extends Controller
     {
         //
         $category = \App\Category::findOrFail($id);
+        if ($category->image != NULL){
+            unlink(storage_path('app/public/' . $category->image));
+        }
+
         $category->delete();
-        return redirect()->route('categories.index')->with('status', 'Category successfully moved to trash');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contact Deleted'
+        ]);
+
+
     }
     public function categorySearch(Request $request)
     {
         $keyword = $request->get('q');
         $categories = \App\Category::where("name", "LIKE", "%$keyword%")->get();
         return $categories;
+    }
+
+    public function apicategory()
+    {
+        $category = \App\Category::all();
+        return Datatables::of($category)
+            ->addColumn('show_photo', function($category){
+                if ($category->image == NULL){
+                    return 'No Image';
+                }
+                return '<img src="'.asset('storage/'.$category->image).'" width="120px" /><br>';
+            })
+            ->addColumn('action', function($category){
+                return '' .
+                       '<a onclick="editForm('. $category->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' .
+                       '<a onclick="deleteData('. $category->id .')" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> Delete</a>';
+            })
+            ->rawColumns(['show_photo', 'action'])->make(true);
     }
 }

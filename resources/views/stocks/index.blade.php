@@ -31,51 +31,38 @@
             </div>
             @endif
             <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">Data stock</h3>
-
-                <div class="box-tools">
-                <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-
-                    <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </div>
+                <div class="box-header">
+                    <h4>Category list
+                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Category</a>
+                    </h4>
                 </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tabel-stocks" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                            <th>Id</th>
+                        <th>Nama Ketegori</th>
+                        <th>Gambar</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                            <th>Id</th>
+                        <th>Nama Ketegori</th>
+                        <th>Gambar</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                    </table>
                 </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body table-responsive no-padding">
-                <table class="table table-hover">
-                <tr>
-                    <th>Produck</th>
-                    <th>Stock</th>
-                </tr>
-                <tr>
-                    @foreach($stocks as $stock)
-                        <tr>
-                        <td>{{$stock->nama_produk}}</td>
-                        <td>@if ($stock->stok)
-                            {{$stock->stok}}
-
-                            @else
-                              0
-                        @endif </td>
-                    @endforeach
-                </tr>
-                </table>
-            </div>
-            <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">
-                Create stocks
-            </button>
-
-            <span class="pull-right">
-                {{$stocks->appends(Request::all())->links()}}
-            </span>
-
+                <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
         </div>
         </div>
         <div class="modal fade" id="modal-default">
@@ -89,59 +76,21 @@
             <form role="form" enctype="multipart/form-data" action="{{route('stocks.store')}}" method="POST">
             <div class="modal-body">
 
-                    @csrf
+                {{ csrf_field() }} {{ method_field('POST') }}
+                <input type="hidden" id="id" name="id">
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name">
+                        <label for="name">Nama Produk</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="name">
                     </div>
                     <div class="form-group">
-                        <label for="stockname">stockname</label>
-                        <input type="text" class="form-control" id="stockname" name="stockname" placeholder="stockname">
-                    </div>
-                    <div class="form-group" >
-                        <label>Role</label>
-                        <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="TLM" value="TLM" >
-                            <label for="TLM" class="custom-control-label">Top Level Management</label>
-                        </div>
-                        <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="ADMIN" value="ADMIN" >
-                            <label for="ADMIN" class="custom-control-label">Admin</label>
-                        </div>
-                        <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="OPERATOR" value="OPERATOR" >
-                            <label for="OPERATOR" class="custom-control-label">Operator</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <textarea id="address" name="address" class="form-control" rows="4"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Enter email">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password2" class="form-control" id="exampleInputPassword1" name="password2" placeholder="Konfirm Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputFile">Avatar</label>
-                        <input id="avatar" name="avatar" type="file" >
+                        <label for="stock">Stock</label>
+                        <input type="text" class="form-control" id="stock" name="stock" placeholder="stock">
                     </div>
                     <!-- /.card-body -->
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary pull-left">Tambah stocks</button>
+                <button type="submit" class="btn btn-primary pull-left" id="submit">Tambah stocks</button>
                 <button type="buton" class="btn btn-default " data-dismiss="modal">Close</button>
 
             </div>
@@ -156,5 +105,120 @@
     <!-- /.content -->
 @endsection
 @section('js')
+<script type="text/javascript">
+    var table = $('#tabel-stocks').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('api.stock') }}",
+        columns: [
+        {data: 'id', name: 'id'},
+        {data: 'nama_produk', name: 'nama_produk'},
+        {data: 'stok', name: 'stok'},
+        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        ]
+    });
+    function addForm() {
+        save_method = "add";
+        $('input[name=_method]').val('POST');
+        $('#modal-default').modal('show');
+        $('#modal-default form')[0].reset();
+        $('.modal-title').text('Add stock');
+    }
 
+    function editForm(id) {
+        save_method = 'edit';
+        $('input[name=_method]').val('PATCH');
+        $('#modal-default form')[0].reset();
+        $('#submit').text('Edit Stock');
+        $.ajax({
+            url: "{{ url('stocks') }}" + '/' + id + "/edit",
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+            $('#modal-default').modal('show');
+            $('.modal-title').text('Edit stock');
+
+            $('#id').val(data.id);
+            $('#name').val(data.nama_produk);
+            $('#name').prop('disabled',true)
+            $('#stock').val(data.stok);
+            },
+            error : function() {
+                alert("Nothing Data");
+            }
+        });
+        }
+    function deleteData(id){
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function () {
+            $.ajax({
+                url : "{{ url('stocks') }}" + '/' + id,
+                type : "POST",
+                data : {'_method' : 'DELETE', '_token' : csrf_token},
+                success : function(data) {
+                    table.ajax.reload();
+                    swal({
+                        title: 'Success!',
+                        text: data.message,
+                        type: 'success',
+                        timer: '1500'
+                    })
+                },
+                error : function () {
+                    swal({
+                        title: 'Oops...',
+                        text: data.message,
+                        type: 'error',
+                        timer: '1500'
+                    })
+                }
+            });
+        });
+        }
+    $(function(){
+            $('#modal-default form').validator().on('submit', function (e) {
+                if (!e.isDefaultPrevented()){
+                    var id = $('#id').val();
+                    if (save_method == 'add') url = "{{ url('stocks') }}";
+                    else url = "{{ url('stocks') . '/' }}" + id;
+
+                    $.ajax({
+                        url : url,
+                        type : "POST",
+                        // data : $('#modal-default form').serialize(),
+                        data: new FormData($("#modal-default form")[0]),
+                        contentType: false,
+                        processData: false,
+                        success : function(data) {
+                            $('#modal-default').modal('hide');
+                            table.ajax.reload();
+                            swal({
+                                title: 'Success!',
+                                text: data.message,
+                                type: 'success',
+                                timer: '1500'
+                            })
+                        },
+                        error : function(data){
+                            swal({
+                                title: 'Oops...',
+                                text: data.message,
+                                type: 'error',
+                                timer: '1500'
+                            })
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
 @endsection

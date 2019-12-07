@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Yajra\DataTables\Datatables;
 class ProductController extends Controller
 {
     /**
@@ -37,6 +38,17 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //
+        $validation = \Validator::make($request->all(),[
+            "kode_produk" => "required|min:5|max:100",
+            "nama_produk" => "required|min:5|max:100",
+            "category_id" => "required",
+            "keterangan" => "required|min:5|max:200",
+            "satuan" => "required|min:5|max:100",
+            "harga_dasar" => "required",
+            "harga_jual" => "required",
+            "produk" => "required"
+        ])->validate();
+
         $new_product = new \App\product;
         $new_product->kode_produk = $request->get('kode_produk');
         $new_product->nama_produk = $request->get('nama_produk');
@@ -57,7 +69,10 @@ class ProductController extends Controller
         $new_Stock->product_id = $product_id;
         $new_Stock->stok = 0;
         $new_Stock->save();
-        return redirect()->route('products.index')->with('status', 'product successfully created.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -81,7 +96,7 @@ class ProductController extends Controller
     {
         //
         $product = \App\Product::findOrFail($id);
-        return view('products.edit', ['product' => $product]);
+        return $product;
     }
 
     /**
@@ -94,6 +109,8 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+
         $product = \App\Product::findOrFail($id);
         $product->kode_produk = $request->get('kode_produk');
         $product->nama_produk = $request->get('nama_produk');
@@ -108,8 +125,11 @@ class ProductController extends Controller
             $product->gambar = $file;
         }
 
-        $product->save();
-        return redirect()->route('products.index')->with('status', 'product successfully created.');
+        $product->update();
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -122,13 +142,38 @@ class ProductController extends Controller
     {
         //
         $product = \App\Product::findOrFail($id);
+        if ($product->gambar != NULL){
+            unlink(storage_path('app/public/' . $product->gambar));
+        }
+
         $product->delete();
-        return redirect()->route('products.index')->with('status', 'Product successfully delete');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contact Deleted'
+        ]);
     }
     public function productSearch(Request $request)
     {
         $keyword = $request->get('q');
         $products = \App\Product::where("nama_produk", "LIKE", "%$keyword%")->get();
         return $products;
+    }
+    public function apiproduct()
+    {
+        $product = \App\Product::with('category')->get();
+        return Datatables::of($product)
+            ->addColumn('show_photo', function($product){
+                if ($product->gambar == NULL){
+                    return 'No Image';
+                }
+                return '<img src="'.asset('storage/'.$product->gambar).'" width="120px" /><br>';
+            })
+            ->addColumn('action', function($product){
+                return '' .
+                    '<a onclick="editForm('. $product->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' .
+                    '<a onclick="deleteData('. $product->id .')" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> Delete</a>';
+            })
+            ->rawColumns(['show_photo', 'action'])->make(true);
     }
 }

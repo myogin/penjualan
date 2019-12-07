@@ -519,3 +519,8 @@
     </section>
     <!-- /.content -->
 @endsection
+@section('js')
+<!-- Morris.js charts -->
+<script src="{{asset('bower_components/raphael/raphael.min.js')}}"></script>
+<script src="{{asset('bower_components/morris.js/morris.min.js')}}"></script>
+@endsection

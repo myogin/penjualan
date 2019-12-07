@@ -94,15 +94,15 @@
                     <div class="form-group" >
                         <label>Role</label>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="TLM" value="TLM" >
+                            <input class="custom-control-input" type="checkbox" name="roles[]" id="RTLM" value="TLM">
                             <label for="TLM" class="custom-control-label">Top Level Management</label>
                         </div>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="ADMIN" value="ADMIN" >
+                            <input class="custom-control-input" type="checkbox" name="roles[]" id="RADMIN" value="ADMIN"}>
                             <label for="ADMIN" class="custom-control-label">Admin</label>
                         </div>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="OPERATOR" value="OPERATOR" >
+                            <input class="custom-control-input" type="checkbox" name="roles[]" id="ROPERATOR" value="OPERATOR">
                             <label for="OPERATOR" class="custom-control-label">Operator</label>
                         </div>
                     </div>
@@ -184,7 +184,16 @@
             success: function(data) {
             $('#modal-default').modal('show');
             $('.modal-title').text('Edit user');
-
+            var roles = data.roles;
+            if(roles.includes('ADMIN') === true){
+                $('#RADMIN').prop('checked',true)
+            }
+            if(roles.includes('TLM') === true){
+                $('#RTLM').prop('checked',true)
+            }
+            if(roles.includes('OPERATOR') === true){
+                $('#ROPERATOR').prop('checked',true)
+            }
             $('#id').val(data.id);
             $('#name').val(data.name);
             $('#username').val(data.username);

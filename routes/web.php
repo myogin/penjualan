@@ -35,8 +35,10 @@ Route::get("/api/category", "CategoryController@apicategory")->name("api.categor
 
 Route::get('/ajax/products/search', 'ProductController@productSearch')->name("productSearch");
 Route::resource("products", "ProductController");
+Route::get("/api/product", "ProductController@apiproduct")->name("api.product");
 
 Route::resource("stocks", "StockController");
+Route::get("/api/stock", "StockController@apistock")->name("api.stock");
 
 Route::resource("penjualans", "PenjualanController");
 

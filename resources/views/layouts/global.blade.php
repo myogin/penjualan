@@ -34,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
-    <link rel="stylesheet" href="{{asset('dist/css/skins/skin-yellow.min.css')}}">
+    <link rel="stylesheet" href="{{asset('dist/css/skins/skin-black.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/yogi.css')}}">
 
 
@@ -80,7 +80,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition skin-yellow sidebar-mini">
+<body class="hold-transition skin-black sidebar-mini">
 <div class="wrapper">
 
     <!-- Main Header -->
@@ -439,9 +439,6 @@ desired effect
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- Morris.js charts -->
-<script src="{{asset('bower_components/raphael/raphael.min.js')}}"></script>
-<script src="{{asset('bower_components/morris.js/morris.min.js')}}"></script>
 <!-- Sparkline -->
 <script src="{{asset('bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
 <!-- jvectormap -->

@@ -21,6 +21,7 @@ class CreateCustomersTable extends Migration
             $table->string("phone");
             $table->text("address");
             $table->string("avatar");
+            $table->enum("status", ["ACTIVE", "INACTIVE"]);
             $table->timestamps();
         });
     }

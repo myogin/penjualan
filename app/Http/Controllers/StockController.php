@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\DataTables\Datatables;
 
 class StockController extends Controller
 {
@@ -81,8 +82,8 @@ class StockController extends Controller
     public function edit($id)
     {
         //
-        $Stock_to_edit = \App\Stock::findOrFail($id);
-        return view('stocks.edit', ['Stock' => $Stock_to_edit]);
+        $Stock_to_edit = \App\Stock::rightjoin('products', 'products.id', '=', 'stocks.product_id')->findOrFail($id);
+        return $Stock_to_edit;
     }
 
     /**
@@ -95,25 +96,16 @@ class StockController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $name = $request->get('name');
-        $slug = $request->get('slug');
+        $stok = $request->get('stock');
 
         $Stock = \App\Stock::findOrFail($id);
 
-        $Stock->name = $name;
-        $Stock->slug = $slug;
-
-        if ($request->file('image')) {
-            if ($Stock->image && file_exists(storage_path('app/public/' . $Stock->image))) {
-                \Storage::delete('public/' . $Stock->name);
-            }
-            $new_image = $request->file('image')->store('Stock_images', 'public');
-            $Stock->image = $new_image;
-        }
-        $Stock->updated_by = \Auth::user()->id;
-        $Stock->slug = str_slug($name);
-        $Stock->save();
-        return redirect()->route('stocks.edit', ['id' => $id])->with('status', 'Stock succesfully update');
+        $Stock->stok = $stok;
+        $Stock->update();
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -126,13 +118,28 @@ class StockController extends Controller
     {
         //
         $Stock = \App\Stock::findOrFail($id);
+
         $Stock->delete();
-        return redirect()->route('stocks.index')->with('status', 'Stock successfully moved to trash');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contact Deleted'
+        ]);
     }
     public function StockSearch(Request $request)
     {
         $keyword = $request->get('q');
         $stocks = \App\Stock::where("name", "LIKE", "%$keyword%")->get();
         return $stocks;
+    }
+    public function apistock()
+    {
+        $stock = \App\Stock::rightjoin('products', 'products.id', '=', 'stocks.product_id')->get();
+        return Datatables::of($stock)
+            ->addColumn('action', function($stock){
+                return '' .
+                    '<a onclick="editForm('. $stock->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' ;
+            })
+            ->rawColumns(['action'])->make(true);
     }
 }

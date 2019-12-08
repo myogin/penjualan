@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Yajra\DataTables\Datatables;
 
 class SupplierController extends Controller
 {
@@ -49,6 +50,15 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         //
+        $validation = \Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'perusahaan' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'avatar' => 'required'
+        ])->validate();
+
         $new_supplier = new \App\supplier;
         $new_supplier->nama = $request->get('name');
         $new_supplier->email = $request->get('email');
@@ -62,7 +72,10 @@ class SupplierController extends Controller
 
         $new_supplier->save();
 
-        return redirect()->route('suppliers.index')->with('status', 'supplier successfully created.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -88,7 +101,7 @@ class SupplierController extends Controller
     {
         //
         $supplier = \App\supplier::findOrFail($id);
-        return view('suppliers.edit', ['supplier' => $supplier]);
+        return $supplier;
     }
 
     /**
@@ -101,6 +114,13 @@ class SupplierController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $validation = \Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'perusahaan' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'address' => 'required|string|max:255'
+        ])->validate();
         $supplier = \App\supplier::findOrFail($id);
         $supplier->nama = $request->get('name');
         $supplier->email = $request->get('email');
@@ -111,8 +131,11 @@ class SupplierController extends Controller
             $file = $request->file('avatar')->store('avatars', 'public');
             $supplier->avatar = $file;
         }
-        $supplier->save();
-        return redirect()->route('suppliers.edit', ['id' => $id])->with('status', 'supplier succesfully updated');
+        $supplier->update();
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -133,5 +156,22 @@ class SupplierController extends Controller
         $keyword = $request->get('q');
         $suppliers = \App\supplier::where("name", "LIKE", "%$keyword%")->get();
         return $suppliers;
+    }
+    public function apisupplier()
+    {
+        $supplier = \App\supplier::all();
+        return Datatables::of($supplier)
+            ->addColumn('show_photo', function($supplier){
+                if ($supplier->avatar == NULL){
+                    return 'No Image';
+                }
+                return '<img src="'.asset('storage/'.$supplier->avatar).'" width="120px" /><br>';
+            })
+            ->addColumn('action', function($supplier){
+                return '' .
+                    '<a onclick="editForm('. $supplier->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' ;
+
+            })
+            ->rawColumns(['show_photo', 'action'])->make(true);
     }
 }

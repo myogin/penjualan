@@ -27,7 +27,10 @@ Route::resource("users", "UserController");
 Route::get("/api/user", "UserController@apiuser")->name("api.user");
 
 Route::resource("customers", "CustomerController");
+Route::get("/api/customer", "CustomerController@apicustomer")->name("api.customer");
+
 Route::resource("suppliers", "SupplierController");
+Route::get("/api/supplier", "SupplierController@apisupplier")->name("api.supplier");
 
 Route::get('/ajax/categories/search', 'CategoryController@categorySearch')->name("categorySearch");
 Route::resource("categories", "CategoryController");

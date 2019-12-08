@@ -297,12 +297,12 @@ desired effect
             <li class="">
                 <a href="{{route('home')}}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
             </li>
-            <li class="{{Request::path() == 'users' ? 'active' :''}}">
+            <li class="{{ (request()->is('users*')) ? 'active' : '' }}">
                 <a href="{{route('users.index')}}"><i class="fa fa-user"></i> <span>Users</span></a>
             </li>
             <li class="header">Transaksi</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="">
+            <li class="{{ (request()->is('penjualans*')) ? 'active' : '' }}">
                 <a href="{{route('penjualans.create')}}"><i class="fa fa-shopping-cart"></i> <span>Penjualan</span></a>
             </li>
              <li class="header">Produk</li>

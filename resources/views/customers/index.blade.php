@@ -99,6 +99,50 @@
                 {{$customers->appends(Request::all())->links()}}
             </span>
 
+            <div class="box">
+                <div class="box-header">
+                    <h4>Customer list
+                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Customer</a>
+                    </h4>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tabel-customers" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Perusahaan</th>
+                        <th>Telepon</th>
+                        <th>Alamat</th>
+                        <th>Avatar</th>
+                        <th>status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Perusahaan</th>
+                        <th>Telepon</th>
+                        <th>Alamat</th>
+                        <th>Avatar</th>
+                        <th>status</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
         </div>
         </div>
         <div class="modal fade" id="modal-default">
@@ -112,14 +156,15 @@
             <form role="form" enctype="multipart/form-data" action="{{route('customers.store')}}" method="POST">
             <div class="modal-body">
 
-                    @csrf
+                {{ csrf_field() }} {{ method_field('POST') }}
+                <input type="hidden" id="id" name="id">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Full Name">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Enter email">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
                     </div>
                     <div class="form-group">
                         <label for="perusahaan">Perusahaan</label>
@@ -156,5 +201,137 @@
     <!-- /.content -->
 @endsection
 @section('js')
+<script type="text/javascript">
+    var table = $('#tabel-customers').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('api.customer') }}",
+        columns: [
+        {data: 'id', name: 'id'},
+        {data: 'nama', name: 'nama'},
+        {data: 'email', name: 'email'},
+        {data: 'perusahaan', name: 'perusahaan'},
+        {data: 'phone', name: 'phone'},
+        {data: 'address', name: 'address'},
+        {data: 'show_photo', name: 'show_photo'},
+        {data: 'status', name: 'status'},
+        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        ]
+    });
 
+    function addForm() {
+        save_method = "add";
+        $('input[name=_method]').val('POST');
+        $('#modal-default').modal('show');
+        $('#modal-default form')[0].reset();
+        $('.modal-title').text('Add customer');
+    }
+
+    function editForm(id) {
+        save_method = 'edit';
+        $('input[name=_method]').val('PATCH');
+        $('#modal-default form')[0].reset();
+        $.ajax({
+            url: "{{ url('customers') }}" + '/' + id + "/edit",
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+            $('#modal-default').modal('show');
+            $('.modal-title').text('Edit customer');
+
+            $('#id').val(data.id);
+            $('#name').val(data.nama);
+            $('#email').val(data.email);
+            $('#perusahaan').val(data.perusahaan);
+            $('#phone').val(data.phone);
+            $('#address').val(data.address);
+            },
+            error : function() {
+                alert("Nothing Data");
+            }
+        });
+        }
+    function deleteData(id){
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function () {
+            $.ajax({
+                url : "{{ url('customers') }}" + '/' + id,
+                type : "POST",
+                data : {'_method' : 'DELETE', '_token' : csrf_token},
+                success : function(data) {
+                    table.ajax.reload();
+                    swal({
+                        title: 'Success!',
+                        text: data.message,
+                        type: 'success',
+                        timer: '1500'
+                    })
+                },
+                error : function () {
+                    swal({
+                        title: 'Oops...',
+                        text: data.message,
+                        type: 'error',
+                        timer: '1500'
+                    })
+                }
+            });
+        });
+        }
+    $(function(){
+            $('#modal-default form').validator().on('submit', function (e) {
+
+                var form =  $('#modal-default form');
+                form.find('.help-block').remove();
+                form.find('.form-group').removeClass('has-error');
+
+                if (!e.isDefaultPrevented()){
+                    var id = $('#id').val();
+                    if (save_method == 'add') url = "{{ url('customers') }}";
+                    else url = "{{ url('customers') . '/' }}" + id;
+
+
+
+                    $.ajax({
+                        url : url,
+                        type : "POST",
+                        // data : $('#modal-default form').serialize(),
+                        data: new FormData($("#modal-default form")[0]),
+                        contentType: false,
+                        processData: false,
+                        success : function(data) {
+                            $('#modal-default').modal('hide');
+                            table.ajax.reload();
+                            swal({
+                                title: 'Success!',
+                                text: data.message,
+                                type: 'success',
+                                timer: '1500'
+                            })
+                        },
+                        error : function(xhr){
+                            var res = xhr.responseJSON;
+                            if($.isEmptyObject(res) == false){
+                                $.each(res.errors, function(key, value){
+                                    $('#' + key)
+                                        .closest('.form-group')
+                                        .addClass('has-error')
+                                        .append('<span class="help-block"><strong>'+ value +'</strong></span>')
+                                });
+                            }
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
 @endsection

@@ -62,7 +62,7 @@
                         </div>
 
                     <div id="appendProduct">
-		                <div class="row" id="product">
+		                <div class="row" id="product" >
 		                	<div class="col-sm-6">
 			                  <div class="form-group">
 			                         <label for="product">Product</label>
@@ -84,13 +84,13 @@
 			            	<div class="col-sm-1">
 			            		<div class="form-group">
 			            			<label>Action</label>
-			            			<button type="button" class="btn btn-danger" onclick="removeData(this)"><i class="fas fa-eraser"></i></button>
+			            			<button type="button" class="btn btn-danger" onclick="removeData(this)"><i class="fa fa-times"></i></button>
 			            		</div>
 			            	</div>
 			            </div>
 
 			        </div>
-                        <button type="button" class="btn btn-success" onclick="addProduct()">Tambah Product</button>
+                        <button type="button" class="btn btn-success" >Tambah Product</button>
                     <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
@@ -111,11 +111,11 @@
 <!-- Select2 -->
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-	function addProduct(){
-		var $clone = $('#product').clone();
-		$('#appendProduct').append($clone);
-		$($clone).show();
-	}
+
+    $(".btn-success").click(function(e) {
+        e.preventDefault();
+        $('#product').first().clone().appendTo('#appendProduct').find('#qty').val('');
+});
 	function removeData(ele){
 		var $parent = $(ele).parent().parent().parent();
 		$($parent).remove();

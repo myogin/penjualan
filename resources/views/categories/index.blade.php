@@ -63,6 +63,8 @@
             <!-- /.box-body -->
             </div>
             <!-- /.box -->
+
+
         </div>
         </div>
         <div class="modal fade" id="modal-default">
@@ -79,7 +81,7 @@
                     <input type="hidden" id="id" name="id">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" id="name" name="name" placeholder="Full Name" autofocus required >
+                        <input type="text" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" id="name" name="name" placeholder="Full Name" >
                     <div class="invalid-feedback">  {{$errors->first('name')}}</div>
                     </div>
                     <div class="form-group">
@@ -117,6 +119,7 @@
         {data: 'action', name: 'action', orderable: false, searchable: false,}
         ]
     });
+
     function addForm() {
         save_method = "add";
         $('input[name=_method]').val('POST');
@@ -182,10 +185,17 @@
         }
     $(function(){
             $('#modal-default form').validator().on('submit', function (e) {
+
+                var form =  $('#modal-default form');
+                form.find('.help-block').remove();
+                form.find('.form-group').removeClass('has-error');
+
                 if (!e.isDefaultPrevented()){
                     var id = $('#id').val();
                     if (save_method == 'add') url = "{{ url('categories') }}";
                     else url = "{{ url('categories') . '/' }}" + id;
+
+
 
                     $.ajax({
                         url : url,
@@ -204,13 +214,16 @@
                                 timer: '1500'
                             })
                         },
-                        error : function(data){
-                            swal({
-                                title: 'Oops...',
-                                text: data.message,
-                                type: 'error',
-                                timer: '1500'
-                            })
+                        error : function(xhr){
+                            var res = xhr.responseJSON;
+                            if($.isEmptyObject(res) == false){
+                                $.each(res.errors, function(key, value){
+                                    $('#' + key)
+                                        .closest('.form-group')
+                                        .addClass('has-error')
+                                        .append('<span class="help-block"><strong>'+ value +'</strong></span>')
+                                });
+                            }
                         }
                     });
                     return false;

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
+use Yajra\DataTables\Datatables;
+
 class CustomerController extends Controller
 {
     public function __construct()
@@ -49,6 +51,16 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         //
+
+        $validation = \Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'perusahaan' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'avatar' => 'required'
+        ])->validate();
+
         $new_customer = new \App\customer;
         $new_customer->nama = $request->get('name');
         $new_customer->email = $request->get('email');
@@ -62,7 +74,10 @@ class CustomerController extends Controller
 
         $new_customer->save();
 
-        return redirect()->route('customers.index')->with('status', 'customer successfully created.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -88,7 +103,7 @@ class CustomerController extends Controller
     {
         //
         $customer = \App\customer::findOrFail($id);
-        return view('customers.edit', ['customer' => $customer]);
+        return $customer;
     }
 
     /**
@@ -101,6 +116,14 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $validation = \Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'perusahaan' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'address' => 'required|string|max:255'
+        ])->validate();
+
         $customer = \App\customer::findOrFail($id);
         $customer->nama = $request->get('name');
         $customer->email = $request->get('email');
@@ -111,8 +134,11 @@ class CustomerController extends Controller
             $file = $request->file('avatar')->store('avatars', 'public');
             $customer->avatar = $file;
         }
-        $customer->save();
-        return redirect()->route('customers.edit', ['id' => $id])->with('status', 'customer succesfully updated');
+        $customer->update();
+        return response()->json([
+            'success' => true,
+            'message' => 'Category Created'
+        ]);
     }
 
     /**
@@ -133,5 +159,22 @@ class CustomerController extends Controller
         $keyword = $request->get('q');
         $customers = \App\customer::where("name", "LIKE", "%$keyword%")->get();
         return $customers;
+    }
+    public function apicustomer()
+    {
+        $customer = \App\Customer::all();
+        return Datatables::of($customer)
+            ->addColumn('show_photo', function($customer){
+                if ($customer->avatar == NULL){
+                    return 'No Image';
+                }
+                return '<img src="'.asset('storage/'.$customer->avatar).'" width="120px" /><br>';
+            })
+            ->addColumn('action', function($customer){
+                return '' .
+                    '<a onclick="editForm('. $customer->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' ;
+
+            })
+            ->rawColumns(['show_photo', 'action'])->make(true);
     }
 }

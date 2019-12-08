@@ -14,14 +14,12 @@ class CreatePenjualanProductTable extends Migration
     public function up()
     {
         Schema::create('penjualan_product', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('penjualan_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('qty');
             $table->timestamps();
 
-            $table->foreign('penjualan_id')->references('id')->on('penjualans');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->primary(['penjualan_id', 'product_id']);
         });
     }
 

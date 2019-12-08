@@ -14,14 +14,12 @@ class CreatePembelianProductTable extends Migration
     public function up()
     {
         Schema::create('pembelian_product', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('pembelian_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('qty');
             $table->timestamps();
 
-            $table->foreign('pembelian_id')->references('id')->on('pembelians');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->primary(['pembelian_id', 'product_id']);
         });
     }
 

@@ -23,26 +23,26 @@ Route::match(["GET", "POST"], "/register", function () {
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/ajax/users/search', 'UserController@ajaxSearch')->name("usersSearch");
-Route::resource("users", "UserController");
+Route::resource("users", "UserController")->middleware('auth');
 Route::get("/api/user", "UserController@apiuser")->name("api.user");
 
-Route::resource("customers", "CustomerController");
+Route::resource("customers", "CustomerController")->middleware('auth');
 Route::get("/api/customer", "CustomerController@apicustomer")->name("api.customer");
 
-Route::resource("suppliers", "SupplierController");
+Route::resource("suppliers", "SupplierController")->middleware('auth');
 Route::get("/api/supplier", "SupplierController@apisupplier")->name("api.supplier");
 
 Route::get('/ajax/categories/search', 'CategoryController@categorySearch')->name("categorySearch");
-Route::resource("categories", "CategoryController");
+Route::resource("categories", "CategoryController")->middleware('auth');
 Route::get("/api/category", "CategoryController@apicategory")->name("api.category");
 
 Route::get('/ajax/products/search', 'ProductController@productSearch')->name("productSearch");
-Route::resource("products", "ProductController");
+Route::resource("products", "ProductController")->middleware('auth');
 Route::get("/api/product", "ProductController@apiproduct")->name("api.product");
 
-Route::resource("stocks", "StockController");
+Route::resource("stocks", "StockController")->middleware('auth');
 Route::get("/api/stock", "StockController@apistock")->name("api.stock");
 
-Route::resource("penjualans", "PenjualanController");
+Route::resource("penjualans", "PenjualanController")->middleware('auth');
 
-Route::resource("pembelians", "PembelianController");
+Route::resource("pembelians", "PembelianController")->middleware('auth');

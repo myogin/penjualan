@@ -39,11 +39,11 @@ class ProductController extends Controller
     {
         //
         $validation = \Validator::make($request->all(),[
-            "kode_produk" => "required|min:5|max:100",
-            "nama_produk" => "required|min:5|max:100",
+            "kode_produk" => "required|max:100",
+            "nama_produk" => "required|max:100",
             "category_id" => "required",
-            "keterangan" => "required|min:5|max:200",
-            "satuan" => "required|min:5|max:100",
+            "keterangan" => "required|max:200",
+            "satuan" => "required|max:100",
             "harga_dasar" => "required",
             "harga_jual" => "required",
             "produk" => "required"
@@ -109,7 +109,14 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         //
-
+        $validation = \Validator::make($request->all(),[
+            "kode_produk" => "required|max:100",
+            "nama_produk" => "required|max:100",
+            "keterangan" => "required|max:200",
+            "satuan" => "required|max:100",
+            "harga_dasar" => "required",
+            "harga_jual" => "required"
+        ])->validate();
 
         $product = \App\Product::findOrFail($id);
         $product->kode_produk = $request->get('kode_produk');

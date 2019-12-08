@@ -101,7 +101,7 @@
                     </div>
                     <div class="form-group">
                         <label>Kategori</label>
-                        <select class="form-control select2" name="category_id" id="category" style="width: 100%;" placeholder="Kategori Produk">
+                        <select class="form-control select2" name="category_id" id="category_id" style="width: 100%;" placeholder="Kategori Produk">
 
                         </select>
                     </div>
@@ -147,7 +147,7 @@
 <!-- Select2 -->
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    $('#category').select2({
+    $('#category_id').select2({
     ajax:{
         url: '{{route('categorySearch')}}',
         processResults: function(data){
@@ -252,6 +252,11 @@
         }
     $(function(){
             $('#modal-default form').validator().on('submit', function (e) {
+
+                var form =  $('#modal-default form');
+                form.find('.help-block').remove();
+                form.find('.form-group').removeClass('has-error');
+
                 if (!e.isDefaultPrevented()){
                     var id = $('#id').val();
                     if (save_method == 'add') url = "{{ url('products') }}";
@@ -274,13 +279,16 @@
                                 timer: '1500'
                             })
                         },
-                        error : function(data){
-                            swal({
-                                title: 'Oops...',
-                                text: data.message,
-                                type: 'error',
-                                timer: '1500'
-                            })
+                        error : function(xhr){
+                            var res = xhr.responseJSON;
+                            if($.isEmptyObject(res) == false){
+                                $.each(res.errors, function(key, value){
+                                    $('#' + key)
+                                        .closest('.form-group')
+                                        .addClass('has-error')
+                                        .append('<span class="help-block"><strong>'+ value +'</strong></span>')
+                                });
+                            }
                         }
                     });
                     return false;

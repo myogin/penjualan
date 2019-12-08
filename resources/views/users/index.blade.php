@@ -85,46 +85,46 @@
                     <input type="hidden" id="id" name="id">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" autofocus required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name"  >
                     </div>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" >
                     </div>
                     <div class="form-group" >
                         <label>Role</label>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="RTLM" value="TLM">
+                            <input class="custom-control-input RTLM" type="checkbox" name="roles[]" id="roles" value="TLM">
                             <label for="TLM" class="custom-control-label">Top Level Management</label>
                         </div>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="RADMIN" value="ADMIN"}>
+                            <input class="custom-control-input RADMIN" type="checkbox" name="roles[]" id="roles" value="ADMIN"}>
                             <label for="ADMIN" class="custom-control-label">Admin</label>
                         </div>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input" type="checkbox" name="roles[]" id="ROPERATOR" value="OPERATOR">
+                            <input class="custom-control-input ROPERATOR" type="checkbox" name="roles[]" id="roles" value="OPERATOR">
                             <label for="OPERATOR" class="custom-control-label">Operator</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <textarea id="address" name="address" class="form-control" rows="4" required></textarea>
+                        <textarea id="address" name="address" class="form-control" rows="4"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password" >
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" name="password2" placeholder="Konfirm Password" >
+                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Konfirm Password" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputFile">Avatar</label>
@@ -186,13 +186,13 @@
             $('.modal-title').text('Edit user');
             var roles = data.roles;
             if(roles.includes('ADMIN') === true){
-                $('#RADMIN').prop('checked',true)
+                $('.RADMIN').prop('checked',true)
             }
             if(roles.includes('TLM') === true){
-                $('#RTLM').prop('checked',true)
+                $('.RTLM').prop('checked',true)
             }
             if(roles.includes('OPERATOR') === true){
-                $('#ROPERATOR').prop('checked',true)
+                $('.ROPERATOR').prop('checked',true)
             }
             $('#id').val(data.id);
             $('#name').val(data.name);
@@ -244,6 +244,11 @@
         }
     $(function(){
             $('#modal-default form').validator().on('submit', function (e) {
+
+                var form =  $('#modal-default form');
+                form.find('.help-block').remove();
+                form.find('.form-group').removeClass('has-error');
+
                 if (!e.isDefaultPrevented()){
                     var id = $('#id').val();
                     if (save_method == 'add') url = "{{ url('users') }}";
@@ -266,13 +271,16 @@
                                 timer: '1500'
                             })
                         },
-                        error : function(data){
-                            swal({
-                                title: 'Oops...',
-                                text: data.message,
-                                type: 'error',
-                                timer: '1500'
-                            })
+                        error : function(xhr){
+                            var res = xhr.responseJSON;
+                            if($.isEmptyObject(res) == false){
+                                $.each(res.errors, function(key, value){
+                                    $('#' + key)
+                                        .closest('.form-group')
+                                        .addClass('has-error')
+                                        .append('<span class="help-block"><strong>'+ value +'</strong></span>')
+                                });
+                            }
                         }
                     });
                     return false;

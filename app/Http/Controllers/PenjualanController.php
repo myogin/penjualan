@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\DataTables\Datatables;
+use Illuminate\Support\Carbon;
 
 class PenjualanController extends Controller
 {
@@ -14,6 +16,7 @@ class PenjualanController extends Controller
     public function index()
     {
         //
+        return view('penjualans.index');
     }
 
     /**
@@ -40,7 +43,15 @@ class PenjualanController extends Controller
         //
         $new_penjualan = new \App\Penjualan;
         $new_penjualan->customer_id = $request->get('customer');
-        $new_penjualan->invoice_number = $request->get('invoice');
+
+        $mytime= Carbon::now();
+        $invoice = \App\Penjualan::get('id')->last();
+        if ($invoice === null) {
+            $invoice_no = $mytime->format('Ymd') . "0001";
+        } else {
+            $invoice_no = $mytime->format('Ymd') . str_pad($invoice->id + 1, 4, '0', STR_PAD_LEFT);;
+        }
+        $new_penjualan->invoice_number = $invoice_no;
         $new_penjualan->status = $request->get('status');
         $new_penjualan->save();
         $penjualan_id = $new_penjualan->id;
@@ -51,6 +62,10 @@ class PenjualanController extends Controller
             $new_penjualan_product->product_id = $brg;
             $new_penjualan_product->qty = $request->get('qty')[$key];
             $new_penjualan_product->save();
+
+            $new_Stock = \App\Stock::find($request->get('product')[$key]);
+            $new_Stock->stok -= $request->get('qty')[$key];
+            $new_Stock->save();
         }
 
 
@@ -77,6 +92,8 @@ class PenjualanController extends Controller
     public function edit($id)
     {
         //
+        $penjualan = \App\Penjualan::with('customer')->with('products')->findOrFail($id);
+        return $penjualan;
     }
 
     /**
@@ -100,5 +117,22 @@ class PenjualanController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function apipenjualan()
+    {
+        $penjualan = \App\Penjualan::with('customer')->with('products')->get();
+        return Datatables::of($penjualan)
+            ->addColumn('show_photo', function($penjualan){
+                if ($penjualan->gambar == NULL){
+                    return 'No Image';
+                }
+                return '<img src="'.asset('storage/'.$penjualan->gambar).'" width="120px" /><br>';
+            })
+            ->addColumn('action', function($penjualan){
+                return '' .
+                    '<a onclick="editForm('. $penjualan->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '
+                    ;
+            })
+            ->rawColumns(['show_photo', 'action'])->make(true);
     }
 }

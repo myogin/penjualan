@@ -163,8 +163,20 @@
         {data: 'show_photo', name: 'show_photo'},
         {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false,}
-        ]
+        ],
+        columnDefs: [{targets: 5,
+            render: function ( data, type, row ) {
+            var css1 = 'black';
+            if (data == 'ACTIVE') {
+                css1 = 'btn btn-success btn-xs';
+            }if (data == 'INACTIVE') {
+                css1 = 'btn btn-danger btn-xs';
+            }
+            return '<button class="'+ css1 +'">' + data + '</button>';
+            }
+    }]
     });
+
     function addForm() {
         save_method = "add";
         $('input[name=_method]').val('POST');

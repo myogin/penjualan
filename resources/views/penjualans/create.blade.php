@@ -40,11 +40,7 @@
                     <div class="box-body" id="box-body">
 
                         <div class="form-group">
-                            <label for="invoice">Invoice Number</label>
-                            <input type="text" class="form-control" id="invoice" name="invoice" placeholder="Invoice Number">
-                        </div>
-                        <div class="form-group">
-                            <label for="customer">Categori</label>
+                            <label for="customer">Customer</label>
                             <select class="form-control custom-select" name="customer">
                                 <option selected="" disabled="">Select one</option>
                                 @foreach($customers as $customer)

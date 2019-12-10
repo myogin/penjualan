@@ -3,13 +3,14 @@
 
 @endsection
 @section('css')
-
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{asset('bower_components/select2/dist/css/select2.min.css')}}">
 @endsection
 @section('content')
 <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        stocks
+        penjualans
         <small>preview of simple tables</small>
         </h1>
         <ol class="breadcrumb">
@@ -32,18 +33,21 @@
             @endif
             <div class="box">
                 <div class="box-header">
-                    <h4>Category list
-                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Category</a>
+                    <h4>penjualan list
+                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add penjualan</a>
                     </h4>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="tabel-stocks" class="table table-bordered table-striped">
+                    <table id="tabel-penjualans" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                            <th>Id</th>
-                        <th>Nama Ketegori</th>
-                        <th>Gambar</th>
+                        <th>Id</th>
+                        <th>Invoice Number</th>
+                        <th>Tanggal pesan</th>
+                        <th>Customer</th>
+                        <th>Produk</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -52,9 +56,12 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                            <th>Id</th>
-                        <th>Nama Ketegori</th>
-                        <th>Gambar</th>
+                        <th>Id</th>
+                        <th>Invoice Number</th>
+                        <th>Tanggal pesan</th>
+                        <th>Customer</th>
+                        <th>Produk</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                     </tfoot>
@@ -73,24 +80,50 @@
                 <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Default Modal</h4>
             </div>
-            <form role="form" enctype="multipart/form-data" action="{{route('stocks.store')}}" method="POST">
+            <form role="form" enctype="multipart/form-data" action="{{route('penjualans.store')}}" method="POST">
             <div class="modal-body">
 
-                {{ csrf_field() }} {{ method_field('POST') }}
-                <input type="hidden" id="id" name="id">
+                    {{ csrf_field() }} {{ method_field('POST') }}
+                    <input type="hidden" id="id" name="id">
                     <div class="form-group">
-                        <label for="name">Nama Produk</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="name">
+                        <label for="kode_produk">Kode Produk</label>
+                        <input type="text" class="form-control" id="kode_produk" name="kode_produk" placeholder="Kode Produk">
                     </div>
                     <div class="form-group">
-                        <label for="stock">Stock</label>
-                        <input type="text" class="form-control" id="stock" name="stock" placeholder="stock">
+                        <label for="nama_produk">Nama Produk</label>
+                        <input type="text" class="form-control" id="nama_produk" name="nama_produk" placeholder="Nama Produk">
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select class="form-control select2" name="category_id" id="category_id" style="width: 100%;" placeholder="Kategori Produk">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="keterangan">Keterangan</label>
+                        <textarea id="keterangan" name="keterangan" class="form-control" rows="4" placeholder="Keterangan"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="satuan">Satuan</label>
+                        <input type="text" class="form-control" id="satuan" name="satuan" placeholder="Satuan">
+                    </div>
+                    <div class="form-group">
+                        <label for="harga_dasar">Harga Dasar</label>
+                        <input type="number" class="form-control" id="harga_dasar" name="harga_dasar" placeholder="Harga Dasar">
+                    </div>
+                    <div class="form-group">
+                        <label for="harga_jual">Harga Jual</label>
+                        <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Harga Jual">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Gambar</label>
+                        <input id="produk" name="produk" type="file" >
                     </div>
                     <!-- /.card-body -->
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary pull-left" id="submit">Tambah stocks</button>
+                <button type="submit" class="btn btn-primary pull-left">Tambah penjualans</button>
                 <button type="buton" class="btn btn-default " data-dismiss="modal">Close</button>
 
             </div>
@@ -105,26 +138,40 @@
     <!-- /.content -->
 @endsection
 @section('js')
+<!-- Select2 -->
+<script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
+<script>
+    $('#category_id').select2({
+    ajax:{
+        url: '{{route('categorySearch')}}',
+        processResults: function(data){
+            return {
+                results: data.map(function(item){
+                    return {
+                    id: item.id,
+                    text: item.name
+                    }
+                    })
+                }
+            }
+        }
+    });
+    </script>
+
 <script type="text/javascript">
-    var table = $('#tabel-stocks').DataTable({
+    var table = $('#tabel-penjualans').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('api.stock') }}",
+        ajax: "{{ route('api.penjualan') }}",
         columns: [
         {data: 'id', name: 'id'},
-        {data: 'nama_produk', name: 'nama_produk'},
-        {data: 'stok', name: 'stok'},
+        {data: 'invoice_number', name: 'invoice_number'},
+        {data: 'created_at', name: 'created_at'},
+        {data: 'customer.nama', name: 'customer.nama'},
+        {data: 'products[ | ].nama_produk', name: 'products[].nama_produk'},
+        {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false,}
-        ],
-        columnDefs: [{targets: 2,
-            render: function ( data, type, row ) {
-            var color = 'black';
-            if (data < 10) {
-                color = 'green';
-            }
-            return '<span style="color:' + color + '">' + data + '</span>';
-            }
-    }]
+        ]
     });
 
     function addForm() {
@@ -132,26 +179,28 @@
         $('input[name=_method]').val('POST');
         $('#modal-default').modal('show');
         $('#modal-default form')[0].reset();
-        $('.modal-title').text('Add stock');
+        $('.modal-title').text('Add penjualan');
     }
 
     function editForm(id) {
         save_method = 'edit';
         $('input[name=_method]').val('PATCH');
         $('#modal-default form')[0].reset();
-        $('#submit').text('Edit Stock');
         $.ajax({
-            url: "{{ url('stocks') }}" + '/' + id + "/edit",
+            url: "{{ url('penjualans') }}" + '/' + id + "/edit",
             type: "GET",
             dataType: "JSON",
             success: function(data) {
             $('#modal-default').modal('show');
-            $('.modal-title').text('Edit stock');
+            $('.modal-title').text('Edit penjualan');
 
             $('#id').val(data.id);
-            $('#name').val(data.nama_produk);
-            $('#name').prop('disabled',true)
-            $('#stock').val(data.stok);
+            $('#kode_produk').val(data.products[0].nama_produk);
+            $('#nama_produk').val(data.nama_produk);
+            $('#keterangan').val(data.keterangan);
+            $('#satuan').val(data.satuan);
+            $('#harga_dasar').val(data.harga_dasar);
+            $('#harga_jual').val(data.harga_jual);
             },
             error : function() {
                 alert("Nothing Data");
@@ -170,7 +219,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then(function () {
             $.ajax({
-                url : "{{ url('stocks') }}" + '/' + id,
+                url : "{{ url('penjualans') }}" + '/' + id,
                 type : "POST",
                 data : {'_method' : 'DELETE', '_token' : csrf_token},
                 success : function(data) {
@@ -195,10 +244,15 @@
         }
     $(function(){
             $('#modal-default form').validator().on('submit', function (e) {
+
+                var form =  $('#modal-default form');
+                form.find('.help-block').remove();
+                form.find('.form-group').removeClass('has-error');
+
                 if (!e.isDefaultPrevented()){
                     var id = $('#id').val();
-                    if (save_method == 'add') url = "{{ url('stocks') }}";
-                    else url = "{{ url('stocks') . '/' }}" + id;
+                    if (save_method == 'add') url = "{{ url('penjualans') }}";
+                    else url = "{{ url('penjualans') . '/' }}" + id;
 
                     $.ajax({
                         url : url,
@@ -217,13 +271,16 @@
                                 timer: '1500'
                             })
                         },
-                        error : function(data){
-                            swal({
-                                title: 'Oops...',
-                                text: data.message,
-                                type: 'error',
-                                timer: '1500'
-                            })
+                        error : function(xhr){
+                            var res = xhr.responseJSON;
+                            if($.isEmptyObject(res) == false){
+                                $.each(res.errors, function(key, value){
+                                    $('#' + key)
+                                        .closest('.form-group')
+                                        .addClass('has-error')
+                                        .append('<span class="help-block"><strong>'+ value +'</strong></span>')
+                                });
+                            }
                         }
                     });
                     return false;

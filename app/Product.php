@@ -15,4 +15,7 @@ class Product extends Model
     {
         return $this->hasOne("App\Stock");
     }
+    public function penjualans(){
+        return $this->belongsToMany('App\Penjualan');
+    }
 }

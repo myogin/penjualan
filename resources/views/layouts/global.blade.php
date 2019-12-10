@@ -303,7 +303,10 @@ desired effect
             <li class="header">Transaksi</li>
             <!-- Optionally, you can add icons to the links -->
             <li class="{{ (request()->is('penjualans*')) ? 'active' : '' }}">
-                <a href="{{route('penjualans.create')}}"><i class="fa fa-shopping-cart"></i> <span>Penjualan</span></a>
+                <a href="{{route('penjualans.create')}}"><i class="fa fa-shopping-cart"></i> <span>Penjualan create</span></a>
+            </li>
+            <li class="{{ (request()->is('penjualans*')) ? 'active' : '' }}">
+                <a href="{{route('penjualans.index')}}"><i class="fa fa-shopping-cart"></i> <span>Penjualan</span></a>
             </li>
              <li class="header">Produk</li>
             <!-- Optionally, you can add icons to the links -->

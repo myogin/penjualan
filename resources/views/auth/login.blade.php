@@ -7,7 +7,8 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <h2>Login Form</h2>
+        <h2>Balinese Classic</h2>
+        <p>Login to continue</p>
 
         <form action="{{ route('login') }}" method="post">
             @csrf

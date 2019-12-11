@@ -27,10 +27,32 @@ class HomeController extends Controller
         $stok = \App\Stock::where('stok','<=',10)->count();
         $penjualan_proses = \App\Penjualan::where('status','PROCESS')->count();
 
-        $data_penjualan=DB::select("SELECT products.nama_produk, penjualan_product.qty, MONTH(penjualan_product.created_at) as month from penjualans
+        $data_penjualan=DB::select("SELECT products.nama_produk, CAST(SUM(penjualan_product.qty)as UNSIGNED) as qty, MONTH(penjualans.tanggal_transaksi) as month, sum(products.harga_jual*penjualan_product.qty) as omset
+        from penjualans
         INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id
-        INNER JOIN products ON products.id = penjualan_product.product_id where MONTH(penjualan_product.created_at) = MONTH(CURRENT_DATE()) AND YEAR(penjualan_product.created_at) = YEAR(CURRENT_DATE()) GROUP BY products.nama_produk");
+        INNER JOIN products ON products.id = penjualan_product.product_id
 
+        where MONTH(penjualans.tanggal_transaksi) = MONTH(CURRENT_DATE()) AND YEAR(penjualans.tanggal_transaksi) = YEAR(CURRENT_DATE())
+        GROUP BY products.nama_produk
+        ");
+        $omsets=DB::select("SELECT sum(products.harga_jual*penjualan_product.qty) as omset
+        from penjualans
+        INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id
+        INNER JOIN products ON products.id = penjualan_product.product_id
+
+        where MONTH(penjualans.tanggal_transaksi) = MONTH(CURRENT_DATE()) AND YEAR(penjualans.tanggal_transaksi) = YEAR(CURRENT_DATE())
+        GROUP BY MONTH(penjualans.tanggal_transaksi)
+        ");
+
+        $penjualan_laba = DB::select("SELECT  MONTH(penjualans.tanggal_transaksi)-1 as month , CAST(SUM((products.harga_jual-products.harga_dasar)*penjualan_product.qty)as UNSIGNED) as profit from penjualans INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id INNER JOIN products ON products.id = penjualan_product.product_id where YEAR(penjualan_product.created_at) = YEAR(CURRENT_DATE()) GROUP BY MONTH(penjualans.tanggal_transaksi)");
+
+        $bulans = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+        // dd(json_encode($bulans));
+        $profit = [];
+        foreach ($penjualan_laba as $pl) {
+
+            $profit[] = $pl->profit;
+        }
 
         $categories = [];
         $data = [];
@@ -41,6 +63,15 @@ class HomeController extends Controller
             $bulan[] = $dp->month;
         }
 
-        return view('home', ['stok' => $stok,'penjualan_proses' => $penjualan_proses,'categories' => $categories,'data' => $data,'bulan' => $bulan]);
+
+        return view('home', ['stok' => $stok,'penjualan_proses' => $penjualan_proses,'categories' => $categories,'data' => $data,'bulans' => $bulans,'profit' => $profit,'omsets' => $omsets]);
+    }
+
+    public function apites()
+    {
+        $penjualan = DB::select("SELECT  MONTH(penjualans.tanggal_transaksi)-1 as month , SUM((products.harga_jual-products.harga_dasar)*penjualan_product.qty) as profit from penjualans INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id INNER JOIN products ON products.id = penjualan_product.product_id where YEAR(penjualan_product.created_at) = YEAR(CURRENT_DATE()) GROUP BY MONTH(penjualans.tanggal_transaksi)");
+
+
+        return $penjualan;
     }
 }

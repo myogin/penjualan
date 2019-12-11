@@ -38,7 +38,19 @@
                 <form role="form" enctype="multipart/form-data" action="{{route('penjualans.store')}}" method="POST">
                 @csrf
                     <div class="box-body" id="box-body">
+                        <!-- Date -->
+                        <div class="form-group">
+                                <label>Date:</label>
 
+                                <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" class="form-control pull-right" id="datepicker" name="tanggal_transaksi">
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                            <!-- /.form group -->
                         <div class="form-group">
                             <label for="customer">Customer</label>
                             <select class="form-control custom-select" name="customer">
@@ -117,6 +129,10 @@
 		$($parent).remove();
 	}
 
+//Date picker
+$('#datepicker').datepicker({
+      autoclose: true
+    })
 </script>
 @endsection
 

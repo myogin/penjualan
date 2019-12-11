@@ -55,9 +55,12 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-            <h3>44</h3>
+            <h3>@foreach ($omsets as $omset)
+                    {{ $omset->omset }}
+                 @endforeach
+                </h3>
 
-            <p>User Registrations</p>
+            <p>Omset Bulan Ini</p>
             </div>
             <div class="icon">
             <i class="ion ion-person-add"></i>
@@ -87,7 +90,22 @@
     <div class="row">
         <!-- Left col -->
         <section class="col-lg-7 connectedSortable">
+                <figure class="highcharts-figure">
+                        <div id="container1"></div>
+                        <p class="highcharts-description">
+                            A basic column chart compares rainfall values between four cities.
+                            Tokyo has the overall highest amount of rainfall, followed by New York.
+                            The chart is making use of the axis crosshair feature, to highlight
+                            months as they are hovered over.
+                        </p>
+                    </figure>
 
+
+
+        </section>
+        <!-- /.Left col -->
+        <!-- right col (We are only adding the ID to make the widgets sortable)-->
+        <section class="col-lg-5 connectedSortable">
 
                 <figure class="highcharts-figure">
                         <div id="container"></div>
@@ -98,13 +116,6 @@
                             months as they are hovered over.
                         </p>
                     </figure>
-
-        </section>
-        <!-- /.Left col -->
-        <!-- right col (We are only adding the ID to make the widgets sortable)-->
-        <section class="col-lg-5 connectedSortable">
-
-
 
 
 
@@ -122,7 +133,48 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+        Highcharts.chart('container1', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Monthly Average Rainfall'
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com'
+            },
+            xAxis: {
+                categories: {!!json_encode($bulans)!!},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Rainfall (IDR)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} IDR</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Pendapatan Tahun 2019',
+                data: {!!json_encode($profit)!!}
 
+            }]
+        });
+        </script>
 <script>
 Highcharts.chart('container', {
     chart: {

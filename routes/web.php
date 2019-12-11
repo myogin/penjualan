@@ -47,3 +47,7 @@ Route::resource("penjualans", "PenjualanController")->middleware('auth');
 Route::get("/api/penjualan", "PenjualanController@apipenjualan")->name("api.penjualan");
 
 Route::resource("pembelians", "PembelianController")->middleware('auth');
+
+
+
+Route::get("/api/tes", "HomeController@apites")->name("api.tes");

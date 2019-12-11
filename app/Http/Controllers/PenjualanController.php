@@ -44,6 +44,9 @@ class PenjualanController extends Controller
         $new_penjualan = new \App\Penjualan;
         $new_penjualan->customer_id = $request->get('customer');
 
+        $new_penjualan->tanggal_transaksi =
+        date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
+
         $mytime= Carbon::now();
         $invoice = \App\Penjualan::get('id')->last();
         if ($invoice === null) {

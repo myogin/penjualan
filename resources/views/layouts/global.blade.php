@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>AdminLTE 2 | @yield('title')</title>
+    <title>Balineses Classic | @yield('title')</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{{asset('bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
@@ -24,8 +24,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     {{-- SweetAlert2 --}}
     <script src="{{ asset('js/sweetalert2/sweetalert2.min.js') }}"></script>
     <link href="{{ asset('js/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet">
-    <!-- Morris chart -->
-    <link rel="stylesheet" href="{{asset('bower_components/morris.js/morris.css')}}">
 
     <!-- Select2 -->
     <link rel="stylesheet" href="{{asset('bower_components/select2/dist/css/select2.min.css')}}">
@@ -35,11 +33,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
     <link rel="stylesheet" href="{{asset('dist/css/skins/skin-black.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/yogi.css')}}">
-
-
-    <!-- Morris chart -->
-    <link rel="stylesheet" href="{{asset('bower_components/morris.js/morris.css')}}">
     <!-- jvectormap -->
     <link rel="stylesheet" href="{{asset('bower_components/jvectormap/jquery-jvectormap.css')}}">
     <!-- Date Picker -->
@@ -48,6 +41,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{asset('bower_components/bootstrap-daterangepicker/daterangepicker.css')}}">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
+
+    <link rel="stylesheet" href="{{asset('css/yogi.css')}}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -91,7 +86,7 @@ desired effect
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>A</b>LT</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Admin</b>LTE</span>
+        <span class="logo-lg"><b>Balinese Classic</b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -250,10 +245,7 @@ desired effect
                 </li>
                 </ul>
             </li>
-            <!-- Control Sidebar Toggle Button -->
-            <li>
-                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-            </li>
+
             </ul>
         </div>
         </nav>

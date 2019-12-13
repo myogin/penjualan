@@ -154,10 +154,10 @@ class CustomerController extends Controller
         $customer->delete();
         return redirect()->route('customers.index')->with('status', 'customer successfully delete');
     }
-    public function ajaxSearch(Request $request)
+    public function customerSearch(Request $request)
     {
         $keyword = $request->get('q');
-        $customers = \App\customer::where("name", "LIKE", "%$keyword%")->get();
+        $customers = \App\Customer::where("nama", "LIKE", "%$keyword%")->get();
         return $customers;
     }
     public function apicustomer()

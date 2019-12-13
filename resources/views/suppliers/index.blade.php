@@ -41,13 +41,12 @@
                     <table id="tabel-suppliers" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Email</th>
                         <th>Perusahaan</th>
                         <th>Telepon</th>
                         <th>Alamat</th>
-                        <th>Avatar</th>
                         <th>status</th>
                         <th>Action</th>
                     </tr>
@@ -57,13 +56,12 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Email</th>
                         <th>Perusahaan</th>
                         <th>Telepon</th>
                         <th>Alamat</th>
-                        <th>Avatar</th>
                         <th>status</th>
                         <th>Action</th>
                     </tr>
@@ -109,9 +107,16 @@
                         <label for="address">Alamat</label>
                         <textarea id="address" name="address" class="form-control" rows="4"></textarea>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="exampleInputFile">Avatar</label>
                         <input id="avatar" name="avatar" type="file" >
+                    </div> --}}
+                    <div class="form-group">
+                        <label for="avatar">Avatar image</label><br>
+                            Current avatar: <br>
+                                <img id="avatar" src="" width="120px" /><br>
+                        <input id="avatar" name="avatar" type="file">
+                        <small class="text-muted">Kosongkan jika tidak ingin mengubah avatar</small>
                     </div>
                     <!-- /.card-body -->
 
@@ -138,15 +143,17 @@
         serverSide: true,
         ajax: "{{ route('api.supplier') }}",
         columns: [
-        {data: 'id', name: 'id'},
+            { data: 'id',sortable: true,
+                render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+                }},
         {data: 'nama', name: 'nama'},
         {data: 'email', name: 'email'},
         {data: 'perusahaan', name: 'perusahaan'},
         {data: 'phone', name: 'phone'},
         {data: 'address', name: 'address'},
-        {data: 'show_photo', name: 'show_photo'},
         {data: 'status', name: 'status'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
         ]
     });
 
@@ -181,6 +188,7 @@
             $('#perusahaan').val(data.perusahaan);
             $('#phone').val(data.phone);
             $('#address').val(data.address);
+            document.getElementById("avatar").src = "{{asset('storage/')}}";
             },
             error : function() {
                 alert("Nothing Data");

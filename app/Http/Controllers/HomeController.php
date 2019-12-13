@@ -44,15 +44,22 @@ class HomeController extends Controller
         GROUP BY MONTH(penjualans.tanggal_transaksi)
         ");
 
-        $penjualan_laba = DB::select("SELECT  MONTH(penjualans.tanggal_transaksi)-1 as month , CAST(SUM((products.harga_jual-products.harga_dasar)*penjualan_product.qty)as UNSIGNED) as profit from penjualans INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id INNER JOIN products ON products.id = penjualan_product.product_id where YEAR(penjualan_product.created_at) = YEAR(CURRENT_DATE()) GROUP BY MONTH(penjualans.tanggal_transaksi)");
+        $penjualan_laba = DB::select("SELECT  MONTH(penjualans.tanggal_transaksi) as month , CAST(SUM((products.harga_jual-products.harga_dasar)*penjualan_product.qty)as UNSIGNED) as profit from penjualans INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id INNER JOIN products ON products.id = penjualan_product.product_id where YEAR(penjualans.tanggal_transaksi) = YEAR(CURRENT_DATE())  GROUP BY MONTH(penjualans.tanggal_transaksi)");
 
-        $bulans = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
-        // dd(json_encode($bulans));
+        $bulans = ["1","2","3","4","5","6","7","8","9","10","11","12"];
         $profit = [];
+        foreach($bulans as $bulan){
+            $penjualan_laba = DB::select("SELECT  MONTH(penjualans.tanggal_transaksi) as month , CAST(SUM((products.harga_jual-products.harga_dasar)*penjualan_product.qty)as UNSIGNED) as profit from penjualans INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id INNER JOIN products ON products.id = penjualan_product.product_id where YEAR(penjualans.tanggal_transaksi) = YEAR(CURRENT_DATE()) AND MONTH(penjualans.tanggal_transaksi) =  $bulan GROUP BY MONTH(penjualans.tanggal_transaksi)");
+            $profit = $penjualan_laba;
+        }
+        // dd(json_encode($bulans));
+
         foreach ($penjualan_laba as $pl) {
 
             $profit[] = $pl->profit;
         }
+
+
 
         $categories = [];
         $data = [];
@@ -69,7 +76,7 @@ class HomeController extends Controller
 
     public function apites()
     {
-        $penjualan = DB::select("SELECT  MONTH(penjualans.tanggal_transaksi)-1 as month , SUM((products.harga_jual-products.harga_dasar)*penjualan_product.qty) as profit from penjualans INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id INNER JOIN products ON products.id = penjualan_product.product_id where YEAR(penjualan_product.created_at) = YEAR(CURRENT_DATE()) GROUP BY MONTH(penjualans.tanggal_transaksi)");
+        $penjualan = DB::select("SELECT  MONTH(penjualans.tanggal_transaksi) as month , CAST(SUM((products.harga_jual-products.harga_dasar)*penjualan_product.qty)as UNSIGNED) as profit from penjualans INNER JOIN penjualan_product ON penjualan_product.penjualan_id = penjualans.id INNER JOIN products ON products.id = penjualan_product.product_id where YEAR(penjualan_product.created_at) = YEAR(CURRENT_DATE()) GROUP BY MONTH(penjualans.tanggal_transaksi)");
 
 
         return $penjualan;

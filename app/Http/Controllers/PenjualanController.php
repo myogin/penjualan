@@ -56,20 +56,34 @@ class PenjualanController extends Controller
         }
         $new_penjualan->invoice_number = $invoice_no;
         $new_penjualan->status = $request->get('status');
+        $new_penjualan->total_harga = 0;
         $new_penjualan->save();
         $penjualan_id = $new_penjualan->id;
+
+        $total_harga=0;
 
         foreach ($request->get('product') as $key => $brg) {
             $new_penjualan_product = new \App\PenjualanProduct;
             $new_penjualan_product->penjualan_id = $penjualan_id;
             $new_penjualan_product->product_id = $brg;
             $new_penjualan_product->qty = $request->get('qty')[$key];
+
+
+            $product = \App\Product::find($request->get('product')[$key]);
+            $new_penjualan_product->harga_jual = $product->harga_jual;
             $new_penjualan_product->save();
+
+            $total_harga+=$new_penjualan_product->harga_jual * $new_penjualan_product->qty;
 
             $new_Stock = \App\Stock::find($request->get('product')[$key]);
             $new_Stock->stok -= $request->get('qty')[$key];
             $new_Stock->save();
         }
+
+        $new_penjualan = \App\Penjualan::find($penjualan_id);
+        $new_penjualan->total_harga = $total_harga;
+        $new_penjualan->save();
+
 
 
         return redirect()->route('penjualans.create')->with('status', 'penjualan successfully created.');
@@ -96,7 +110,7 @@ class PenjualanController extends Controller
     {
         //
         $penjualan = \App\Penjualan::with('customer')->with('products')->findOrFail($id);
-        return $penjualan;
+        return view('penjualans.edit', ['penjualan' => $penjualan]);
     }
 
     /**
@@ -133,7 +147,7 @@ class PenjualanController extends Controller
             })
             ->addColumn('action', function($penjualan){
                 return '' .
-                    '<a onclick="editForm('. $penjualan->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '
+                    '<a href="'.route('penjualans.edit', ['id' => $penjualan->id]).'" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '
                     ;
             })
             ->rawColumns(['show_photo', 'action'])->make(true);

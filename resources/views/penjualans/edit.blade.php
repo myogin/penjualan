@@ -35,8 +35,9 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.store')}}" method="POST">
-                @csrf
+                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.update', ['id'=>$penjualan->id])}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="PUT" name="_method">
                     <div class="box-body" id="box-body">
                         <!-- Date -->
                         <div class="form-group">
@@ -52,11 +53,11 @@
                             </div>
                             <!-- /.form group -->
                         <div class="form-group">
-                                <label>Customer</label>
-                                <select class="form-control select2" name="customer" id="customer" style="width: 100%;" placeholder="Kategori Produk">
+                            <label for="customer">Customer</label>
+                            <select class="form-control custom-select" name="customer">
 
-                                </select>
-                            </div>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="Status">Status</label>
                             <select class="form-control select2"  name="status" id="Status"  style="width: 100%;">
@@ -66,14 +67,15 @@
                             </select>
                         </div>
 
-
                     <div id="appendProduct">
 		                <div class="row" id="product" >
 		                	<div class="col-sm-6">
-                                    <div class="form-group">
-                                            <label for="product">Product</label>
-                                               <select class="form-control select2" name="product2[]" id="product2" style="width: 100%;" placeholder="Kategori Produk"><select></select>
-                                      </div>
+			                  <div class="form-group">
+			                         <label for="product">Product</label>
+                                        <select class="form-control custom-select" name="product[]">
+
+                                        </select>
+			                   </div>
 			                </div>
 			                <div class="col-sm-5">
 			                   <div class="form-group">
@@ -112,37 +114,6 @@
 <!-- Select2 -->
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    $('#customer').select2({
-    ajax:{
-        url: '{{route('customerSearch')}}',
-        processResults: function(data){
-            return {
-                results: data.map(function(item){
-                    return {
-                    id: item.id,
-                    text: item.nama +" || "+ item.perusahaan
-                    }
-                    })
-                }
-            }
-        }
-    });
-
-    $('#product2').select2({
-    ajax:{
-        url: '{{route('productSearch')}}',
-        processResults: function(data){
-            return {
-                results: data.map(function(item){
-                    return {
-                    id: item.id,
-                    text: item.nama_produk
-                    }
-                    })
-                }
-            }
-        }
-    });
 
     $(".btn-success").click(function(e) {
         e.preventDefault();

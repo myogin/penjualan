@@ -42,7 +42,7 @@
                     <table id="tabel-penjualans" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Invoice Number</th>
                         <th>Tanggal pesan</th>
                         <th>Customer</th>
@@ -56,7 +56,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Invoice Number</th>
                         <th>Tanggal pesan</th>
                         <th>Customer</th>
@@ -159,12 +159,16 @@
     </script>
 
 <script type="text/javascript">
+
     var table = $('#tabel-penjualans').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.penjualan') }}",
         columns: [
-        {data: 'id', name: 'id'},
+            { data: 'id',sortable: true,
+                render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+                }},
         {data: 'invoice_number', name: 'invoice_number'},
         {data: 'created_at', name: 'created_at'},
         {data: 'customer.nama', name: 'customer.nama'},

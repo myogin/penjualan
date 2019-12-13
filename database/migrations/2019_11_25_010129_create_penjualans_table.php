@@ -15,8 +15,10 @@ class CreatePenjualansTable extends Migration
     {
         Schema::create('penjualans', function (Blueprint $table) {
             $table->increments('id');
+            $table->date('tanggal_transaksi');
             $table->integer('customer_id')->unsigned();
             $table->string('invoice_number');
+            $table->integer('total_harga');
             $table->enum('status', ['SUBMIT', 'PROCESS', 'FINISH', 'CANCEL']);
             $table->timestamps();
 

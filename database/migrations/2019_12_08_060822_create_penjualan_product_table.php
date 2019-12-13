@@ -17,6 +17,7 @@ class CreatePenjualanProductTable extends Migration
             $table->integer('penjualan_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('qty');
+            $table->integer('harga_jual');
             $table->timestamps();
 
             $table->primary(['penjualan_id', 'product_id']);

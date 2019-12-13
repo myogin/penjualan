@@ -114,7 +114,7 @@
         {data: 'id', name: 'id'},
         {data: 'nama_produk', name: 'nama_produk'},
         {data: 'stok', name: 'stok'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '50px'}
         ],
         columnDefs: [{targets: 2,
             render: function ( data, type, row ) {

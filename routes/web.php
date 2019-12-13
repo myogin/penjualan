@@ -26,6 +26,8 @@ Route::get('/ajax/users/search', 'UserController@ajaxSearch')->name("usersSearch
 Route::resource("users", "UserController")->middleware('auth');
 Route::get("/api/user", "UserController@apiuser")->name("api.user");
 
+
+Route::get('/ajax/customers/search', 'CustomerController@customerSearch')->name("customerSearch");
 Route::resource("customers", "CustomerController")->middleware('auth');
 Route::get("/api/customer", "CustomerController@apicustomer")->name("api.customer");
 

@@ -53,11 +53,13 @@
                             </div>
                             <!-- /.form group -->
                         <div class="form-group">
-                            <label for="customer">Customer</label>
-                            <select class="form-control custom-select" name="customer">
-
-                            </select>
-                        </div>
+                                <label>Customer</label>
+                                <select class="form-control select2" name="customer" id="customer" style="width: 100%;" placeholder="Kategori Produk">
+                                    @foreach ($products as $product)
+                                    <option value="{{$product->id}}">{{$product->nama_produk}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         <div class="form-group">
                             <label for="Status">Status</label>
                             <select class="form-control select2"  name="status" id="Status"  style="width: 100%;">
@@ -67,15 +69,19 @@
                             </select>
                         </div>
 
+
                     <div id="appendProduct">
 		                <div class="row" id="product" >
 		                	<div class="col-sm-6">
-			                  <div class="form-group">
-			                         <label for="product">Product</label>
-                                        <select class="form-control custom-select" name="product[]">
-
-                                        </select>
-			                   </div>
+                                <div class="form-group">
+                                    <label for="product">Product</label>
+                                    <select class="form-control select2 selectproduct" name="product[]" style="width: 100%;" onchange="loadBarang(this)" placeholder="Kategori Produk">
+                                        <option value="">Select Product</option>
+                                        @foreach ($products as $product)
+                                        <option value="{{$product->id}}">{{$product->nama_produk}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 			                </div>
 			                <div class="col-sm-5">
 			                   <div class="form-group">
@@ -114,15 +120,81 @@
 <!-- Select2 -->
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
+    $('.select2').select2();
+    $('#customer').select2({
+    ajax:{
+        url: '{{route('customerSearch')}}',
+        processResults: function(data){
+            return {
+                results: data.map(function(item){
+                    return {
+                    id: item.id,
+                    text: item.nama +" || "+ item.perusahaan
+                    }
+                    })
+                }
+            }
+        }
+    });
+
 
     $(".btn-success").click(function(e) {
         e.preventDefault();
-        $('#product').first().clone().appendTo('#appendProduct').find('#qty').val('');
-});
+        var appendProductDetail = `
+        <div class="row" id="product" >
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="product">Product</label>
+                    <select class="form-control select2 selectproduct" name="product2[]" style="width: 100%;" placeholder="Kategori Produk" onchange="loadBarang(this)">
+                        <option value="">Select Product</option>
+                        @foreach ($products as $product)
+                        <option value="{{$product->id}}">{{$product->nama_produk}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label for="qty">QTY</label>
+                    <input type="number" class="form-control" id="qty" name="qty[]" placeholder="Jumlah">
+                </div>
+            </div>
+
+            <div class="col-sm-1">
+                <div class="form-group">
+                    <label>Action</label>
+                    <button type="button" class="btn btn-danger" onclick="removeData(this)"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+        </div>
+        `;
+        $('#appendProduct').append(appendProductDetail);
+        $('.select2').select2();
+    })
+
 	function removeData(ele){
 		var $parent = $(ele).parent().parent().parent();
 		$($parent).remove();
 	}
+
+    function loadBarang(ele){
+        var count_selected = 0;
+        $('.selectproduct').each(function(index){
+            var id_product = $(this).val();
+            var now_id_product = $(ele).val();
+
+            if(id_product == now_id_product){
+                count_selected += 1;
+            }
+        });
+
+        if(count_selected > 1){
+
+                alert('Product sudah dipilih sebelumnya!');
+                $(ele).val('').trigger('change');
+                return false;
+        }
+    }
 
 //Date picker
 $('#datepicker').datepicker({

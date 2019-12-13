@@ -45,9 +45,9 @@ class PenjualanController extends Controller
         $new_penjualan->customer_id = $request->get('customer');
 
         $new_penjualan->tanggal_transaksi =
-        date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
+            date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
 
-        $mytime= Carbon::now();
+        $mytime = Carbon::now();
         $invoice = \App\Penjualan::get('id')->last();
         if ($invoice === null) {
             $invoice_no = $mytime->format('Ymd') . "0001";
@@ -60,7 +60,7 @@ class PenjualanController extends Controller
         $new_penjualan->save();
         $penjualan_id = $new_penjualan->id;
 
-        $total_harga=0;
+        $total_harga = 0;
 
         foreach ($request->get('product') as $key => $brg) {
             $new_penjualan_product = new \App\PenjualanProduct;
@@ -73,7 +73,7 @@ class PenjualanController extends Controller
             $new_penjualan_product->harga_jual = $product->harga_jual;
             $new_penjualan_product->save();
 
-            $total_harga+=$new_penjualan_product->harga_jual * $new_penjualan_product->qty;
+            $total_harga += $new_penjualan_product->harga_jual * $new_penjualan_product->qty;
 
             $new_Stock = \App\Stock::find($request->get('product')[$key]);
             $new_Stock->stok -= $request->get('qty')[$key];
@@ -110,7 +110,12 @@ class PenjualanController extends Controller
     {
         //
         $penjualan = \App\Penjualan::with('customer')->with('products')->findOrFail($id);
-        return view('penjualans.edit', ['penjualan' => $penjualan]);
+        $products = \App\Product::All();
+        $customers = \App\Customer::All();
+
+        $product = \App\Product::findOrFail($id);
+        $customer = \App\Customer::findOrFail($id);
+        return view('penjualans.edit', ['penjualan' => $penjualan, 'products' => $products, 'customers' => $customers, 'product' => $product, 'customer' => $customer]);
     }
 
     /**
@@ -139,16 +144,15 @@ class PenjualanController extends Controller
     {
         $penjualan = \App\Penjualan::with('customer')->with('products')->get();
         return Datatables::of($penjualan)
-            ->addColumn('show_photo', function($penjualan){
-                if ($penjualan->gambar == NULL){
+            ->addColumn('show_photo', function ($penjualan) {
+                if ($penjualan->gambar == NULL) {
                     return 'No Image';
                 }
-                return '<img src="'.asset('storage/'.$penjualan->gambar).'" width="120px" /><br>';
+                return '<img src="' . asset('storage/' . $penjualan->gambar) . '" width="120px" /><br>';
             })
-            ->addColumn('action', function($penjualan){
+            ->addColumn('action', function ($penjualan) {
                 return '' .
-                    '<a href="'.route('penjualans.edit', ['id' => $penjualan->id]).'" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '
-                    ;
+                    '<a href="' . route('penjualans.edit', ['id' => $penjualan->id]) . '" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
             })
             ->rawColumns(['show_photo', 'action'])->make(true);
     }

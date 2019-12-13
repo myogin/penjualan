@@ -47,6 +47,8 @@
                         <th>Tanggal pesan</th>
                         <th>Customer</th>
                         <th>Produk</th>
+
+                        <th>Total</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -61,6 +63,7 @@
                         <th>Tanggal pesan</th>
                         <th>Customer</th>
                         <th>Produk</th>
+                        <th>Total</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -170,9 +173,10 @@
                 return meta.row + meta.settings._iDisplayStart + 1;
                 }},
         {data: 'invoice_number', name: 'invoice_number'},
-        {data: 'created_at', name: 'created_at'},
+        {data: 'tanggal_transaksi', name: 'tanggal_transaksi'},
         {data: 'customer.nama', name: 'customer.nama'},
         {data: 'products[ | ].nama_produk', name: 'products[].nama_produk'},
+        {data: 'total_harga', name: 'total_harga'},
         {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false,}
         ]

@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Penjualan extends Model
 {
     //
-    public function customer(){
+    public function customer()
+    {
         return $this->belongsTo('App\Customer');
     }
 
-    public function products(){
-        return $this->belongsToMany('App\Product');
+    public function products()
+    {
+        return $this->belongsToMany('App\Product')->withPivot('qty', 'harga_jual');;
     }
 }

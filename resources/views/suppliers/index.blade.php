@@ -188,7 +188,7 @@
             $('#perusahaan').val(data.perusahaan);
             $('#phone').val(data.phone);
             $('#address').val(data.address);
-            document.getElementById("avatar").src = "{{asset('storage/')}}";
+            document.getElementById("avatar").src = "{{asset('storage/')}}/"+data.avatar;
             },
             error : function() {
                 alert("Nothing Data");

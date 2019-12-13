@@ -138,7 +138,7 @@ class StockController extends Controller
         return Datatables::of($stock)
             ->addColumn('action', function($stock){
                 return '' .
-                    '<a onclick="editForm('. $stock->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' ;
+                '<a onclick="editForm('. $stock->id .')" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
             })
             ->rawColumns(['action'])->make(true);
     }

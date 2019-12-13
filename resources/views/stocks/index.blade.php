@@ -9,14 +9,9 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        stocks
-        <small>preview of simple tables</small>
+        Stocks
         </h1>
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
-        <li class="active">Simple</li>
-        </ol>
+        {{ Breadcrumbs::render('stock') }}
     </section>
 
     <!-- Main content -->
@@ -32,13 +27,13 @@
             @endif
             <div class="box">
                 <div class="box-header">
-                    <h4>Category list
-                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Category</a>
+                    <h4>Stock list
+
                     </h4>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="tabel-stocks" class="table table-bordered table-striped">
+                    <table id="tabel-stocks" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                             <th>Id</th>
@@ -114,7 +109,7 @@
         {data: 'id', name: 'id'},
         {data: 'nama_produk', name: 'nama_produk'},
         {data: 'stok', name: 'stok'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,width: '50px'}
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '80px'}
         ],
         columnDefs: [{targets: 2,
             render: function ( data, type, row ) {

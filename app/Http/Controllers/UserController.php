@@ -129,6 +129,7 @@ class UserController extends Controller
         ])->validate();
 
         $user = \App\User::findOrFail($id);
+        $user->status = $request->get('status');
         $user->name = $request->get('name');
         $user->roles = json_encode($request->get('roles'));
         $user->address = $request->get('address');
@@ -187,8 +188,8 @@ class UserController extends Controller
             })
             ->addColumn('action', function($user){
                 return '' .
-                       '<a onclick="editForm('. $user->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' .
-                       '<a onclick="deleteData('. $user->id .')" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> Delete</a>';
+                '<a onclick="editForm('. $user->id .')" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '.
+                '<a onclick="showForm('. $user->id .')" class="btn btn-success btn-flat btn-xs"><i class="fa fa-eye"></i> Show</a> '  ;
             })
             ->rawColumns(['show_photo', 'action'])->make(true);
     }

@@ -170,7 +170,7 @@ class SupplierController extends Controller
             ->addColumn('action', function($supplier){
                 return '' .
                     '<a onclick="editForm('. $supplier->id .')" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '.
-                    '<a onclick="editForm('. $supplier->id .')" class="btn btn-success btn-flat btn-xs"><i class="fa fa-eye"></i> Show</a> '  ;
+                    '<a onclick="showForm('. $supplier->id .')" class="btn btn-success btn-flat btn-xs"><i class="fa fa-eye"></i> Show</a> '  ;
 
             })
             ->rawColumns(['show_photo', 'action'])->make(true);

@@ -9,14 +9,9 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        customers
-        <small>preview of simple tables</small>
+        Customers
         </h1>
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
-        <li class="active">Simple</li>
-        </ol>
+        {{ Breadcrumbs::render('customer') }}
     </section>
 
     <!-- Main content -->
@@ -39,7 +34,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="tabel-customers" class="table table-bordered table-striped">
+                    <table id="tabel-customers" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>Id</th>
@@ -147,7 +142,7 @@
         {data: 'address', name: 'address'},
         {data: 'show_photo', name: 'show_photo'},
         {data: 'status', name: 'status'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
         ]
     });
 

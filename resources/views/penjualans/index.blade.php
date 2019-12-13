@@ -10,14 +10,10 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        penjualans
-        <small>preview of simple tables</small>
+        Penjualans
+
         </h1>
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
-        <li class="active">Simple</li>
-        </ol>
+        {{ Breadcrumbs::render('penjualan') }}
     </section>
 
     <!-- Main content -->
@@ -33,13 +29,13 @@
             @endif
             <div class="box">
                 <div class="box-header">
-                    <h4>penjualan list
-                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add penjualan</a>
+                    <h4>Penjualan list
+                        <a href="{{route('penjualans.create')}}" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Penjualan</a>
                     </h4>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="tabel-penjualans" class="table table-bordered table-striped">
+                    <table id="tabel-penjualans" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>No</th>
@@ -177,9 +173,22 @@
         {data: 'customer.nama', name: 'customer.nama'},
         {data: 'products[ | ].nama_produk', name: 'products[].nama_produk'},
         {data: 'total_harga', name: 'total_harga'},
-        {data: 'status', name: 'status'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,}
-        ]
+        {data: 'status', name: 'status',width: '80'},
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '80px'}
+        ],
+        columnDefs: [{targets: 6,
+            render: function ( data, type, row ) {
+            var css1 = 'black';
+            if (data == 'FINISH') {
+                css1 = 'btn bg-olive btn-flat btn-xs';
+            }if (data == 'CANCEL') {
+                css1 = 'btn bg-navy btn-flat btn-xs';
+            }if (data == 'PROCESS') {
+                css1 = 'btn bg-maroon btn-flat btn-xs';
+            }
+            return '<button class="'+ css1 +'">' + data + '</button>';
+            }
+    }]
     });
 
     function addForm() {

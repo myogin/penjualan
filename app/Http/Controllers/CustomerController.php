@@ -172,7 +172,8 @@ class CustomerController extends Controller
             })
             ->addColumn('action', function($customer){
                 return '' .
-                    '<a onclick="editForm('. $customer->id .')" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ' ;
+                '<a onclick="editForm('. $customer->id .')" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '.
+                '<a onclick="showForm('. $customer->id .')" class="btn btn-success btn-flat btn-xs"><i class="fa fa-eye"></i> Show</a> '  ;
 
             })
             ->rawColumns(['show_photo', 'action'])->make(true);

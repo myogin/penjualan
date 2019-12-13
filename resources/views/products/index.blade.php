@@ -10,14 +10,10 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        products
-        <small>preview of simple tables</small>
+        Products
         </h1>
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
-        <li class="active">Simple</li>
-        </ol>
+
+        {{ Breadcrumbs::render('product') }}
     </section>
 
     <!-- Main content -->
@@ -39,7 +35,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="tabel-products" class="table table-bordered table-striped">
+                    <table id="tabel-products" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>Id</th>
@@ -180,7 +176,7 @@
         {data: 'harga_dasar', name: 'harga_dasar'},
         {data: 'harga_jual', name: 'harga_jual'},
         {data: 'show_photo', name: 'show_photo'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '180px'}
         ]
     });
     function addForm() {

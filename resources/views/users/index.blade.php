@@ -10,12 +10,8 @@
     <section class="content-header">
         <h1>
         Users
-        <small>preview of tables</small>
         </h1>
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Simple</li>
-        </ol>
+        {{ Breadcrumbs::render('user') }}
     </section>
 
     <!-- Main content -->
@@ -31,13 +27,13 @@
             @endif
             <div class="box">
                     <div class="box-header">
-                        <h4>Category list
+                        <h4>User list
                             <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Category</a>
                         </h4>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tabel-users" class="table table-bordered table-striped">
+                        <table id="tabel-users" class="table table-bordered table-hover">
                         <thead>
                         <tr>
                             <th>Id</th>
@@ -130,6 +126,22 @@
                         <label for="exampleInputFile">Avatar</label>
                         <input id="avatar" name="avatar" type="file" >
                     </div>
+                    <!-- radio -->
+                    <div class="form-group" style="display: none;" id="status">
+                            <label for="">Status</label>
+                        <div class="radio">
+                        <label>
+                            <input type="radio" name="status" id="optionsRadios1" value="ACTIVE" checked>
+                            AKTIVE
+                        </label>
+                        </div>
+                        <div class="radio">
+                        <label>
+                            <input type="radio" name="status" id="optionsRadios2" value="INACTIVE">
+                            INAKTIVE
+                        </label>
+                        </div>
+                    </div>
                     <!-- /.card-body -->
 
             </div>
@@ -161,16 +173,16 @@
         {data: 'username', name: 'username'},
         {data: 'email', name: 'email'},
         {data: 'show_photo', name: 'show_photo'},
-        {data: 'status', name: 'status'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        {data: 'status', name: 'status',width: '80px'},
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
         ],
         columnDefs: [{targets: 5,
             render: function ( data, type, row ) {
             var css1 = 'black';
             if (data == 'ACTIVE') {
-                css1 = 'btn btn-success btn-xs';
+                css1 = 'btn bg-olive btn-flat btn-xs';
             }if (data == 'INACTIVE') {
-                css1 = 'btn btn-danger btn-xs';
+                css1 = 'btn bg-navy btn-flat btn-xs';
             }
             return '<button class="'+ css1 +'">' + data + '</button>';
             }
@@ -183,12 +195,14 @@
         $('#modal-default').modal('show');
         $('#modal-default form')[0].reset();
         $('.modal-title').text('Add user');
+        document.getElementById("status").style.display = "none";
     }
 
     function editForm(id) {
         save_method = 'edit';
         $('input[name=_method]').val('PATCH');
         $('#modal-default form')[0].reset();
+        document.getElementById("status").style.display = "block";
         $.ajax({
             url: "{{ url('users') }}" + '/' + id + "/edit",
             type: "GET",

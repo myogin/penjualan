@@ -8,15 +8,10 @@
 @section('content')
 <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>
-        suppliers
-        <small>preview of simple tables</small>
-        </h1>
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
-        <li class="active">Simple</li>
-        </ol>
+    <h1>
+        Suppliers
+    </h1>
+        {{ Breadcrumbs::render('supplier') }}
     </section>
 
     <!-- Main content -->
@@ -38,7 +33,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="tabel-suppliers" class="table table-bordered table-striped">
+                    <table id="tabel-suppliers" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>No</th>

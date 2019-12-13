@@ -25,9 +25,6 @@
         <!-- small box -->
         <div class="small-box bg-aqua">
             <div class="inner">
-            <h3>{{$penjualan_proses}}</h3>
-
-            <p>Terdapat {{$penjualan_proses}} buah order berstatus proses</p>
             </div>
             <div class="icon">
             <i class="ion ion-bag"></i>
@@ -40,9 +37,6 @@
         <!-- small box -->
         <div class="small-box bg-green">
             <div class="inner">
-            <h3>{{$stok}}</h3>
-
-            <p>Terdapat {{$stok}} buah produk yang memiliki stok kurang dari 10</p>
             </div>
             <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -55,9 +49,6 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-            <h3>@foreach ($omsets as $omset)
-                    {{ $omset->omset }}
-                 @endforeach
                 </h3>
 
             <p>Omset Bulan Ini</p>
@@ -108,7 +99,7 @@
         <section class="col-lg-5 connectedSortable">
 
                 <figure class="highcharts-figure">
-                        <div id="container"></div>
+                        <div id="chart-bulet"></div>
                         <p class="highcharts-description">
                             A basic column chart compares rainfall values between four cities.
                             Tokyo has the overall highest amount of rainfall, followed by New York.
@@ -134,30 +125,48 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script>
+    function IDRFormatter(angka, prefix) {
+    var number_string = angka.toString().replace(/[^,\d]/g, ''),
+        split = number_string.split(','),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+        separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+}
+    var bilangan = {{$total_profit}};
         Highcharts.chart('container1', {
             chart: {
                 type: 'line'
             },
             title: {
-                text: 'Monthly Average Rainfall'
+                text: 'Pendapatan di tahun ' +{{$tahun_ini}}
             },
             subtitle: {
-                text: 'Source: WorldClimate.com'
+                text: 'Total profit RP ' +IDRFormatter(bilangan)
             },
             xAxis: {
                 categories: {!!json_encode($bulans)!!},
                 crosshair: true
             },
             yAxis: {
-                min: 0,
-                title: {
-                    text: 'Rainfall (IDR)'
+                label:{
+                    formatter: function(){
+                    return IDRFormatter(this.value, 'Rp. ');
                 }
+
+                },
             },
             tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} IDR</b></td></tr>',
+                headerFormat: '<span style="font-size:10px">Pendapatan di bulan {point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0"></td>' +
+                    '<td style="padding:0"><b>{point.y:.0f} IDR</b></td></tr>',
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -176,44 +185,38 @@
         });
         </script>
 <script>
-Highcharts.chart('container', {
+    Highcharts.chart('chart-bulet', {
     chart: {
-        type: 'line'
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
     },
     title: {
-        text: 'Monthly Average Rainfall'
-    },
-    subtitle: {
-        text: 'Source: WorldClimate.com'
-    },
-    xAxis: {
-        categories: {!!json_encode($categories)!!},
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Rainfall (mm)'
-        }
+        text: 'Browser market shares in January, 2018'
     },
     tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-        footerFormat: '</table>',
-        shared: true,
-        useHTML: true
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
     },
     plotOptions: {
-        column: {
-            pointPadding: 0.2,
-            borderWidth: 0
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.y:.1f} pcs'
+            }
         }
     },
     series: [{
-        name: 'Bulan ini',
-        data: {!!json_encode($data)!!}
-
+        name: 'Presentase',
+        colorByPoint: true,
+        data: {!!json_encode($penjualan2)!!}
     }]
 });
 </script>

@@ -41,7 +41,18 @@ class PenjualanController extends Controller
     public function store(Request $request)
     {
         //
+
+        $validation = \Validator::make($request->all(),[
+            "tanggal_transaksi" => "required",
+            "customer" => "required",
+            "status" => "required",
+            "product" => "required",
+            "qty" => "required"
+        ])->validate();
+
+
         $new_penjualan = new \App\Penjualan;
+        $new_penjualan->user_id = \Auth::user()->id;
         $new_penjualan->customer_id = $request->get('customer');
 
         $new_penjualan->tanggal_transaksi =
@@ -57,10 +68,12 @@ class PenjualanController extends Controller
         $new_penjualan->invoice_number = $invoice_no;
         $new_penjualan->status = $request->get('status');
         $new_penjualan->total_harga = 0;
+        $new_penjualan->profit = 0;
         $new_penjualan->save();
         $penjualan_id = $new_penjualan->id;
 
         $total_harga = 0;
+        $profit = 0;
 
         foreach ($request->get('product') as $key => $brg) {
             $new_penjualan_product = new \App\PenjualanProduct;
@@ -71,9 +84,11 @@ class PenjualanController extends Controller
 
             $product = \App\Product::find($request->get('product')[$key]);
             $new_penjualan_product->harga_jual = $product->harga_jual;
+            $new_penjualan_product->harga_beli = $product->harga_dasar;
             $new_penjualan_product->save();
 
             $total_harga += $new_penjualan_product->harga_jual * $new_penjualan_product->qty;
+            $profit += ($new_penjualan_product->harga_jual - $new_penjualan_product->harga_beli) * $new_penjualan_product->qty;
 
             $new_Stock = \App\Stock::find($request->get('product')[$key]);
             $new_Stock->stok -= $request->get('qty')[$key];
@@ -82,6 +97,7 @@ class PenjualanController extends Controller
 
         $new_penjualan = \App\Penjualan::find($penjualan_id);
         $new_penjualan->total_harga = $total_harga;
+        $new_penjualan->profit = $profit;
         $new_penjualan->save();
 
 
@@ -109,13 +125,14 @@ class PenjualanController extends Controller
     public function edit($id)
     {
         //
-        $penjualan = \App\Penjualan::with('customer')->with('products')->findOrFail($id);
+        $penjualan = \App\Penjualan::findOrFail($id);
         $products = \App\Product::All();
         $customers = \App\Customer::All();
 
-        $product = \App\Product::findOrFail($id);
-        $customer = \App\Customer::findOrFail($id);
-        return view('penjualans.edit', ['penjualan' => $penjualan, 'products' => $products, 'customers' => $customers, 'product' => $product, 'customer' => $customer]);
+        // $product = \App\Product::findOrFail($id);
+        // $customer = \App\Customer::findOrFail($id);
+        // , 'product' => $product, 'customer' => $customer
+        return view('penjualans.edit', ['penjualan' => $penjualan, 'products' => $products, 'customers' => $customers]);
     }
 
     /**
@@ -152,7 +169,7 @@ class PenjualanController extends Controller
             })
             ->addColumn('action', function ($penjualan) {
                 return '' .
-                    '<a href="' . route('penjualans.edit', ['id' => $penjualan->id]) . '" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
+                '<a  href="'.route('penjualans.edit', ['id' => $penjualan->id]).'" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
             })
             ->rawColumns(['show_photo', 'action'])->make(true);
     }

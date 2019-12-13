@@ -10,12 +10,8 @@
     <section class="content-header">
         <h1>
         Category
-        <small>preview of tables</small>
         </h1>
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Category</li>
-        </ol>
+        {{ Breadcrumbs::render('categories') }}
     </section>
 
     <!-- Main content -->
@@ -38,7 +34,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="tabel-categories" class="table table-bordered table-striped">
+                <table id="tabel-categories" class="table table-bordered table-hover">
                 <thead>
                 <tr>
                         <th>Id</th>
@@ -116,7 +112,7 @@
         {data: 'id', name: 'id'},
         {data: 'name', name: 'name'},
         {data: 'show_photo', name: 'show_photo'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,}
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
         ]
     });
 

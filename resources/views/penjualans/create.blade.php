@@ -23,6 +23,13 @@
                 {{session('status')}}
             </div>
             @endif
+            @if(session('message'))
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-check"></i> Alert!</h4>
+                {{session('message')}}
+            </div>
+            @endif
             <!-- general form elements -->
             <div class="box box-primary">
                 <div class="box-header with-border">

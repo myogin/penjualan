@@ -6,14 +6,9 @@
 
     <section class="content-header">
         <h1>
-            General Form Elements
-            <small>Preview</small>
+            Transaksi
         </h1>
-        <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Forms</a></li>
-            <li class="active">General Elements</li>
-        </ol>
+        {{ Breadcrumbs::render('penjualan') }}
     </section>
 
     <!-- Main content -->
@@ -31,41 +26,47 @@
             <!-- general form elements -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                <h3 class="box-title">Quick Example</h3>
+                <h3 class="box-title">Form Transaksi</h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.update', ['id'=>$penjualan->id])}}" method="POST">
-                    @csrf
-                    <input type="hidden" value="PUT" name="_method">
+                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.store')}}" method="POST">
+                @csrf
                     <div class="box-body" id="box-body">
                         <!-- Date -->
-                        <div class="form-group">
+                        <?php
+                            $tanggal_transaksi =date('m/d/Y', strtotime($penjualan->tanggal_transaksi));
+                        ?>
+                        <div class="form-group {{$errors->first('tanggal_transaksi') ? "has-error": ""}}">
                                 <label>Date:</label>
 
                                 <div class="input-group date">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                                <input type="text" class="form-control pull-right" id="datepicker" name="tanggal_transaksi">
+                                <input type="text" class="form-control pull-right"
+                            id="datepicker" name="tanggal_transaksi" value="{{$tanggal_transaksi}}">
                                 </div>
+                                <span class="help-block"><strong>{{$errors->first('tanggal_transaksi')}}</strong></span>
                                 <!-- /.input group -->
                             </div>
                             <!-- /.form group -->
-                        <div class="form-group">
+                        <div class="form-group {{$errors->first('customer') ? "has-error": ""}}">
                                 <label>Customer</label>
-                                <select class="form-control select2" name="customer" id="customer" style="width: 100%;" placeholder="Kategori Produk">
-                                    @foreach ($products as $product)
-                                    <option value="{{$product->id}}">{{$product->nama_produk}}</option>
+                                <select class="form-control select2" name="customer" value="{{old('customer')}}" id="customer" style="width: 100%;" placeholder="Kategori Produk">
+                                    <option value="">Select Product</option>
+                                    @foreach ($customers as $customer)
+                                    <option value="{{$customer->id}}">{{$customer->nama}} || {{$customer->perusahaan}}</option>
                                     @endforeach
                                 </select>
+                                <span class="help-block"><strong>{{$errors->first('customer')}}</strong></span>
                             </div>
                         <div class="form-group">
                             <label for="Status">Status</label>
-                            <select class="form-control select2"  name="status" id="Status"  style="width: 100%;">
-                                <option selected>Process</option>
-                                <option>Finish</option>
-                                <option>Cancel</option>
+                            <select class="form-control"  name="status" id="Status"  style="width: 100%;">
+                                <option {{$penjualan->status == "PROCESS" ? "selected" : ""}} value="PROCESS">PROCESS</option>
+                                <option {{$penjualan->status == "FINISH" ? "selected" : ""}} value="FINISH">FINISH</option>
+                                <option {{$penjualan->status == "CANCEL" ? "selected" : ""}} value="CANCEL">CANCEL</option>
                             </select>
                         </div>
 
@@ -73,20 +74,22 @@
                     <div id="appendProduct">
 		                <div class="row" id="product" >
 		                	<div class="col-sm-6">
-                                <div class="form-group">
+                                {{-- <div class="form-group {{$errors->first('product') ? "has-error": ""}}">
                                     <label for="product">Product</label>
-                                    <select class="form-control select2 selectproduct" name="product[]" style="width: 100%;" onchange="loadBarang(this)" placeholder="Kategori Produk">
+                                    <select class="form-control selectproduct" name="product[]" style="width: 100%;" onchange="loadBarang(this)" placeholder="Kategori Produk" required>
                                         <option value="">Select Product</option>
                                         @foreach ($products as $product)
-                                        <option value="{{$product->id}}">{{$product->nama_produk}}</option>
+                                        <option value="{{$product->id}}">{{$product->nama_produk}} || {{$product->kode_produk}}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                    <span class="help-block"><strong>{{$errors->first('product')}}</strong></span>
+                                </div> --}}
 			                </div>
 			                <div class="col-sm-5">
-			                   <div class="form-group">
+			                   <div class="form-group {{$errors->first('qty') ? "has-error": ""}}">
 			                        <label for="qty">QTY</label>
-                                    <input type="number" class="form-control" id="qty" name="qty[]" placeholder="Jumlah">
+                                    <input type="number" class="form-control" id="qty" name="qty[]" placeholder="Jumlah" required min="1" >
+                                    <span class="help-block"><strong>{{$errors->first('qty')}}</strong></span>
 			                   </div>
 			                </div>
 
@@ -120,7 +123,6 @@
 <!-- Select2 -->
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    $('.select2').select2();
     $('#customer').select2({
     ajax:{
         url: '{{route('customerSearch')}}',
@@ -136,41 +138,21 @@
             }
         }
     });
+var data_cus = {{$penjualan->customer_id}};
+console.log(data_cus);
+    $('.select2').val(data_cus).trigger('change');
 
 
-    $(".btn-success").click(function(e) {
-        e.preventDefault();
-        var appendProductDetail = `
-        <div class="row" id="product" >
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="product">Product</label>
-                    <select class="form-control select2 selectproduct" name="product2[]" style="width: 100%;" placeholder="Kategori Produk" onchange="loadBarang(this)">
-                        <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                        <option value="{{$product->id}}">{{$product->nama_produk}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-5">
-                <div class="form-group">
-                    <label for="qty">QTY</label>
-                    <input type="number" class="form-control" id="qty" name="qty[]" placeholder="Jumlah">
-                </div>
-            </div>
+    var number = document.getElementById('qty');
 
-            <div class="col-sm-1">
-                <div class="form-group">
-                    <label>Action</label>
-                    <button type="button" class="btn btn-danger" onclick="removeData(this)"><i class="fa fa-times"></i></button>
-                </div>
-            </div>
-        </div>
-        `;
-        $('#appendProduct').append(appendProductDetail);
-        $('.select2').select2();
-    })
+    // Listen for input event on numInput.
+    number.onkeydown = function(e) {
+        if(!((e.keyCode > 95 && e.keyCode < 106)
+        || (e.keyCode > 47 && e.keyCode < 58)
+        || e.keyCode == 8)) {
+            return false;
+        }
+    }
 
 	function removeData(ele){
 		var $parent = $(ele).parent().parent().parent();
@@ -198,10 +180,8 @@
 
 //Date picker
 $('#datepicker').datepicker({
-      autoclose: true,
-      setDate: new Date()
+      autoclose: true
     })
-    $("#datepicker").datepicker().datepicker("setDate", new Date());
 </script>
 @endsection
 

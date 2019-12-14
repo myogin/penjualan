@@ -50,6 +50,14 @@ class PenjualanController extends Controller
             "qty" => "required"
         ])->validate();
 
+        foreach ($request->get('product') as $key => $brg) {
+            $stock = \App\Stock::find($request->get('product')[$key]);
+            $product = \App\Product::find($request->get('product')[$key]);
+            if($request->get('qty')[$key] > $stock->stok ){
+                return redirect()->route('penjualans.create')->with('message', 'Stok '. $product->nama_produk .' tidak mencukupi');
+            }
+        }
+
 
         $new_penjualan = new \App\Penjualan;
         $new_penjualan->user_id = \Auth::user()->id;

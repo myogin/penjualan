@@ -97,8 +97,12 @@
                     </div>
                     <div class="form-group">
                         <label>Kategori</label>
-                        <select class="form-control select2" name="category_id" id="category_id" style="width: 100%;" placeholder="Kategori Produk">
-
+                        <select class="form-control select2" name="category_id" id="category_id" style="width: 100%;"
+                        placeholder="Kategori Produk">
+                        <option value="">Select Product</option>
+                        @foreach ($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -191,6 +195,7 @@
         save_method = 'edit';
         $('input[name=_method]').val('PATCH');
         $('#modal-default form')[0].reset();
+
         $.ajax({
             url: "{{ url('products') }}" + '/' + id + "/edit",
             type: "GET",
@@ -199,6 +204,8 @@
             $('#modal-default').modal('show');
             $('.modal-title').text('Edit product');
 
+            $('.select2').val(data.category_id).trigger('change');
+            console.log(data.category_id);
             $('#id').val(data.id);
             $('#kode_produk').val(data.kode_produk);
             $('#nama_produk').val(data.nama_produk);

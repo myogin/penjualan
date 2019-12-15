@@ -98,6 +98,7 @@ class ComposerStaticInit364a96a37b9274eb5df7a1751325a3e3
         ),
         'M' => 
         array (
+            'Mpociot\\HasCompositeKey\\' => 24,
             'Monolog\\' => 8,
         ),
         'L' => 
@@ -308,6 +309,10 @@ class ComposerStaticInit364a96a37b9274eb5df7a1751325a3e3
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
         ),
+        'Mpociot\\HasCompositeKey\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpociot/laravel-composite-key/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -414,6 +419,7 @@ class ComposerStaticInit364a96a37b9274eb5df7a1751325a3e3
     public static $classMap = array (
         'AdministratorSeeder' => __DIR__ . '/../..' . '/database/seeds/AdministratorSeeder.php',
         'App\\Category' => __DIR__ . '/../..' . '/app/Category.php',
+        'App\\CompositeKey' => __DIR__ . '/../..' . '/app/Traits/CompositeKey.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Customer' => __DIR__ . '/../..' . '/app/Customer.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
@@ -2234,6 +2240,7 @@ class ComposerStaticInit364a96a37b9274eb5df7a1751325a3e3
         'Monolog\\ResettableInterface' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/ResettableInterface.php',
         'Monolog\\SignalHandler' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/SignalHandler.php',
         'Monolog\\Utils' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Utils.php',
+        'Mpociot\\HasCompositeKey\\HasCompositeKey' => __DIR__ . '/..' . '/mpociot/laravel-composite-key/src/HasCompositeKey.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/CollisionServiceProvider.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\ExceptionHandler' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/ExceptionHandler.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\Inspector' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/Inspector.php',

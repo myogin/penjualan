@@ -87,7 +87,16 @@ class HomeController extends Controller
             ->whereYear('tanggal_transaksi', 2019)
             ->first();
 
+            $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', 2)->get();
+            foreach($detail_product as $detail){
+            $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $detail->penjualan_id)
+            ->where('product_id', '=', $detail->product_id)
+            ->first();
+            $detail_product->delete();
 
-        return $total_profit;
+
+        }
+
+        return $detail_product;
     }
 }

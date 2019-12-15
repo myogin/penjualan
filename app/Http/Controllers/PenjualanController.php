@@ -153,6 +153,69 @@ class PenjualanController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $penjualan = \App\Penjualan::findOrFail($id);
+        $penjualan->customer_id = $request->get('customer');
+
+        $penjualan->tanggal_transaksi =
+            date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
+
+        $penjualan->status = $request->get('status');
+        $penjualan->total_harga = 0;
+        $penjualan->profit = 0;
+        $penjualan->save();
+        $penjualan_id = $penjualan->id;
+
+        $total_harga = 0;
+        $profit = 0;
+
+        $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $penjualan_id)->get();
+        foreach($detail_product as $detail){
+            $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $detail->penjualan_id)
+            ->where('product_id', '=', $detail->product_id)
+            ->first();
+            $detail_product->delete();
+        }
+
+        foreach ($request->get('product') as $key => $brg) {
+            $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $penjualan_id)
+            ->where('product_id', '=', $brg)
+            ->first();
+
+            if($detail_product != ''){
+                $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $penjualan_id)
+                ->where('product_id', '=', $brg)
+                ->first();
+            }else{
+                $detail_product = new \App\PenjualanProduct;
+            $detail_product->penjualan_id = $penjualan_id;
+            $detail_product->product_id = $brg;
+            }
+
+            $detail_product->qty = $request->get('qty')[$key];
+
+
+            $product = \App\Product::find($request->get('product')[$key]);
+            $detail_product->harga_jual = $product->harga_jual;
+            $detail_product->harga_beli = $product->harga_dasar;
+            $detail_product->save();
+
+            $total_harga += $detail_product->harga_jual * $detail_product->qty;
+            $profit += ($detail_product->harga_jual - $detail_product->harga_beli) * $detail_product->qty;
+
+            $new_Stock = \App\Stock::find($request->get('product')[$key]);
+            $new_Stock->stok -= $request->get('qty')[$key];
+            $new_Stock->save();
+        }
+
+        $penjualan = \App\Penjualan::find($penjualan_id);
+        $penjualan->total_harga = $total_harga;
+        $penjualan->profit = $profit;
+        $penjualan->save();
+
+
+
+        return redirect()->route('penjualans.edit', ['id' => $id])->with('status', 'Penjualan successfully updated');
+
     }
 
     /**

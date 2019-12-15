@@ -30,8 +30,9 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.store')}}" method="POST">
+                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.update', ['id'=>$penjualan->id])}}" method="POST">
                 @csrf
+                <input type="hidden" value="PUT" name="_method">
                     <div class="box-body" id="box-body">
                         <!-- Date -->
                         <?php
@@ -158,8 +159,37 @@
     }
     $(".btn-success").click(function(e) {
         e.preventDefault();
-        $('#product').first().clone().appendTo('#appendProduct').find('#qty').val('');
-});
+        var appendProductDetail = `
+        <div class="row" id="product" >
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="product">Product</label>
+                    <select class="form-control select2 selectproduct" name="product[]" style="width: 100%;" placeholder="Kategori Produk" onchange="loadBarang(this)" required>
+                        <option value="">Select Product</option>
+                        @foreach ($products as $product)
+                        <option value="{{$product->id}}">{{$product->nama_produk}} || {{$product->kode_produk}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label for="qty">QTY</label>
+                    <input type="number" class="form-control qty" id="qty" name="qty[]" placeholder="Jumlah" required min="1">
+                </div>
+            </div>
+
+            <div class="col-sm-1">
+                <div class="form-group">
+                    <label>Action</label>
+                    <button type="button" class="btn btn-danger" onclick="removeData(this)"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+        </div>
+        `;
+        $('#appendProduct').append(appendProductDetail);
+        $('.select2').select2();
+    })
 
 	function removeData(ele){
 		var $parent = $(ele).parent().parent().parent();

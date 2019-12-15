@@ -16,4 +16,9 @@ class Penjualan extends Model
     {
         return $this->belongsToMany('App\Product')->withPivot('qty', 'harga_jual');;
     }
+
+    public function details()
+    {
+        return $this->hasMany('App\PenjualanProduct');
+    }
 }

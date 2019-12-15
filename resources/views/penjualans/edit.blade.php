@@ -72,35 +72,38 @@
 
 
                     <div id="appendProduct">
-		                <div class="row" id="product" >
-		                	<div class="col-sm-6">
-                                {{-- <div class="form-group {{$errors->first('product') ? "has-error": ""}}">
-                                    <label for="product">Product</label>
-                                    <select class="form-control selectproduct" name="product[]" style="width: 100%;" onchange="loadBarang(this)" placeholder="Kategori Produk" required>
-                                        <option value="">Select Product</option>
-                                        @foreach ($products as $product)
-                                        <option value="{{$product->id}}">{{$product->nama_produk}} || {{$product->kode_produk}}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="help-block"><strong>{{$errors->first('product')}}</strong></span>
-                                </div> --}}
-			                </div>
-			                <div class="col-sm-5">
-			                   <div class="form-group {{$errors->first('qty') ? "has-error": ""}}">
-			                        <label for="qty">QTY</label>
-                                    <input type="number" class="form-control" id="qty" name="qty[]" placeholder="Jumlah" required min="1" >
-                                    <span class="help-block"><strong>{{$errors->first('qty')}}</strong></span>
-			                   </div>
-			                </div>
+                        @if (!(empty(@$penjualan->details)))
+                            @foreach ($penjualan->details as $value)
+                            <div class="row" id="product" >
+                                <div class="col-sm-6">
+                                    <div class="form-group {{$errors->first('product') ? "has-error": ""}}">
+                                        <label for="product">Product</label>
+                                        <select class="form-control selectproduct" name="product[]" style="width: 100%;" onchange="loadBarang(this)" placeholder="Kategori Produk" required>
+                                            <option value="">Select Product</option>
+                                            @foreach ($products as $product)
+                                            <option value="{{$product->id}}" {{ ($product->id == $value->product_id)? 'selected':'' }}>{{$product->nama_produk}} || {{$product->kode_produk}}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="help-block"><strong>{{$errors->first('product')}}</strong></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                <div class="form-group {{$errors->first('qty') ? "has-error": ""}}">
+                                        <label for="qty">QTY</label>
+                                        <input type="number" class="form-control" id="qty" value="{{$value->qty}}" name="qty[]" placeholder="Jumlah" required min="1" >
+                                        <span class="help-block"><strong>{{$errors->first('qty')}}</strong></span>
+                                </div>
+                                </div>
 
-			            	<div class="col-sm-1">
-			            		<div class="form-group">
-			            			<label>Action</label>
-			            			<button type="button" class="btn btn-danger" onclick="removeData(this)"><i class="fa fa-times"></i></button>
-			            		</div>
-			            	</div>
-			            </div>
-
+                                <div class="col-sm-1">
+                                    <div class="form-group">
+                                        <label>Action</label>
+                                        <button type="button" class="btn btn-danger" onclick="removeData(this)"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        @endif
 			        </div>
                         <button type="button" class="btn btn-success" >Tambah Product</button>
                     <div class="card-footer">
@@ -138,8 +141,8 @@
             }
         }
     });
-var data_cus = {{$penjualan->customer_id}};
-console.log(data_cus);
+    var data_cus = {{$penjualan->customer_id}};
+    console.log(data_cus);
     $('.select2').val(data_cus).trigger('change');
 
 
@@ -153,6 +156,10 @@ console.log(data_cus);
             return false;
         }
     }
+    $(".btn-success").click(function(e) {
+        e.preventDefault();
+        $('#product').first().clone().appendTo('#appendProduct').find('#qty').val('');
+});
 
 	function removeData(ele){
 		var $parent = $(ele).parent().parent().parent();

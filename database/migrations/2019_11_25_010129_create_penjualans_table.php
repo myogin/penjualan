@@ -20,13 +20,12 @@ class CreatePenjualansTable extends Migration
             $table->integer('customer_id')->unsigned();
             $table->string('invoice_number');
             $table->integer('total_harga');
+            $table->integer('shipping')->nullable();;
             $table->integer('profit');
-            $table->enum('status', ['SUBMIT', 'PROCESS', 'FINISH', 'CANCEL']);
+            $table->enum('status', ['PROCESS', 'FINISH', 'CANCEL']);
             $table->timestamps();
 
-
             $table->foreign('customer_id')->references('id')->on('customers');
-
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

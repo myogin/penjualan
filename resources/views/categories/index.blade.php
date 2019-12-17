@@ -37,7 +37,7 @@
                 <table id="tabel-categories" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                        <th>Id</th>
+                        <th>No</th>
                     <th>Nama Ketegori</th>
                     <th>Gambar</th>
                     <th>Action</th>
@@ -48,7 +48,7 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                        <th>Id</th>
+                        <th>No</th>
                     <th>Nama Ketegori</th>
                     <th>Gambar</th>
                     <th>Action</th>
@@ -109,7 +109,10 @@
         serverSide: true,
         ajax: "{{ route('api.category') }}",
         columns: [
-        {data: 'id', name: 'id'},
+        {data: 'id', sortable: true,
+                render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+                },width: '20'},
         {data: 'name', name: 'name'},
         {data: 'show_photo', name: 'show_photo'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}

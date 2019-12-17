@@ -3,11 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Datatables;
 use Illuminate\Support\Carbon;
 
 class PenjualanController extends Controller
 {
+    public function __construct()
+    {
+        // OTORISASI GATE
+        $this->middleware(function ($request, $next) {
+            if (Gate::allows('manage-penjualan')) return $next($request);
+            abort(403, 'Anda tidak memiliki cukup hak akses');
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -77,6 +86,7 @@ class PenjualanController extends Controller
         $new_penjualan->status = $request->get('status');
         $new_penjualan->total_harga = 0;
         $new_penjualan->profit = 0;
+        $new_penjualan->shipping = $request->get('shipping');
         $new_penjualan->save();
         $penjualan_id = $new_penjualan->id;
 
@@ -142,6 +152,30 @@ class PenjualanController extends Controller
         // , 'product' => $product, 'customer' => $customer
         return view('penjualans.edit', ['penjualan' => $penjualan, 'products' => $products, 'customers' => $customers]);
     }
+    public function invoice($id)
+    {
+        //
+        $penjualan = \App\Penjualan::findOrFail($id);
+        $products = \App\Product::All();
+        $customers = \App\Customer::All();
+
+        // $product = \App\Product::findOrFail($id);
+        // $customer = \App\Customer::findOrFail($id);
+        // , 'product' => $product, 'customer' => $customer
+        return view('penjualans.invoice', ['penjualan' => $penjualan, 'products' => $products, 'customers' => $customers]);
+    }
+    public function invoicePrint($id)
+    {
+        //
+        $penjualan = \App\Penjualan::findOrFail($id);
+        $products = \App\Product::All();
+        $customers = \App\Customer::All();
+
+        // $product = \App\Product::findOrFail($id);
+        // $customer = \App\Customer::findOrFail($id);
+        // , 'product' => $product, 'customer' => $customer
+        return view('penjualans.invoice-print', ['penjualan' => $penjualan, 'products' => $products, 'customers' => $customers]);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -153,6 +187,15 @@ class PenjualanController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $validation = \Validator::make($request->all(),[
+            "tanggal_transaksi" => "required",
+            "customer" => "required",
+            "status" => "required",
+            "product" => "required",
+            "qty" => "required"
+        ])->validate();
+
         $penjualan = \App\Penjualan::findOrFail($id);
         $penjualan->customer_id = $request->get('customer');
 
@@ -168,6 +211,16 @@ class PenjualanController extends Controller
         $total_harga = 0;
         $profit = 0;
 
+        $penjualan->shipping = $request->get('shipping');
+        // kembalikan stok
+        $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $penjualan_id)->get();
+        foreach($detail_product as $detail){
+            $stock = \App\Stock::find($detail->product_id);
+            $stock->stok += $detail->qty;
+            $stock->save();
+        }
+
+        // hapus product
         $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $penjualan_id)->get();
         foreach($detail_product as $detail){
             $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $detail->penjualan_id)
@@ -176,6 +229,7 @@ class PenjualanController extends Controller
             $detail_product->delete();
         }
 
+        // update product
         foreach ($request->get('product') as $key => $brg) {
             $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $penjualan_id)
             ->where('product_id', '=', $brg)
@@ -202,6 +256,7 @@ class PenjualanController extends Controller
             $total_harga += $detail_product->harga_jual * $detail_product->qty;
             $profit += ($detail_product->harga_jual - $detail_product->harga_beli) * $detail_product->qty;
 
+            // update stock
             $new_Stock = \App\Stock::find($request->get('product')[$key]);
             $new_Stock->stok -= $request->get('qty')[$key];
             $new_Stock->save();
@@ -240,7 +295,8 @@ class PenjualanController extends Controller
             })
             ->addColumn('action', function ($penjualan) {
                 return '' .
-                '<a  href="'.route('penjualans.edit', ['id' => $penjualan->id]).'" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
+                '<a  href="'.route('penjualans.edit', ['id' => $penjualan->id]).'" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '.
+                '<a  href="'.route('invoiceTransaksi', ['id' => $penjualan->id]).'" class="btn bg-orange btn-flat btn-xs"><i class="fa fa-print"></i> Invoice</a> ';
             })
             ->rawColumns(['show_photo', 'action'])->make(true);
     }

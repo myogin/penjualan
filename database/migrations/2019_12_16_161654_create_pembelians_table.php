@@ -15,12 +15,16 @@ class CreatePembeliansTable extends Migration
     {
         Schema::create('pembelians', function (Blueprint $table) {
             $table->increments('id');
+            $table->date('tanggal_transaksi');
+            $table->bigInteger('user_id')->unsigned();
             $table->integer('supplier_id')->unsigned();
             $table->string('invoice_number');
-            $table->enum('status', ['SUBMIT', 'PROCESS', 'FINISH', 'CANCEL']);
+            $table->integer('total_harga');
+            $table->enum('status', ['PROCESS', 'FINISH', 'CANCEL']);
             $table->timestamps();
 
             $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

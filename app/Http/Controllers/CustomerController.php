@@ -90,7 +90,7 @@ class CustomerController extends Controller
     {
         //
         $customer = \App\customer::findOrFail($id);
-        return view('customers.show', ['customer' => $customer]);
+        return $customer;
     }
 
     /**

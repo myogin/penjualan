@@ -17,6 +17,8 @@ class CreatePembelianProductTable extends Migration
             $table->integer('pembelian_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('qty');
+            $table->integer('harga_jual');
+            $table->integer('harga_beli');
             $table->timestamps();
 
             $table->primary(['pembelian_id', 'product_id']);

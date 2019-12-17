@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 use Yajra\DataTables\Datatables;
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        // OTORISASI GATE
+        $this->middleware(function ($request, $next) {
+            if (Gate::allows('manage-product')) return $next($request);
+            abort(403, 'Anda tidak memiliki cukup hak akses');
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -85,6 +94,8 @@ class ProductController extends Controller
     public function show($id)
     {
         //
+        $product = \App\Product::with('category')->with('stock')->findOrFail($id);
+        return $product;
     }
 
     /**

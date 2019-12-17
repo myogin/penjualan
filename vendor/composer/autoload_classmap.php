@@ -8,7 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'AdministratorSeeder' => $baseDir . '/database/seeds/AdministratorSeeder.php',
     'App\\Category' => $baseDir . '/app/Category.php',
-    'App\\CompositeKey' => $baseDir . '/app/Traits/CompositeKey.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Customer' => $baseDir . '/app/Customer.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
@@ -47,6 +46,7 @@ return array(
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
     'App\\Stock' => $baseDir . '/app/Stock.php',
     'App\\Supplier' => $baseDir . '/app/Supplier.php',
+    'App\\Traits\\CompositeKey' => $baseDir . '/app/Traits/CompositeKey.php',
     'App\\User' => $baseDir . '/app/User.php',
     'BeyondCode\\DumpServer\\DumpServerCommand' => $vendorDir . '/beyondcode/laravel-dump-server/src/DumpServerCommand.php',
     'BeyondCode\\DumpServer\\DumpServerServiceProvider' => $vendorDir . '/beyondcode/laravel-dump-server/src/DumpServerServiceProvider.php',

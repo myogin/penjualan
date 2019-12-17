@@ -7,13 +7,10 @@
  <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        Simple Tables
-        <small>preview of simple tables</small>
+        Dashboard
         </h1>
         <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
-        <li class="active">Simple</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         </ol>
     </section>
 
@@ -22,95 +19,85 @@
     <!-- Small boxes (Stat box) -->
     <div class="row">
         <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-aqua">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
             <div class="inner">
-            </div>
-            <div class="icon">
-            <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-green">
-            <div class="inner">
-            </div>
-            <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-yellow">
-            <div class="inner">
-                </h3>
+                <h3 id="tampilan_omset"></h3>
 
-            <p>Omset Bulan Ini</p>
+                <p>Omset Bulan ini</p>
             </div>
             <div class="icon">
-            <i class="ion ion-person-add"></i>
+                    <i class="fa fa-money"></i></a>
             </div>
             <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
+            </div>
         </div>
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-red">
+            <!-- small box -->
+            <div class="small-box bg-maroon">
             <div class="inner">
-            <h3>65</h3>
+                <h3>{{$transaksi_proses}}</h3>
 
-            <p>Unique Visitors</p>
+                <p>Transaksi Berstatus Proses</p>
             </div>
             <div class="icon">
-            <i class="ion ion-pie-graph"></i>
+                <i class="ion ion-stats-bars"></i>
             </div>
             <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
+            </div>
         </div>
         <!-- ./col -->
-    </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>{{$customer}}</h3>
+
+                <p>Pelanggan Baru</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+            <div class="inner">
+                <h3>{{$stock}}</h3>
+
+                <p>Stok Menipis</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        </div>
     <!-- /.row -->
     <!-- Main row -->
     <div class="row">
         <!-- Left col -->
         <section class="col-lg-7 connectedSortable">
+            <div class="box box-primary">
                 <figure class="highcharts-figure">
-                        <div id="container1"></div>
-                        <p class="highcharts-description">
-                            A basic column chart compares rainfall values between four cities.
-                            Tokyo has the overall highest amount of rainfall, followed by New York.
-                            The chart is making use of the axis crosshair feature, to highlight
-                            months as they are hovered over.
-                        </p>
-                    </figure>
-
-
-
+                    <div id="container1"></div>
+                </figure>
+            </div>
         </section>
         <!-- /.Left col -->
         <!-- right col (We are only adding the ID to make the widgets sortable)-->
         <section class="col-lg-5 connectedSortable">
-
+            <div class="box box-primary">
                 <figure class="highcharts-figure">
-                        <div id="chart-bulet"></div>
-                        <p class="highcharts-description">
-                            A basic column chart compares rainfall values between four cities.
-                            Tokyo has the overall highest amount of rainfall, followed by New York.
-                            The chart is making use of the axis crosshair feature, to highlight
-                            months as they are hovered over.
-                        </p>
-                    </figure>
-
-
-
-
+                    <div id="chart-bulet"></div>
+                </figure>
+            </div>
         </section>
         <!-- right col -->
     </div>
@@ -140,6 +127,9 @@
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
     return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 }
+    var tampilan_omset = {{$total_omset}};
+    document.getElementById('tampilan_omset').innerHTML= 'Rp'+IDRFormatter(tampilan_omset);
+
     var bilangan = {{$total_profit}};
         Highcharts.chart('container1', {
             chart: {
@@ -193,7 +183,7 @@
         type: 'pie'
     },
     title: {
-        text: 'Browser market shares in January, 2018'
+        text: 'Produk Terjual Bulan ini'
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'

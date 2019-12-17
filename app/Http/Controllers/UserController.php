@@ -92,7 +92,7 @@ class UserController extends Controller
     {
         //
         $user = \App\User::findOrFail($id);
-        return view('users.show', ['user' => $user]);
+        return $user;
     }
 
     /**

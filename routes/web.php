@@ -31,6 +31,8 @@ Route::get('/ajax/customers/search', 'CustomerController@customerSearch')->name(
 Route::resource("customers", "CustomerController")->middleware('auth');
 Route::get("/api/customer", "CustomerController@apicustomer")->name("api.customer");
 
+
+Route::get('/ajax/suppliers/search', 'SupplierController@supplierSearch')->name("supplierSearch");
 Route::resource("suppliers", "SupplierController")->middleware('auth');
 Route::get("/api/supplier", "SupplierController@apisupplier")->name("api.supplier");
 
@@ -49,7 +51,10 @@ Route::resource("penjualans", "PenjualanController")->middleware('auth');
 Route::get("/api/penjualan", "PenjualanController@apipenjualan")->name("api.penjualan");
 
 Route::resource("pembelians", "PembelianController")->middleware('auth');
-
+Route::get("/api/pembelian", "PembelianController@apipembelian")->name("api.pembelian");
 
 
 Route::get("/api/tes", "HomeController@apites")->name("api.tes");
+
+Route::get("penjualans/{id}/invoice","PenjualanController@invoice")->name("invoiceTransaksi");
+Route::get("penjualans/{id}/invoice-print","PenjualanController@invoicePrint")->name("invoicePrint");

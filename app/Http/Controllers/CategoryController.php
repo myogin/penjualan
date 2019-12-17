@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\Datatables;
+use Illuminate\Support\Facades\Gate;
 use App\Category;
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        // OTORISASI GATE
+        $this->middleware(function ($request, $next) {
+            if (Gate::allows('manage-category')) return $next($request);
+            abort(403, 'Anda tidak memiliki cukup hak akses');
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +50,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validation = \Validator::make($request->all(),[
-            "name" => "required|min:5|max:100",
+            "name" => "required|min:5|max:100|unique:categories",
             "image" => "required"
         ])->validate();
 
@@ -59,8 +68,6 @@ class CategoryController extends Controller
         }
 
         $new_category->created_by = \Auth::user()->id;
-
-        $new_category->slug = str_slug($name, '-');
 
         $new_category->save();
 
@@ -108,7 +115,7 @@ class CategoryController extends Controller
     {
         //
         $validation = \Validator::make($request->all(),[
-            "name" => "required|min:5|max:100"
+            "name" => "required|min:5|max:100|unique:categories"
         ])->validate();
 
         $name = $request->get('name');
@@ -124,7 +131,6 @@ class CategoryController extends Controller
             $category->image = $new_image;
         }
         $category->updated_by = \Auth::user()->id;
-        $category->slug = str_slug($name);
         $category->update();
         return response()->json([
             'success' => true,

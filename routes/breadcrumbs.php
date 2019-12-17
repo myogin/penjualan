@@ -34,6 +34,25 @@ Breadcrumbs::for('penjualan', function ($trail) {
     $trail->push('Penjualan', route('penjualans.index'));
 });
 
+// Home > Penjualan > Tambah
+Breadcrumbs::for('transaksi', function ($trail) {
+    $trail->parent('penjualan');
+    $trail->push('Transaksi Jual', route('penjualans.create'));
+});
+
+// Home > Penjualan
+Breadcrumbs::for('pembelian', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Pembelian', route('pembelians.index'));
+});
+
+// Home > Penjualan > Tambah
+Breadcrumbs::for('transaksi-beli', function ($trail) {
+    $trail->parent('pembelian');
+    $trail->push('Transaksi Beli', route('pembelians.create'));
+});
+
+
 // Home > Customer
 Breadcrumbs::for('customer', function ($trail) {
     $trail->parent('home');

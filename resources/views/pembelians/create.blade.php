@@ -1,6 +1,6 @@
 @extends('layouts.global')
 @section('title')
-    Penjualans
+    pembelians
 @endsection
 @section('content')
 
@@ -8,7 +8,7 @@
         <h1>
             Transaksi
         </h1>
-        {{ Breadcrumbs::render('transaksi') }}
+        {{ Breadcrumbs::render('transaksi-beli') }}
     </section>
 
     <!-- Main content -->
@@ -37,7 +37,7 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.store')}}" method="POST">
+                <form role="form" enctype="multipart/form-data" action="{{route('pembelians.store')}}" method="POST">
                 @csrf
                     <div class="box-body" id="box-body">
                         <!-- Date -->
@@ -54,17 +54,12 @@
                                 <!-- /.input group -->
                             </div>
                             <!-- /.form group -->
-                        <div class="form-group {{$errors->first('customer') ? "has-error": ""}}">
-                                <label>Customer</label>
-                                <select class="form-control select2" name="customer" value="{{old('customer')}}" id="customer" style="width: 100%;" placeholder="Kategori Produk">
+                        <div class="form-group {{$errors->first('supplier') ? "has-error": ""}}">
+                                <label>supplier</label>
+                                <select class="form-control select2" name="supplier" value="{{old('supplier')}}" id="supplier" style="width: 100%;" placeholder="Kategori Produk">
 
                                 </select>
-                                <span class="help-block"><strong>{{$errors->first('customer')}}</strong></span>
-                            </div>
-                            <div class="form-group {{$errors->first('shipping') ? "has-error": ""}}">
-                                <label for="shipping">shipping</label>
-                                <input type="number" class="form-control" id="shipping" name="shipping" placeholder="Harga Pengiriman" >
-                                <span class="help-block"><strong>{{$errors->first('shipping')}}</strong></span>
+                                <span class="help-block"><strong>{{$errors->first('supplier')}}</strong></span>
                             </div>
                         <div class="form-group">
                             <label for="Status">Status</label>
@@ -106,10 +101,8 @@
 			            	</div>
 			            </div>
 
-                    </div>
-                    <div class="form-group">
+			        </div>
                         <button type="button" class="btn btn-success" >Tambah Product</button>
-                    </div>
                     <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
@@ -131,9 +124,9 @@
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $('.select2').select2();
-    $('#customer').select2({
+    $('#supplier').select2({
     ajax:{
-        url: '{{route('customerSearch')}}',
+        url: '{{route('supplierSearch')}}',
         processResults: function(data){
             return {
                 results: data.map(function(item){
@@ -192,15 +185,7 @@
             return false;
         }
     }
-    var number = document.getElementById('shipping');
-    // Listen for input event on numInput.
-    number.onkeydown = function(e) {
-            if(!((e.keyCode > 95 && e.keyCode < 106)
-            || (e.keyCode > 47 && e.keyCode < 58)
-            || e.keyCode == 8)) {
-                return false;
-            }
-        }
+
 	function removeData(ele){
 		var $parent = $(ele).parent().parent().parent();
 		$($parent).remove();

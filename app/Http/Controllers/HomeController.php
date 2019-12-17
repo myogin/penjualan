@@ -30,6 +30,7 @@ class HomeController extends Controller
         $tahun_ini = Carbon::now()->format('Y');
         $bulan_ini = Carbon::now()->format('m');
 
+        // chart profit tahunan
         $bulans = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
         $profit = [];
         foreach ($bulans as $key => $bulan) {
@@ -46,6 +47,7 @@ class HomeController extends Controller
             }
         }
 
+        // chart barang laku bulanan
         $penjualan2 = DB::table('penjualans')
             ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
             ->join('products', 'products.id', '=', 'penjualan_product.product_id')
@@ -55,14 +57,35 @@ class HomeController extends Controller
             ->groupBy('products.nama_produk')
             ->get();
 
+        //query mencari profit bulan ini
         $cari_profit = DB::table('penjualans')->selectRaw('sum(profit)as profit')
         ->whereYear('penjualans.tanggal_transaksi', $tahun_ini)
         ->first();
         $total_profit=$cari_profit->profit;
+
+        //query omset bulan ini
+        $cari_omset = DB::table('penjualans')->selectRaw('sum(total_harga)as omset')
+        ->whereYear('penjualans.tanggal_transaksi', $tahun_ini)
+        ->first();
+        $total_omset=$cari_omset->omset;
+
+        //query transaksi berstatus PROCESS
+        $cari_process = \App\Penjualan::where('status','PROCESS')->whereMonth('penjualans.tanggal_transaksi', $bulan_ini )->count();
+
+        //query cari stok kurang dari 10
+        $cari_stock = \App\Stock::where('stok', '<=', 10)->count();
+
+        //query cari user yang daftar bulan ini
+        $cari_customer = \App\Customer::whereMonth('created_at', $bulan_ini)->count();
+
         return view('home',
         ['tahun_ini' => $tahun_ini,'bulan_ini' => $bulan_ini,
         'bulans' => $bulans, 'profit' => $profit,'penjualan2' => $penjualan2,
-        'total_profit' =>$total_profit
+        'total_profit' =>$total_profit,
+        'total_omset' =>$total_omset,
+        'transaksi_proses' => $cari_process,
+        'stock' => $cari_stock,
+        'customer' => $cari_customer
         ]);
     }
 

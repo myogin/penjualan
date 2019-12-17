@@ -36,7 +36,7 @@
                     <table id="tabel-stocks" class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                            <th>Id</th>
+                            <th>No</th>
                         <th>Nama Ketegori</th>
                         <th>Gambar</th>
                         <th>Action</th>
@@ -47,7 +47,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                            <th>Id</th>
+                            <th>No</th>
                         <th>Nama Ketegori</th>
                         <th>Gambar</th>
                         <th>Action</th>
@@ -106,7 +106,10 @@
         serverSide: true,
         ajax: "{{ route('api.stock') }}",
         columns: [
-        {data: 'id', name: 'id'},
+        {data: 'id', sortable: true,
+                render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+                },width: '20'},
         {data: 'nama_produk', name: 'nama_produk'},
         {data: 'stok', name: 'stok'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '80px'}

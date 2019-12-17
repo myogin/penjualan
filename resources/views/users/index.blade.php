@@ -36,7 +36,7 @@
                         <table id="tabel-users" class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>No</th>
                             <th>Name</th>
                             <th>Username</th>
                             <th>Email</th>
@@ -50,7 +50,7 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th>Id</th>
+                            <th>No</th>
                             <th>Name</th>
                             <th>Username</th>
                             <th>Email</th>
@@ -66,6 +66,8 @@
                     <!-- /.box -->
         </div>
         </div>
+
+        {{-- form edit --}}
         <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -90,16 +92,16 @@
                     <div class="form-group" >
                         <label>Role</label>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input RTLM" type="checkbox" name="roles[]" id="roles" value="TLM">
-                            <label for="TLM" class="custom-control-label">Top Level Management</label>
+                            <input class="custom-control-input RADMIN" type="checkbox" name="roles[]" id="roles" value="ADMIN">
+                            <label for="TLM" class="custom-control-label">Admin</label>
                         </div>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input RADMIN" type="checkbox" name="roles[]" id="roles" value="ADMIN"}>
-                            <label for="ADMIN" class="custom-control-label">Admin</label>
+                            <input class="custom-control-input RKASIR" type="checkbox" name="roles[]" id="roles" value="KASIR"}>
+                            <label for="ADMIN" class="custom-control-label">Kasir</label>
                         </div>
                         <div class="custom-control custom-checkbox" style="padding-right: 50px; display: table-cell;">
-                            <input class="custom-control-input ROPERATOR" type="checkbox" name="roles[]" id="roles" value="OPERATOR">
-                            <label for="OPERATOR" class="custom-control-label">Operator</label>
+                            <input class="custom-control-input RGUDANG" type="checkbox" name="roles[]" id="roles" value="GUDANG">
+                            <label for="OPERATOR" class="custom-control-label">Gudang</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -157,6 +159,76 @@
         <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
+
+
+        {{-- form show --}}
+        <div class="modal fade" id="modal-show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Default Modal</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                    <div class="col-md-6">
+                        <h5>Tanggal Daftar</h5>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" id="stgl"class="form-control" disabled="">
+                        </div>
+                        <h5>Roles</h5>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-cog"></i></span>
+                            <input type="text" id="sroles"class="form-control" disabled="">
+                        </div>
+                        <h5>Phone</h5>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-mobile-phone"></i></span>
+                            <input type="text" id="sphone"class="form-control" disabled="">
+                        </div>
+                        <h5>Status</h5>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-exclamation"></i></span>
+                            <input type="text" id="sstatus"class="form-control" disabled="">
+                        </div>
+                        <h5>Address</h5>
+                        <div class="input-group">
+                            <textarea class="form-control" id="saddress" rows="3" disabled=""></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Avatar</h5>
+                        <div class="input-group img-show">
+                                <img id="savatar" src="" width="120px" /><br>
+                        </div>
+                        <h5>Nama</h5>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                            <input type="text" id="sname" class="form-control" disabled="">
+                        </div>
+                        <h5>Username</h5>
+                        <div class="input-group">
+                            <span class="input-group-addon">@</span>
+                            <input type="text" id="susername"class="form-control" disabled="">
+                        </div>
+                        <h5>Email</h5>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                            <input type="email" id="semail"class="form-control" disabled="">
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal --
+
+
     </section>
     <!-- /.content -->
 @endsection
@@ -168,7 +240,10 @@
         serverSide: true,
         ajax: "{{ route('api.user') }}",
         columns: [
-        {data: 'id', name: 'id'},
+        {data: 'id', sortable: true,
+                render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+                },width: '20'},
         {data: 'name', name: 'name'},
         {data: 'username', name: 'username'},
         {data: 'email', name: 'email'},
@@ -210,16 +285,7 @@
             success: function(data) {
             $('#modal-default').modal('show');
             $('.modal-title').text('Edit user');
-            var roles = data.roles;
-            if(roles.includes('ADMIN') === true){
-                $('.RADMIN').prop('checked',true)
-            }
-            if(roles.includes('TLM') === true){
-                $('.RTLM').prop('checked',true)
-            }
-            if(roles.includes('OPERATOR') === true){
-                $('.ROPERATOR').prop('checked',true)
-            }
+
             $('#id').val(data.id);
             $('#name').val(data.name);
             $('#username').val(data.username);
@@ -227,6 +293,41 @@
             $('#address').val(data.address);
             $('#email').val(data.email);
             $('#status').val(data.status);
+            },
+            error : function() {
+                alert("Nothing Data");
+            }
+        });
+        }
+        function showForm(id) {
+        document.getElementById("status").style.display = "block";
+        $.ajax({
+            url: "{{ url('users') }}" + '/' + id,
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+            $('#modal-show').modal('show');
+            $('.modal-title').text('Info Data User');
+            var roles = data.roles;
+            if(roles.includes('ADMIN') === true){
+                $('.RADMIN').prop('checked',true)
+            }
+            if(roles.includes('KASIR') === true){
+                $('.RKASIR').prop('checked',true)
+            }
+            if(roles.includes('GUDANG') === true){
+                $('.RGUDANG').prop('checked',true)
+            }
+            $('#sname').val(data.name);
+            $('#semail').val(data.email);
+            $('#sphone').val(data.phone);
+            $('#saddress').val(data.address);
+            $('#sstatus').val(data.status);
+            $('#susername').val(data.username);
+            $('#stgl').val(data.created_at);
+            $('#sroles').val(JSON.parse(data.roles));
+
+            document.getElementById("savatar").src = "{{asset('storage/')}}/"+data.avatar;
             },
             error : function() {
                 alert("Nothing Data");

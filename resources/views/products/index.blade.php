@@ -38,7 +38,7 @@
                     <table id="tabel-products" class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Kode Produk</th>
                         <th>Nama Produk</th>
                         <th>Nama Ketegori</th>
@@ -55,7 +55,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Kode Produk</th>
                         <th>Nama Produk</th>
                         <th>Nama Ketegori</th>
@@ -140,6 +140,68 @@
         <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
+
+        {{-- form show --}}
+        <div class="modal fade" id="modal-show">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Default Modal</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h5>Kode Produk</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-qrcode"></i></span>
+                                <input type="text" id="skode"class="form-control" disabled="">
+                            </div>
+                            <h5>Nama</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                                <input type="text" id="snama"class="form-control" disabled="">
+                            </div>
+                            <h5>Kategori</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-reorder"></i></span>
+                                <input type="text" id="skate"class="form-control" disabled="">
+                            </div>
+                            <h5>Satuan</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-balance-scale"></i></span>
+                                <input type="text" id="ssatuan"class="form-control" disabled="">
+                            </div>
+                            <h5>Keterangan</h5>
+                            <div class="input-group">
+                                <textarea class="form-control" id="sket" rows="3" disabled=""></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Avatar</h5>
+                            <div class="input-group img-show">
+                                    <img id="savatar" src="" width="120px" /><br>
+                            </div>
+                            <h5>Harga Jual</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                <input type="text" id="sharga" class="form-control" disabled="">
+                            </div>
+                            <h5>Stok</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-database"></i></span>
+                                <input type="text" id="sstok"class="form-control" disabled="">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
     </section>
     <!-- /.content -->
 @endsection
@@ -171,7 +233,10 @@
         serverSide: true,
         ajax: "{{ route('api.product') }}",
         columns: [
-        {data: 'id', name: 'id'},
+        {data: 'id', sortable: true,
+                render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+                },width: '20'},
         {data: 'kode_produk', name: 'kode_produk'},
         {data: 'nama_produk', name: 'nama_produk'},
         {data: 'category.name', name: 'category.name'},
@@ -213,6 +278,30 @@
             $('#satuan').val(data.satuan);
             $('#harga_dasar').val(data.harga_dasar);
             $('#harga_jual').val(data.harga_jual);
+            },
+            error : function() {
+                alert("Nothing Data");
+            }
+        });
+        }
+        function showForm(id) {
+        $.ajax({
+            url: "{{ url('products') }}" + '/' + id,
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+            $('#modal-show').modal('show');
+            $('.modal-title').text('Info Data Product');
+
+            $('#skode').val(data.kode_produk);
+            $('#snama').val(data.nama_produk);
+            $('#skate').val(data.category.name);
+            $('#ssatuan').val(data.satuan);
+            $('#sket').val(data.keterangan);
+            $('#sharga').val(data.harga_jual);
+            $('#sstok').val(data.stock.stok);
+
+            document.getElementById("savatar").src = "{{asset('storage/')}}/"+data.gambar;
             },
             error : function() {
                 alert("Nothing Data");

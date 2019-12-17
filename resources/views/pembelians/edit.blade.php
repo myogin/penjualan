@@ -1,6 +1,6 @@
 @extends('layouts.global')
 @section('title')
-    penjualans
+    Pembelians
 @endsection
 @section('content')
 
@@ -8,7 +8,7 @@
         <h1>
             Edit Transaksi
         </h1>
-        {{ Breadcrumbs::render('transaksi') }}
+        {{ Breadcrumbs::render('transaksi-beli') }}
     </section>
 
     <!-- Main content -->
@@ -30,13 +30,13 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form role="form" enctype="multipart/form-data" action="{{route('penjualans.update', ['id'=>$penjualan->id])}}" method="POST">
+                <form role="form" enctype="multipart/form-data" action="{{route('pembelians.update', ['id'=>$pembelian->id])}}" method="POST">
                 @csrf
                 <input type="hidden" value="PUT" name="_method">
                     <div class="box-body" id="box-body">
                         <!-- Date -->
                         <?php
-                            $tanggal_transaksi =date('m/d/Y', strtotime($penjualan->tanggal_transaksi));
+                            $tanggal_transaksi =date('m/d/Y', strtotime($pembelian->tanggal_transaksi));
                         ?>
                         <div class="form-group {{$errors->first('tanggal_transaksi') ? "has-error": ""}}">
                                 <label>Date:</label>
@@ -52,35 +52,29 @@
                                 <!-- /.input group -->
                             </div>
                             <!-- /.form group -->
-                        <div class="form-group {{$errors->first('customer') ? "has-error": ""}}">
-                                <label>Customer</label>
-                                <select class="form-control select2" name="customer" value="{{old('customer')}}" id="customer" style="width: 100%;" placeholder="Kategori Produk">
+                        <div class="form-group {{$errors->first('supplier') ? "has-error": ""}}">
+                                <label>supplier</label>
+                                <select class="form-control select2" name="supplier" value="{{old('supplier')}}" id="supplier" style="width: 100%;" placeholder="Kategori Produk">
                                     <option value="">Select Product</option>
-                                    @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}">{{$customer->nama}} || {{$customer->perusahaan}}</option>
+                                    @foreach ($suppliers as $supplier)
+                                    <option value="{{$supplier->id}}">{{$supplier->nama}} || {{$supplier->perusahaan}}</option>
                                     @endforeach
                                 </select>
-                                <span class="help-block"><strong>{{$errors->first('customer')}}</strong></span>
-                            </div>
-
-                            <div class="form-group {{$errors->first('shipping') ? "has-error": ""}}">
-                                <label for="shipping">shipping</label>
-                                <input type="number" class="form-control" id="shipping" value="{{$penjualan->shipping}}" name="shipping" placeholder="Harga Pengiriman" >
-                                <span class="help-block"><strong>{{$errors->first('shipping')}}</strong></span>
+                                <span class="help-block"><strong>{{$errors->first('supplier')}}</strong></span>
                             </div>
                         <div class="form-group">
                             <label for="Status">Status</label>
                             <select class="form-control"  name="status" id="Status"  style="width: 100%;">
-                                <option {{$penjualan->status == "PROCESS" ? "selected" : ""}} value="PROCESS">PROCESS</option>
-                                <option {{$penjualan->status == "FINISH" ? "selected" : ""}} value="FINISH">FINISH</option>
-                                <option {{$penjualan->status == "CANCEL" ? "selected" : ""}} value="CANCEL">CANCEL</option>
+                                <option {{$pembelian->status == "PROCESS" ? "selected" : ""}} value="PROCESS">PROCESS</option>
+                                <option {{$pembelian->status == "FINISH" ? "selected" : ""}} value="FINISH">FINISH</option>
+                                <option {{$pembelian->status == "CANCEL" ? "selected" : ""}} value="CANCEL">CANCEL</option>
                             </select>
                         </div>
 
 
                     <div id="appendProduct">
-                        @if (!(empty(@$penjualan->details)))
-                            @foreach ($penjualan->details as $value)
+                        @if (!(empty(@$pembelian->details)))
+                            @foreach ($pembelian->details as $value)
                             <div class="row" id="product" >
                                 <div class="col-sm-6">
                                     <div class="form-group {{$errors->first('product') ? "has-error": ""}}">
@@ -133,9 +127,9 @@
 <!-- Select2 -->
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    $('#customer').select2({
+    $('#supplier').select2({
     ajax:{
-        url: '{{route('customerSearch')}}',
+        url: '{{route('supplierSearch')}}',
         processResults: function(data){
             return {
                 results: data.map(function(item){
@@ -148,7 +142,7 @@
             }
         }
     });
-    var data_cus = {{$penjualan->customer_id}};
+    var data_cus = {{$pembelian->supplier_id}};
     console.log(data_cus);
     $('.select2').val(data_cus).trigger('change');
 

@@ -419,7 +419,6 @@ class ComposerStaticInit364a96a37b9274eb5df7a1751325a3e3
     public static $classMap = array (
         'AdministratorSeeder' => __DIR__ . '/../..' . '/database/seeds/AdministratorSeeder.php',
         'App\\Category' => __DIR__ . '/../..' . '/app/Category.php',
-        'App\\CompositeKey' => __DIR__ . '/../..' . '/app/Traits/CompositeKey.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Customer' => __DIR__ . '/../..' . '/app/Customer.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
@@ -458,6 +457,7 @@ class ComposerStaticInit364a96a37b9274eb5df7a1751325a3e3
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Stock' => __DIR__ . '/../..' . '/app/Stock.php',
         'App\\Supplier' => __DIR__ . '/../..' . '/app/Supplier.php',
+        'App\\Traits\\CompositeKey' => __DIR__ . '/../..' . '/app/Traits/CompositeKey.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'BeyondCode\\DumpServer\\DumpServerCommand' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/src/DumpServerCommand.php',
         'BeyondCode\\DumpServer\\DumpServerServiceProvider' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/src/DumpServerServiceProvider.php',

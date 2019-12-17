@@ -88,7 +88,7 @@ class SupplierController extends Controller
     {
         //
         $supplier = \App\supplier::findOrFail($id);
-        return view('suppliers.show', ['supplier' => $supplier]);
+        return $supplier;
     }
 
     /**
@@ -151,15 +151,15 @@ class SupplierController extends Controller
         $supplier->delete();
         return redirect()->route('suppliers.index')->with('status', 'supplier successfully delete');
     }
-    public function ajaxSearch(Request $request)
+    public function supplierSearch(Request $request)
     {
         $keyword = $request->get('q');
-        $suppliers = \App\supplier::where("name", "LIKE", "%$keyword%")->get();
+        $suppliers = \App\Supplier::where("nama", "LIKE", "%$keyword%")->get();
         return $suppliers;
     }
     public function apisupplier()
     {
-        $supplier = \App\supplier::all();
+        $supplier = \App\Supplier::all();
         return Datatables::of($supplier)
             ->addColumn('show_photo', function($supplier){
                 if ($supplier->avatar == NULL){

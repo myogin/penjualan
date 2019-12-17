@@ -37,7 +37,7 @@
                     <table id="tabel-customers" class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Email</th>
                         <th>Perusahaan</th>
@@ -53,7 +53,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Id</th>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Email</th>
                         <th>Perusahaan</th>
@@ -124,6 +124,68 @@
         <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
+
+        {{-- form show --}}
+        <div class="modal fade" id="modal-show">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Default Modal</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h5>Tanggal Daftar</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" id="stgl"class="form-control" disabled="">
+                            </div>
+                            <h5>Perusahaan</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                <input type="text" id="sperusahaan"class="form-control" disabled="">
+                            </div>
+                            <h5>Phone</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-mobile-phone"></i></span>
+                                <input type="text" id="sphone"class="form-control" disabled="">
+                            </div>
+                            <h5>Status</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-exclamation"></i></span>
+                                <input type="text" id="sstatus"class="form-control" disabled="">
+                            </div>
+                            <h5>Address</h5>
+                            <div class="input-group">
+                                <textarea class="form-control" id="saddress" rows="3" disabled=""></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Avatar</h5>
+                            <div class="input-group img-show">
+                                    <img id="savatar" src="" width="120px" /><br>
+                            </div>
+                            <h5>Nama</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" id="sname" class="form-control" disabled="">
+                            </div>
+                            <h5>Email</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                <input type="email" id="semail"class="form-control" disabled="">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
     </section>
     <!-- /.content -->
 @endsection
@@ -134,7 +196,10 @@
         serverSide: true,
         ajax: "{{ route('api.customer') }}",
         columns: [
-        {data: 'id', name: 'id'},
+        {data: 'id', sortable: true,
+                render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+                },width: '20'},
         {data: 'nama', name: 'nama'},
         {data: 'email', name: 'email'},
         {data: 'perusahaan', name: 'perusahaan'},
@@ -172,6 +237,30 @@
             $('#perusahaan').val(data.perusahaan);
             $('#phone').val(data.phone);
             $('#address').val(data.address);
+            },
+            error : function() {
+                alert("Nothing Data");
+            }
+        });
+        }
+        function showForm(id) {
+        $.ajax({
+            url: "{{ url('customers') }}" + '/' + id,
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+            $('#modal-show').modal('show');
+            $('.modal-title').text('Info Data Customer');
+
+            $('#sname').val(data.nama);
+            $('#semail').val(data.email);
+            $('#sphone').val(data.phone);
+            $('#saddress').val(data.address);
+            $('#sstatus').val(data.status);
+            $('#sperusahaan').val(data.perusahaan);
+            $('#stgl').val(data.created_at);
+
+            document.getElementById("savatar").src = "{{asset('storage/')}}/"+data.avatar;
             },
             error : function() {
                 alert("Nothing Data");

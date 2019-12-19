@@ -103,7 +103,7 @@
     <!-- /.content -->
 @endsection
 @section('js')
-    <script type="text/javascript">
+   <script type="text/javascript">
     var table = $('#tabel-categories').DataTable({
         processing: true,
         serverSide: true,

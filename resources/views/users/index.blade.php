@@ -285,7 +285,16 @@
             success: function(data) {
             $('#modal-default').modal('show');
             $('.modal-title').text('Edit user');
-
+            var roles = data.roles;
+            if(roles.includes('ADMIN') === true){
+                $('.RADMIN').prop('checked',true)
+            }
+            if(roles.includes('KASIR') === true){
+                $('.RKASIR').prop('checked',true)
+            }
+            if(roles.includes('GUDANG') === true){
+                $('.RGUDANG').prop('checked',true)
+            }
             $('#id').val(data.id);
             $('#name').val(data.name);
             $('#username').val(data.username);
@@ -308,16 +317,7 @@
             success: function(data) {
             $('#modal-show').modal('show');
             $('.modal-title').text('Info Data User');
-            var roles = data.roles;
-            if(roles.includes('ADMIN') === true){
-                $('.RADMIN').prop('checked',true)
-            }
-            if(roles.includes('KASIR') === true){
-                $('.RKASIR').prop('checked',true)
-            }
-            if(roles.includes('GUDANG') === true){
-                $('.RGUDANG').prop('checked',true)
-            }
+
             $('#sname').val(data.name);
             $('#semail').val(data.email);
             $('#sphone').val(data.phone);

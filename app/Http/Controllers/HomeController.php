@@ -63,7 +63,7 @@ class HomeController extends Controller
         ->first();
         $total_profit=$cari_profit->profit;
 
-        //query omset bulan ini
+        //query omset tahun ini
         $cari_omset = DB::table('penjualans')->selectRaw('sum(total_harga)as omset')
         ->whereYear('penjualans.tanggal_transaksi', $tahun_ini)
         ->first();
@@ -91,35 +91,49 @@ class HomeController extends Controller
 
     public function apites()
     {
-        $month='12';
-        $penjualan = \App\Penjualan::selectRaw('sum(profit) as profit')->selectRaw('YEAR(tanggal_transaksi) year, MONTH(tanggal_transaksi) month')
-            ->whereMonth('tanggal_transaksi', $month )
-            ->groupby('year','month')
-            ->first();
+        $product_name =[];
+        $bulan_a = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+        $product_search = \App\Product::
+        orderBy('nama_produk', 'asc')->get();
 
-            $penjualan2 = DB::table('penjualans')
+            foreach($product_search as $key2 =>$ps){
+
+
+                $product_name[$key2]['nama'] = $ps->nama_produk;
+
+                foreach ($bulan_a as $key => $bulan) {
+                        $penjualan3 = DB::table('penjualans')
+                        ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
+                        ->join('products', 'products.id', '=', 'penjualan_product.product_id')
+                        ->select('products.nama_produk as name')
+                        ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
+                        ->where('products.nama_produk', $ps->nama_produk)
+                        ->whereMonth('penjualans.tanggal_transaksi', $bulan )
+                        ->groupBy('products.nama_produk')
+                        ->get();
+
+                        if(@$penjualan3[0]->y != null){
+                            $product_name[$key2]['data'][$key] = $penjualan3[0]->y;
+                        }else{
+                            $product_name[$key2]['data'][$key]  = 0;
+                        }
+                    }
+        }
+        $penjualan2 = DB::table('penjualans')
             ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
             ->join('products', 'products.id', '=', 'penjualan_product.product_id')
             ->select('products.nama_produk as name')
-            ->selectRaw('sum(penjualan_product.qty) as y')
-            ->whereMonth('penjualans.tanggal_transaksi', 12 )
+            ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
+            ->whereYear('penjualans.tanggal_transaksi', 2019 )
             ->groupBy('products.nama_produk')
+            ->orderBy('products.nama_produk', 'asc')
             ->get();
 
-            $total_profit = \App\Penjualan::selectRaw('sum(profit)as profit')
-            ->whereYear('tanggal_transaksi', 2019)
-            ->first();
-
-            $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', 2)->get();
-            foreach($detail_product as $detail){
-            $detail_product = \App\PenjualanProduct::where('penjualan_id', '=', $detail->penjualan_id)
-            ->where('product_id', '=', $detail->product_id)
-            ->first();
-            $detail_product->delete();
-
-
-        }
-
-        return $detail_product;
+            $terjual_qty = DB::table('penjualans')
+                        ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
+                        ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
+                        ->whereYear('penjualans.tanggal_transaksi',2019 )
+                        ->get();
+        return $terjual_qty;
     }
 }

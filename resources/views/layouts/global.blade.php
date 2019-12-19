@@ -164,8 +164,17 @@ desired effect
             <li class="{{ (request()->is('home*')) ? 'active' : '' }}">
                 <a href="{{route('home')}}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
             </li>
+
+            <li class="header">User</li>
+            <!-- Optionally, you can add icons to the links -->
             <li class="{{ (request()->is('users*')) ? 'active' : '' }}">
                 <a href="{{route('users.index')}}"><i class="fa fa-user"></i> <span>Users</span></a>
+            </li>
+            <li class="{{Request::path() == 'customers' ? 'active' :''}}">
+                <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> <span>Customers</span></a>
+            </li>
+            <li class="{{Request::path() == 'suppliers' ? 'active' :''}}">
+                <a href="{{route('suppliers.index')}}"><i class="fa fa-users"></i> <span>Suppliers</span></a>
             </li>
             <li class="header">Transaksi</li>
             <!-- Optionally, you can add icons to the links -->
@@ -187,15 +196,12 @@ desired effect
             <li class="{{Request::path() == 'stocks' ? 'active' :''}}">
                 <a href="{{route('stocks.index')}}"><i class="fa fa-cubes"></i> <span>Data Stok</span></a>
             </li>
-
-            <li class="header">Kontak</li>
+            <li class="header">Laporan</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="{{Request::path() == 'customers' ? 'active' :''}}">
-                <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> <span>Customers</span></a>
+            <li class="{{Request::path() == 'laporans' ? 'active' :''}}">
+                <a href="{{route('laporans.index')}}"><i class="fa fa-tags"></i> <span>Laporan Penjualan</span></a>
             </li>
-            <li class="{{Request::path() == 'suppliers' ? 'active' :''}}">
-                <a href="{{route('suppliers.index')}}"><i class="fa fa-users"></i> <span>Suppliers</span></a>
-            </li>
+
         <!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->

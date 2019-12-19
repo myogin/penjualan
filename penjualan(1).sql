@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 14, 2019 at 04:57 PM
+-- Generation Time: Dec 19, 2019 at 07:47 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -31,7 +31,6 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'berisi nama file image saja tanpapath',
   `created_by` int(11) NOT NULL,
   `updated_by` int(11) DEFAULT NULL,
@@ -45,9 +44,10 @@ CREATE TABLE `categories` (
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `slug`, `image`, `created_by`, `updated_by`, `deleted_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Ate bag', 'ate-bag', 'category_images/uyiUPFKJLoCufIAj2meXavIkLquBaYKG9ETBKctq.jpeg', 1, NULL, NULL, NULL, '2019-12-13 07:00:13', '2019-12-13 07:00:13'),
-(2, 'Rotan', 'rotan', 'category_images/zQvdwefVH1E7jsZ8KGbkmvyp3gQra1hAeoI3Luvz.jpeg', 1, NULL, NULL, NULL, '2019-12-13 07:00:24', '2019-12-13 07:00:24');
+INSERT INTO `categories` (`id`, `name`, `image`, `created_by`, `updated_by`, `deleted_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 'Ate bag', 'category_images/uyiUPFKJLoCufIAj2meXavIkLquBaYKG9ETBKctq.jpeg', 1, NULL, NULL, NULL, '2019-12-13 07:00:13', '2019-12-13 07:00:13'),
+(2, 'Rotan', 'category_images/zQvdwefVH1E7jsZ8KGbkmvyp3gQra1hAeoI3Luvz.jpeg', 1, NULL, NULL, NULL, '2019-12-13 07:00:24', '2019-12-13 07:00:24'),
+(4, 'qwerty', 'category_images/LY2BlQup8V8o19p8TBTZCsx9VHkaZBnp9e8WdjKS.jpeg', 1, NULL, NULL, NULL, '2019-12-17 07:50:59', '2019-12-17 07:50:59');
 
 -- --------------------------------------------------------
 
@@ -103,7 +103,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (21, '2019_11_25_010129_create_penjualans_table', 1),
 (22, '2019_12_05_210808_create_pembelians_table', 1),
 (23, '2019_12_08_060822_create_penjualan_product_table', 1),
-(24, '2019_12_08_065736_create_pembelian_product_table', 1);
+(24, '2019_12_08_065736_create_pembelian_product_table', 1),
+(25, '2019_12_16_161654_create_pembelians_table', 2),
+(26, '2019_12_16_161719_create_pembelian_product_table', 2);
 
 -- --------------------------------------------------------
 
@@ -125,12 +127,23 @@ CREATE TABLE `password_resets` (
 
 CREATE TABLE `pembelians` (
   `id` int(10) UNSIGNED NOT NULL,
+  `tanggal_transaksi` date NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `supplier_id` int(10) UNSIGNED NOT NULL,
   `invoice_number` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('SUBMIT','PROCESS','FINISH','CANCEL') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_harga` int(11) NOT NULL,
+  `status` enum('PROCESS','FINISH','CANCEL') COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `pembelians`
+--
+
+INSERT INTO `pembelians` (`id`, `tanggal_transaksi`, `user_id`, `supplier_id`, `invoice_number`, `total_harga`, `status`, `created_at`, `updated_at`) VALUES
+(1, '2019-12-17', 1, 1, '201912160001', 5100, 'PROCESS', '2019-12-16 08:59:13', '2019-12-16 09:14:33'),
+(2, '2019-12-17', 1, 1, '201912160002', 7500, 'PROCESS', '2019-12-16 08:59:40', '2019-12-16 08:59:40');
 
 -- --------------------------------------------------------
 
@@ -142,9 +155,22 @@ CREATE TABLE `pembelian_product` (
   `pembelian_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `qty` int(11) NOT NULL,
+  `harga_jual` int(11) NOT NULL,
+  `harga_beli` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `pembelian_product`
+--
+
+INSERT INTO `pembelian_product` (`pembelian_id`, `product_id`, `qty`, `harga_jual`, `harga_beli`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 2000, 1000, '2019-12-16 09:14:32', '2019-12-16 09:14:32'),
+(1, 2, 5, 1000, 500, '2019-12-16 09:14:32', '2019-12-16 09:14:32'),
+(1, 3, 2, 1000, 800, '2019-12-16 09:14:32', '2019-12-16 09:14:32'),
+(2, 1, 5, 2000, 1000, '2019-12-16 08:59:40', '2019-12-16 08:59:40'),
+(2, 2, 5, 1000, 500, '2019-12-16 08:59:40', '2019-12-16 08:59:40');
 
 -- --------------------------------------------------------
 
@@ -160,6 +186,7 @@ CREATE TABLE `penjualans` (
   `invoice_number` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `total_harga` int(11) NOT NULL,
   `profit` int(11) NOT NULL,
+  `shipping` int(11) NOT NULL,
   `status` enum('SUBMIT','PROCESS','FINISH','CANCEL') COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -169,13 +196,18 @@ CREATE TABLE `penjualans` (
 -- Dumping data for table `penjualans`
 --
 
-INSERT INTO `penjualans` (`id`, `tanggal_transaksi`, `user_id`, `customer_id`, `invoice_number`, `total_harga`, `profit`, `status`, `created_at`, `updated_at`) VALUES
-(2, '2019-12-13', 1, 1, '201912130001', 6000, 3000, 'PROCESS', '2019-12-13 07:03:36', '2019-12-13 07:03:36'),
-(3, '2019-11-13', 1, 1, '201912130003', 15000, 7200, 'FINISH', '2019-12-13 07:06:13', '2019-12-13 07:06:14'),
-(4, '2019-12-21', 1, 1, '201912130004', 2000, 1000, 'CANCEL', '2019-12-13 07:22:44', '2019-12-13 07:22:44'),
-(5, '2019-12-13', 1, 1, '201912130005', 2000, 1000, 'PROCESS', '2019-12-13 07:27:18', '2019-12-13 07:27:18'),
-(6, '2019-12-15', 1, 1, '201912130006', 5000, 1000, 'FINISH', '2019-12-13 15:00:09', '2019-12-13 15:00:09'),
-(8, '2019-12-14', 1, 1, '201912140007', 10000, 5000, 'FINISH', '2019-12-14 07:34:24', '2019-12-14 07:34:24');
+INSERT INTO `penjualans` (`id`, `tanggal_transaksi`, `user_id`, `customer_id`, `invoice_number`, `total_harga`, `profit`, `shipping`, `status`, `created_at`, `updated_at`) VALUES
+(5, '2019-12-13', 1, 1, '201912130005', 2000, 1000, 0, 'PROCESS', '2019-12-13 07:27:18', '2019-12-13 07:27:18'),
+(6, '2019-12-15', 1, 1, '201912130006', 17000, 7000, 0, 'FINISH', '2019-12-13 15:00:09', '2019-12-16 10:23:40'),
+(8, '2019-12-14', 1, 1, '201912140007', 10000, 5000, 0, 'FINISH', '2019-12-14 07:34:24', '2019-12-14 07:34:24'),
+(11, '2019-12-16', 1, 1, '201912160011', 1000, 200, 0, 'PROCESS', '2019-12-16 06:57:34', '2019-12-16 06:57:45'),
+(12, '2019-08-05', 1, 1, '201912160012', 2000, 1000, 0, 'FINISH', '2019-12-16 06:59:00', '2019-12-16 06:59:00'),
+(13, '2019-12-17', 1, 1, '201912170013', 12000, 6000, 0, 'PROCESS', '2019-12-17 07:33:40', '2019-12-17 07:33:41'),
+(14, '2019-12-17', 1, 1, '201912170014', 6000, 3000, 0, 'PROCESS', '2019-12-17 07:34:34', '2019-12-17 07:34:35'),
+(15, '2019-12-17', 1, 1, '201912170015', 4000, 2000, 0, 'FINISH', '2019-12-17 07:35:06', '2019-12-17 07:35:06'),
+(16, '2019-12-17', 1, 1, '201912170016', 11000, 5500, 20000, 'PROCESS', '2019-12-17 07:44:42', '2019-12-17 07:44:42'),
+(17, '2019-12-19', 1, 1, '201912190017', 10000, 5000, 5, 'PROCESS', '2019-12-18 20:59:12', '2019-12-18 20:59:12'),
+(18, '2019-07-08', 1, 1, '201912190018', 52000, 26000, 5, 'FINISH', '2019-12-18 20:59:30', '2019-12-18 20:59:30');
 
 -- --------------------------------------------------------
 
@@ -198,14 +230,23 @@ CREATE TABLE `penjualan_product` (
 --
 
 INSERT INTO `penjualan_product` (`penjualan_id`, `product_id`, `qty`, `harga_jual`, `harga_beli`, `created_at`, `updated_at`) VALUES
-(2, 1, 3, 2000, 1000, '2019-12-13 07:03:36', '2019-12-13 07:03:36'),
-(3, 1, 5, 2000, 1000, '2019-12-13 07:06:14', '2019-12-13 07:06:14'),
-(3, 2, 4, 1000, 500, '2019-12-13 07:06:14', '2019-12-13 07:06:14'),
-(3, 3, 1, 1000, 800, '2019-12-13 07:06:14', '2019-12-13 07:06:14'),
-(4, 2, 2, 1000, 500, '2019-12-13 07:22:44', '2019-12-13 07:22:44'),
 (5, 1, 1, 2000, 1000, '2019-12-13 07:27:18', '2019-12-13 07:27:18'),
-(6, 3, 5, 1000, 800, '2019-12-13 15:00:09', '2019-12-13 15:00:09'),
-(8, 1, 5, 2000, 1000, '2019-12-14 07:34:24', '2019-12-14 07:34:24');
+(6, 1, 5, 2000, 1000, '2019-12-16 10:23:40', '2019-12-16 10:23:40'),
+(6, 2, 2, 1000, 500, '2019-12-16 10:23:40', '2019-12-16 10:23:40'),
+(6, 3, 5, 1000, 800, '2019-12-16 10:23:40', '2019-12-16 10:23:40'),
+(8, 1, 5, 2000, 1000, '2019-12-14 07:34:24', '2019-12-14 07:34:24'),
+(9, 3, 3, 1000, 800, '2019-12-16 06:54:49', '2019-12-16 06:54:49'),
+(10, 2, 5, 1000, 500, '2019-12-16 06:56:30', '2019-12-16 06:56:30'),
+(10, 3, 5, 1000, 800, '2019-12-16 06:56:30', '2019-12-16 06:56:30'),
+(11, 3, 1, 1000, 800, '2019-12-16 06:57:45', '2019-12-16 06:57:45'),
+(12, 1, 1, 2000, 1000, '2019-12-16 06:59:00', '2019-12-16 06:59:00'),
+(13, 1, 6, 2000, 1000, '2019-12-17 07:33:41', '2019-12-17 07:33:41'),
+(14, 1, 3, 2000, 1000, '2019-12-17 07:34:35', '2019-12-17 07:34:35'),
+(15, 2, 4, 1000, 500, '2019-12-17 07:35:06', '2019-12-17 07:35:06'),
+(16, 1, 3, 2000, 1000, '2019-12-17 07:44:42', '2019-12-17 07:44:42'),
+(16, 2, 5, 1000, 500, '2019-12-17 07:44:42', '2019-12-17 07:44:42'),
+(17, 1, 5, 2000, 1000, '2019-12-18 20:59:12', '2019-12-18 20:59:12'),
+(18, 2, 52, 1000, 500, '2019-12-18 20:59:30', '2019-12-18 20:59:30');
 
 -- --------------------------------------------------------
 
@@ -255,9 +296,9 @@ CREATE TABLE `stocks` (
 --
 
 INSERT INTO `stocks` (`id`, `product_id`, `stok`, `created_at`, `updated_at`) VALUES
-(1, 1, 995, '2019-12-13 07:00:52', '2019-12-14 07:34:24'),
-(2, 2, 1000, '2019-12-13 07:01:23', '2019-12-14 07:17:24'),
-(3, 3, 1000, '2019-12-13 07:01:48', '2019-12-14 07:17:29');
+(1, 1, 900, '2019-12-13 07:00:52', '2019-12-18 20:59:12'),
+(2, 2, 905, '2019-12-13 07:01:23', '2019-12-18 20:59:30'),
+(3, 3, 6, '2019-12-13 07:01:48', '2019-12-16 10:23:40');
 
 -- --------------------------------------------------------
 
@@ -314,7 +355,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `username`, `roles`, `address`, `phone`, `avatar`, `status`) VALUES
 (1, 'Made Yogi Nugraha', 'yoginugraha19@gmail.com', NULL, '$2y$10$g7x7qyiCBhQIEp7aiNRSWO27COzlEJ6R0FcvnMW3Xt0q24kw1eRRS', NULL, '2019-12-13 06:58:17', '2019-12-13 13:10:14', 'Yogi Nugraha', '[\"ADMIN\"]', 'Sarmili, Bintaro, Tangerang Selatan', '089468416847', 'avatars/TuTiOkqQVDgS20dKHibg3TymbL7EixkeLTDpTb0P.jpeg', 'ACTIVE'),
-(2, 'luthvi', 'luthvi@gmail.com', NULL, '$2y$10$ATkkxaluxkgvkwpckkYQt.AwCX2QPr286mdMZRbTuOO4L.rmqInHO', NULL, '2019-12-13 11:19:14', '2019-12-13 11:19:14', 'luthvi', '[\"TLM\",\"ADMIN\",\"OPERATOR\"]', 'wqewqeqweqwe qwe qw eqw ewq eqw e', '089468416847', 'avatars/d7mqaQNpADNOO2IchprXsXsNgTvHob67mkyCWM4N.jpeg', 'INACTIVE');
+(2, 'luthvi', 'luthvi@gmail.com', NULL, '$2y$10$ATkkxaluxkgvkwpckkYQt.AwCX2QPr286mdMZRbTuOO4L.rmqInHO', NULL, '2019-12-13 11:19:14', '2019-12-16 09:29:17', 'luthvi', '[\"KASIR\"]', 'wqewqeqweqwe qwe qw eqw ewq eqw e', '089468416847', 'avatars/d7mqaQNpADNOO2IchprXsXsNgTvHob67mkyCWM4N.jpeg', 'ACTIVE'),
+(3, 'gudang', 'gudang@gmail.com', NULL, '$2y$10$O0g7W3Cy5JkGkPUdBfao9./u/yJyxoGJX.xwrV736ijX9J7n9CGXq', NULL, '2019-12-16 09:31:04', '2019-12-16 09:31:04', 'gudang', '[\"GUDANG\"]', 'qwe qwe qwe qwe eqw eqw eqw eqw eqw e', '089468416847', 'avatars/5YaGfecLMtYTNGOzJbtAKvlIAN2dvkcSO00d2Ul4.jpeg', 'ACTIVE'),
+(4, 'windu ambara', 'windu@gmail.com', NULL, '$2y$10$w/FYnm5d0siLciZeW1VLx.WANp2b0x6hxqNNovXYjaFTPwXs.K/ny', NULL, '2019-12-17 13:27:36', '2019-12-17 13:27:36', 'windu', '[\"ADMIN\",\"KASIR\",\"GUDANG\"]', 'jalan narakesuma gang ii a', '089468416847', 'avatars/ETuGcGvHIIRLikg2XKmKCiSgn6eztp2CeUzRRL2I.jpeg', 'ACTIVE');
 
 --
 -- Indexes for dumped tables
@@ -324,8 +367,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `categories_slug_unique` (`slug`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `customers`
@@ -351,7 +393,8 @@ ALTER TABLE `password_resets`
 --
 ALTER TABLE `pembelians`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `pembelians_supplier_id_foreign` (`supplier_id`);
+  ADD KEY `pembelians_supplier_id_foreign` (`supplier_id`),
+  ADD KEY `pembelians_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `pembelian_product`
@@ -410,7 +453,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `customers`
@@ -422,19 +465,19 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `pembelians`
 --
 ALTER TABLE `pembelians`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `penjualans`
 --
 ALTER TABLE `penjualans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -458,7 +501,7 @@ ALTER TABLE `suppliers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -468,7 +511,8 @@ ALTER TABLE `users`
 -- Constraints for table `pembelians`
 --
 ALTER TABLE `pembelians`
-  ADD CONSTRAINT `pembelians_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`);
+  ADD CONSTRAINT `pembelians_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
+  ADD CONSTRAINT `pembelians_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `penjualans`

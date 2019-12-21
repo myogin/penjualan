@@ -123,10 +123,10 @@ class HomeController extends Controller
             ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
             ->join('products', 'products.id', '=', 'penjualan_product.product_id')
             ->select('products.nama_produk as name')
-            ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
+            ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as jumlah')
             ->whereYear('penjualans.tanggal_transaksi', 2019 )
             ->groupBy('products.nama_produk')
-            ->orderBy('products.nama_produk', 'asc')
+            ->orderBy('jumlah', 'desc')
             ->get();
 
             $terjual_qty = DB::table('penjualans')
@@ -134,6 +134,6 @@ class HomeController extends Controller
                         ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
                         ->whereYear('penjualans.tanggal_transaksi',2019 )
                         ->get();
-        return $terjual_qty;
+        return $penjualan2;
     }
 }

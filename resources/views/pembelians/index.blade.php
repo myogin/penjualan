@@ -163,13 +163,13 @@
             render: function ( data, type, row ) {
             var css1 = 'black';
             if (data == 'FINISH') {
-                css1 = 'btn bg-olive btn-flat btn-xs';
+                css1 = 'bg-olive btn-flat btn-xs';
             }if (data == 'CANCEL') {
-                css1 = 'btn bg-navy btn-flat btn-xs';
+                css1 = 'bg-navy btn-flat btn-xs';
             }if (data == 'PROCESS') {
-                css1 = 'btn bg-maroon btn-flat btn-xs';
+                css1 = 'bg-maroon btn-flat btn-xs';
             }
-            return '<button class="'+ css1 +'">' + data + '</button>';
+            return '<span class="'+ css1 +'">' + data + '</span>';
             }
     }]
     });

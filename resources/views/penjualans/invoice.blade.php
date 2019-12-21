@@ -29,8 +29,7 @@
         From
         <address>
             <strong>Balinese Classic</strong><br>
-            Jalan Kebo Iwa Perum<br>
-            Swamandala XIII no 3<br>
+            Address: Jalan Kebo Iwa XIII<br>
             Phone: (+62) 0895342574617<br>
             Email: yoginugraha19@gmail.com
         </address>
@@ -40,10 +39,10 @@
         To
         <address>
             <strong>{{$penjualan->customer->nama}}</strong><br>
-            {{$penjualan->customer->address}}<br>
-            {{$penjualan->customer->perusahaan}}<br>
-            {{$penjualan->customer->phone}}<br>
-            {{$penjualan->customer->email}}
+            Address: {{$penjualan->customer->address}}<br>
+            Company: {{$penjualan->customer->perusahaan}}<br>
+            Phone: {{$penjualan->customer->phone}}<br>
+            Email: {{$penjualan->customer->email}}
         </address>
         </div>
         <!-- /.col -->
@@ -58,14 +57,14 @@
     <!-- Table row -->
     <div class="row">
         <div class="col-xs-12 table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped detail_product_invoice">
             <thead>
             <tr>
-            <th>No</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Subtotal</th>
+            <th style="width: 50px;">No</th>
+            <th style="text-align: left;">Product</th>
+            <th style="width: 200px;">Price</th>
+            <th style="width: 100px;text-align: center;">Qty</th>
+            <th style="width: 200px;">Subtotal</th>
             </tr>
             </thead>
             <tbody>
@@ -80,11 +79,11 @@
                 @endphp
                 @foreach ($penjualan->products as $value)
                     <tr>
-                    <td>{{$no++}}</td>
+                    <td style="text-align: center;">{{$no++}}</td>
                     <td>{{$value->nama_produk}}</td>
-                    <td>{{rupiah($value->pivot->harga_jual)}}</td>
-                    <td>{{$value->pivot->qty}}</td>
-                    <td>{{rupiah($value->pivot->qty*$value->pivot->harga_jual)}}</td>
+                    <td style="text-align: right;">{{rupiah($value->pivot->harga_jual)}}</td>
+                    <td style="text-align: center;">{{$value->pivot->qty}}</td>
+                    <td style="text-align: right;">{{rupiah($value->pivot->qty*$value->pivot->harga_jual)}}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -112,9 +111,9 @@
         <div class="col-xs-6">
 
         <div class="table-responsive">
-            <table class="table">
+            <table class="table rata-kanan">
             <tr>
-                <th style="width:50%">Subtotal:</th>
+                <th >Subtotal:</th>
                 <td>{{rupiah($penjualan->total_harga)}}</td>
             </tr>
             <tr>

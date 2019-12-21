@@ -208,7 +208,18 @@
         {data: 'show_photo', name: 'show_photo'},
         {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
-        ]
+        ],
+        columnDefs: [{targets: 7,
+            render: function ( data, type, row ) {
+            var css1 = 'black';
+            if (data == 'ACTIVE') {
+                css1 = ' bg-olive btn-flat btn-xs';
+            }if (data == 'INACTIVE') {
+                css1 = ' bg-navy btn-flat btn-xs';
+            }
+            return '<span class="'+ css1 +'">' + data + '</span>';
+            }
+    }]
     });
 
     function addForm() {

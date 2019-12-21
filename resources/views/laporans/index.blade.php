@@ -15,13 +15,20 @@
         </h1>
         {{ Breadcrumbs::render('penjualan') }}
     </section>
+    @php
+    function rupiah($angka){
 
+        $hasil_rupiah = "Rp " . number_format($angka,0,',','.');
+        return $hasil_rupiah;
+
+    }
+    @endphp
     <!-- Main content -->
     <section class="content">
         <!-- Main row -->
     <div class="row">
         <!-- Left col -->
-        <section class="col-lg-7 connectedSortable">
+        <section class="col-lg-9 connectedSortable">
                 <div class="box box-primary">
                     <figure class="highcharts-figure">
                         <div id="produk-laku"></div>
@@ -30,18 +37,52 @@
             </section>
             <!-- /.Left col -->
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <section class="col-lg-5 connectedSortable">
+            <section class="col-lg-3 connectedSortable">
                 <div class="box box-primary">
-                    <form action="{{route('laporans.index')}}">
-                        <label>Pilih tahun</label>
-                        <input type="text" id="datepicker" value='{{Request::get('year')}}' name='year' />
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                    <form action="{{route('laporans.index')}}" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <label> DATA TAHUN {{$tahun_ini}} </label>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Pilih tahun</label>
+                                        <input type="text" id="datepicker" value='{{Request::get('year')}}' name='year' />
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                    <hr>
+                                    <div class="input-group">
+                                        @foreach ($rank_customer as $rcus)
+                                        <h4>Peringkat Customer</h4>
+                                        <label>Nama Customer : <u>{{$rcus->name}}</u> total tas dibeli sebanyak: <u>{{$rcus->jumlah}}</u></label>
+                                        @endforeach
+                                    </div>
+                                    <hr>
+                                    <div class="input-group">
+                                        @foreach ($rank_product as $rpro)
+                                        <h4>Peringkat Product</h4>
+                                        <label>Nama Product : <u>{{$rpro->name}}</u> total terjual sebanyak: <u>{{$rpro->jumlah}}</u></label>
+                                        @endforeach
+                                    </div>
+                                    <hr>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Laba</h4>
+                                    <label>{{rupiah($total_profit)}}</label>
+                                </div>
+                                <div class="col-md-6">
+                                        <h4>Omset</h4>
+                                        <label>{{rupiah($total_omset)}}</label>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </section>
             <!-- right col -->
             <!-- Left col -->
-            <section class="col-lg-7 connectedSortable">
+            <section class="col-lg-8 connectedSortable">
                 <div class="box box-primary">
                     <figure class="highcharts-figure">
                         <div id="container1"></div>
@@ -50,7 +91,7 @@
             </section>
             <!-- /.Left col -->
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <section class="col-lg-5 connectedSortable">
+            <section class="col-lg-4 connectedSortable">
                 <div class="box box-primary">
                     <figure class="highcharts-figure">
                         <div id="chart-bulet"></div>
@@ -404,13 +445,13 @@ $(document).ready(function(){
             render: function ( data, type, row ) {
             var css1 = 'black';
             if (data == 'FINISH') {
-                css1 = 'btn bg-olive btn-flat btn-xs';
+                css1 = 'bg-olive btn-flat btn-xs';
             }if (data == 'CANCEL') {
-                css1 = 'btn bg-navy btn-flat btn-xs';
+                css1 = 'bg-navy btn-flat btn-xs';
             }if (data == 'PROCESS') {
-                css1 = 'btn bg-maroon btn-flat btn-xs';
+                css1 = 'bg-maroon btn-flat btn-xs';
             }
-            return '<button class="'+ css1 +'">' + data + '</button>';
+            return '<span class="'+ css1 +'">' + data + '</span>';
             }
     }],
     dom: 'lBfrtip',

@@ -164,28 +164,27 @@ desired effect
             <li class="{{ (request()->is('home*')) ? 'active' : '' }}">
                 <a href="{{route('home')}}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
             </li>
-
             <li class="header">User</li>
-            <!-- Optionally, you can add icons to the links -->
-            <li class="{{ (request()->is('users*')) ? 'active' : '' }}">
-                <a href="{{route('users.index')}}"><i class="fa fa-user"></i> <span>Users</span></a>
-            </li>
+                @if (array_intersect(["ADMIN"], json_decode(Auth::user()->roles)))
+
+                <!-- Optionally, you can add icons to the links -->
+                <li class="{{ (request()->is('users*')) ? 'active' : '' }}">
+                    <a href="{{route('users.index')}}"><i class="fa fa-user"></i> <span>Users</span></a>
+                </li>
+                @endif
+
+            @if (array_intersect(["ADMIN","KASIR"], json_decode(Auth::user()->roles)))
             <li class="{{Request::path() == 'customers' ? 'active' :''}}">
                 <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> <span>Customers</span></a>
             </li>
+            @endif
+            @if (array_intersect(["ADMIN","GUDANG"], json_decode(Auth::user()->roles)))
             <li class="{{Request::path() == 'suppliers' ? 'active' :''}}">
                 <a href="{{route('suppliers.index')}}"><i class="fa fa-users"></i> <span>Suppliers</span></a>
             </li>
-            <li class="header">Transaksi</li>
-            <!-- Optionally, you can add icons to the links -->
-            <li class="{{ (request()->is('penjualans*')) ? 'active' : '' }}">
-                <a href="{{route('penjualans.index')}}"><i class="fa fa-shopping-cart"></i> <span>Transaksi Jual</span></a>
-            </li>
-            <!-- Optionally, you can add icons to the links -->
-            <li class="{{ (request()->is('pembelians*')) ? 'active' : '' }}">
-                <a href="{{route('pembelians.index')}}"><i class="fa fa-shopping-cart"></i> <span>Transaksi Beli</span></a>
-            </li>
+            @endif
             <li class="header">Produk</li>
+            @if (array_intersect(["ADMIN","KASIR","GUDANG"], json_decode(Auth::user()->roles)))
             <!-- Optionally, you can add icons to the links -->
             <li class="{{Request::path() == 'categories' ? 'active' :''}}">
                 <a href="{{route('categories.index')}}"><i class="fa fa-tags"></i> <span>Kategori Produk</span></a>
@@ -193,14 +192,32 @@ desired effect
             <li class="{{Request::path() == 'products' ? 'active' :''}}">
                 <a href="{{route('products.index')}}"><i class="fa fa-cube"></i> <span>Data Produk</span></a>
             </li>
+            @endif
+            @if (array_intersect(["ADMIN","GUDANG"], json_decode(Auth::user()->roles)))
             <li class="{{Request::path() == 'stocks' ? 'active' :''}}">
                 <a href="{{route('stocks.index')}}"><i class="fa fa-cubes"></i> <span>Data Stok</span></a>
             </li>
+            @endif
+            <li class="header">Transaksi</li>
+            @if (array_intersect(["ADMIN","KASIR"], json_decode(Auth::user()->roles)))
+            <!-- Optionally, you can add icons to the links -->
+            <li class="{{ (request()->is('penjualans*')) ? 'active' : '' }}">
+                <a href="{{route('penjualans.index')}}"><i class="fa fa-shopping-cart"></i> <span>Transaksi Jual</span></a>
+            </li>
+            @endif
+            @if (array_intersect(["ADMIN","GUDANG"], json_decode(Auth::user()->roles)))
+            <!-- Optionally, you can add icons to the links -->
+            <li class="{{ (request()->is('pembelians*')) ? 'active' : '' }}">
+                <a href="{{route('pembelians.index')}}"><i class="fa fa-shopping-cart"></i> <span>Transaksi Beli</span></a>
+            </li>
+            @endif
+            @if (array_intersect(["ADMIN"], json_decode(Auth::user()->roles)))
             <li class="header">Laporan</li>
             <!-- Optionally, you can add icons to the links -->
             <li class="{{Request::path() == 'laporans' ? 'active' :''}}">
                 <a href="{{route('laporans.index')}}"><i class="fa fa-tags"></i> <span>Laporan Penjualan</span></a>
             </li>
+            @endif
 
         <!-- /.sidebar-menu -->
         </section>

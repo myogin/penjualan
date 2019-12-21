@@ -131,16 +131,44 @@ class LaporanController extends Controller
         $terjual_qty = DB::table('penjualans')
                         ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
                         ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
-                        ->whereYear('penjualans.tanggal_transaksi',2019 )
+                        ->whereYear('penjualans.tanggal_transaksi',$tahun_ini )
                         ->get();
         $terjual_qty = $terjual_qty[0]->y;
+
+        //cari customer paling banyak mesen
+        $rank_customer = DB::table('penjualans')
+            ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
+            ->join('customers', 'customers.id', '=', 'penjualans.customer_id')
+            ->select('customers.nama as name')
+            ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as jumlah')
+            ->whereYear('penjualans.tanggal_transaksi', $tahun_ini )
+            ->groupBy('customers.nama')
+            ->orderBy('jumlah', 'desc')
+            ->limit(1)
+            ->get();
+
+        //cari product paling laku
+        $rank_product = DB::table('penjualans')
+            ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
+            ->join('products', 'products.id', '=', 'penjualan_product.product_id')
+            ->select('products.nama_produk as name')
+            ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as jumlah')
+            ->whereYear('penjualans.tanggal_transaksi', $tahun_ini )
+            ->groupBy('products.nama_produk')
+            ->orderBy('jumlah', 'desc')
+            ->limit(1)
+            ->get();
+
+
 
         return view('laporans.index',['tahun_ini' => $tahun_ini,'bulan_ini' => $bulan_ini,
         'bulans' => $bulans, 'profit' => $profit,'penjualan2' => $penjualan2,
         'total_profit' =>$total_profit,
         'total_omset' =>$total_omset,
         'product_name' =>$product_name,
-        'terjual' => $terjual_qty
+        'terjual' => $terjual_qty,
+        'rank_customer' => $rank_customer,
+        'rank_product' => $rank_product
         ]);
     }
 }

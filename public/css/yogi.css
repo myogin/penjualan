@@ -54,3 +54,15 @@
     display: table-cell !important;
 
 }
+
+.invoice {
+    max-width: 1000px !important;
+}
+
+.detail_product_invoice th {
+    text-align: center;
+}
+
+.rata-kanan td {
+    text-align: right !important;
+}

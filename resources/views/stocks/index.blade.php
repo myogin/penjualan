@@ -37,7 +37,7 @@
                     <thead>
                     <tr>
                             <th>No</th>
-                        <th>Nama Ketegori</th>
+                        <th>Nama Produk</th>
                         <th>Gambar</th>
                         <th>Action</th>
                     </tr>
@@ -48,7 +48,7 @@
                     <tfoot>
                     <tr>
                             <th>No</th>
-                        <th>Nama Ketegori</th>
+                        <th>Nama Produk</th>
                         <th>Gambar</th>
                         <th>Action</th>
                     </tr>
@@ -102,6 +102,7 @@
 @section('js')
 <script type="text/javascript">
     var table = $('#tabel-stocks').DataTable({
+        aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.stock') }}",

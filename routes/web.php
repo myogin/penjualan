@@ -59,4 +59,5 @@ Route::get("/api/tes", "HomeController@apites")->name("api.tes");
 Route::get("penjualans/{id}/invoice","PenjualanController@invoice")->name("invoiceTransaksi");
 Route::get("penjualans/{id}/invoice-print","PenjualanController@invoicePrint")->name("invoicePrint");
 
-Route::get('laporans', "LaporanController@index")->name("laporans.index");
+Route::get('laporan-penjualan', "LaporanController@index")->name("laporans.index");
+Route::get('laporan-pembelian', "LaporanController@laporanBeli")->name("laporans2.index");

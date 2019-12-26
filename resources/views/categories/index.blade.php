@@ -105,6 +105,7 @@
 @section('js')
    <script type="text/javascript">
     var table = $('#tabel-categories').DataTable({
+        aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.category') }}",

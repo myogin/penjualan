@@ -214,8 +214,11 @@ desired effect
             @if (array_intersect(["ADMIN"], json_decode(Auth::user()->roles)))
             <li class="header">Laporan</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="{{Request::path() == 'laporans' ? 'active' :''}}">
+            <li class="{{Request::path() == 'laporan-penjualan' ? 'active' :''}}">
                 <a href="{{route('laporans.index')}}"><i class="fa fa-tags"></i> <span>Laporan Penjualan</span></a>
+            </li>
+            <li class="{{Request::path() == 'laporan-pembelian' ? 'active' :''}}">
+                <a href="{{route('laporans2.index')}}"><i class="fa fa-tags"></i> <span>Laporan Pembelian</span></a>
             </li>
             @endif
 

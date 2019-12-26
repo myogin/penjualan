@@ -16,17 +16,20 @@ class CreatePenjualansTable extends Migration
         Schema::create('penjualans', function (Blueprint $table) {
             $table->increments('id');
             $table->date('tanggal_transaksi');
-            $table->bigInteger('user_id')->unsigned();
             $table->integer('customer_id')->unsigned();
             $table->string('invoice_number');
             $table->integer('total_harga');
             $table->integer('shipping')->nullable();;
             $table->integer('profit');
             $table->enum('status', ['PROCESS', 'FINISH', 'CANCEL']);
+
+            $table->bigInteger('created_by')->unsigned();
+            $table->bigInteger('updated_by')->nullable();
+
             $table->timestamps();
 
             $table->foreign('customer_id')->references('id')->on('customers');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users');
         });
     }
 

@@ -10,10 +10,10 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        Penjualans
+        Pembelian
 
         </h1>
-        {{ Breadcrumbs::render('penjualan') }}
+        {{ Breadcrumbs::render('pembelian') }}
     </section>
     @php
     function rupiah($angka){
@@ -25,83 +25,50 @@
     @endphp
     <!-- Main content -->
     <section class="content">
-        <!-- Main row -->
-    <div class="row">
-        <!-- Left col -->
-        <section class="col-lg-9 connectedSortable">
-                <div class="box box-primary">
-                    <figure class="highcharts-figure">
-                        <div id="produk-laku"></div>
-                    </figure>
-                </div>
-            </section>
-            <!-- /.Left col -->
-            <!-- right col (We are only adding the ID to make the widgets sortable)-->
+        <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-9 connectedSortable">
+                    <div class="box box-primary">
+                        <figure class="highcharts-figure">
+                            <div id="container1"></div>
+                        </figure>
+                    </div>
+                </section>
+                <!-- /.Left col -->
+                <!-- right col (We are only adding the ID to make the widgets sortable)-->
             <section class="col-lg-3 connectedSortable">
-                <div class="box box-primary">
-                    <form action="{{route('laporans.index')}}" class="form-horizontal">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <label> DATA TAHUN {{$tahun_ini}} </label>
+                    <div class="box box-primary">
+                        <form action="{{route('laporans2.index')}}" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group">
+                                            <label> DATA TAHUN {{$tahun_ini}} </label>
+                                        </div>
+                                        <div class="input-group">
+                                            <label>Pilih tahun</label>
+                                            <input type="text" id="datepicker" value='{{Request::get('year')}}' name='year' />
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                        <hr>
+                                        <div class="input-group">
+                                            @foreach ($rank_supplier as $rcus)
+                                            <h4>Peringkat Supplier</h4>
+                                            <label>Nama Supplier : <u>{{$rcus->name}}</u> total dibeli tas sebanyak: <u>{{$rcus->jumlah}}</u></label>
+                                            @endforeach
+                                        </div>
+                                        <hr>
                                     </div>
-                                    <div class="input-group">
-                                        <label>Pilih tahun</label>
-                                        <input type="text" id="datepicker" value='{{Request::get('year')}}' name='year' />
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    <div class="col-md-6">
+                                        <h4>Pengeluaran</h4>
+                                        <label>{{rupiah($total_pengeluaran)}}</label>
                                     </div>
-                                    <hr>
-                                    <div class="input-group">
-                                        @foreach ($rank_customer as $rcus)
-                                        <h4>Peringkat Customer</h4>
-                                        <label>Nama Customer : <u>{{$rcus->name}}</u> total tas dibeli sebanyak: <u>{{$rcus->jumlah}}</u></label>
-                                        @endforeach
-                                    </div>
-                                    <hr>
-                                    <div class="input-group">
-                                        @foreach ($rank_product as $rpro)
-                                        <h4>Peringkat Product</h4>
-                                        <label>Nama Product : <u>{{$rpro->name}}</u> total terjual sebanyak: <u>{{$rpro->jumlah}}</u></label>
-                                        @endforeach
-                                    </div>
-                                    <hr>
-                                </div>
-                                <div class="col-md-6">
-                                    <h4>Laba</h4>
-                                    <label>{{rupiah($total_profit)}}</label>
-                                </div>
-                                <div class="col-md-6">
-                                        <h4>Omset</h4>
-                                        <label>{{rupiah($total_omset)}}</label>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            </section>
-            <!-- right col -->
-            <!-- Left col -->
-            <section class="col-lg-8 connectedSortable">
-                <div class="box box-primary">
-                    <figure class="highcharts-figure">
-                        <div id="container1"></div>
-                    </figure>
-                </div>
-            </section>
-            <!-- /.Left col -->
-            <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <section class="col-lg-4 connectedSortable">
-                <div class="box box-primary">
-                    <figure class="highcharts-figure">
-                        <div id="chart-bulet"></div>
-                    </figure>
-                </div>
-            </section>
-            <!-- right col -->
-        </div>
-        <!-- /.row (main row) -->
-        <div class="row">
+                        </form>
+                    </div>
+                </section>
+                <!-- right col -->
         <div class="col-xs-12">
             @if(session('status'))
             <div class="alert alert-success alert-dismissible">
@@ -111,28 +78,27 @@
             </div>
             @endif
             <div class="box">
-
                 <div class="box-header">
-                    <h4>Penjualan list
-                        <a href="{{route('penjualans.create')}}" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Penjualan</a>
+                    <h4>Pembelian list
+                        <a href="{{route('pembelians.create')}}" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Pembelian</a>
                     </h4>
                     <div class="row input-daterange">
-                            <div class="col-md-4">
-                                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly />
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly />
-                            </div>
-                            <div class="col-md-4">
-                                <button type="button" name="filter" id="filter" class="btn btn-primary">Filter</button>
-                                <button type="button" name="refresh" id="refresh" class="btn btn-default">Refresh</button>
-                            </div>
+                        <div class="col-md-4">
+                            <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly />
                         </div>
-                        <br />
+                        <div class="col-md-4">
+                            <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly />
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" name="filter" id="filter" class="btn btn-primary">Filter</button>
+                            <button type="button" name="refresh" id="refresh" class="btn btn-default">Refresh</button>
+                        </div>
+                    </div>
+                    <br />
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="tabel-penjualans" class="table table-bordered table-hover">
+                    <table id="tabel-pembelians" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>No</th>
@@ -176,7 +142,7 @@
                 <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Default Modal</h4>
             </div>
-            <form role="form" enctype="multipart/form-data" action="{{route('penjualans.store')}}" method="POST">
+            <form role="form" enctype="multipart/form-data" action="{{route('pembelians.store')}}" method="POST">
             <div class="modal-body">
 
                     {{ csrf_field() }} {{ method_field('POST') }}
@@ -219,7 +185,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary pull-left">Tambah penjualans</button>
+                <button type="submit" class="btn btn-primary pull-left">Tambah pembelians</button>
                 <button type="buton" class="btn btn-default " data-dismiss="modal">Close</button>
 
             </div>
@@ -237,12 +203,12 @@
 <!-- Select2 -->
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/af-2.1.2/b-1.2.2/b-colvis-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.1.3/r-2.1.0/rr-1.1.2/sc-1.4.2/se-1.2.0/datatables.min.css"/>
-
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/af-2.1.2/b-1.2.2/b-colvis-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.1.3/r-2.1.0/rr-1.1.2/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 <script>
     function IDRFormatter(angka, prefix) {
     var number_string = angka.toString().replace(/[^,\d]/g, ''),
@@ -259,66 +225,16 @@
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
     return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 }
-var bilangan = {{$total_profit}};
-Highcharts.chart('produk-laku', {
-    chart: {
-        type: 'column'
-    },
-    title: {
-        text: 'Grafik Penjualan Tas Tahun '+{{$tahun_ini}}
-    },
-    subtitle: {
-        text: 'Total tas terjual '+{{$terjual}}+' PCS'
-    },
-    xAxis: {
-        categories: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec'
-        ],
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Rainfall (mm)'
-        }
-    },
-    tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} pcs</b></td></tr>',
-        footerFormat: '</table>',
-        shared: true,
-        useHTML: true
-    },
-    plotOptions: {
-        column: {
-            pointPadding: 0.2,
-            borderWidth: 0
-        }
-    },
-    series:{!!json_encode($product_name)!!}
-});
-
-        Highcharts.chart('container1', {
+var bilangan = {{$total_pengeluaran}};
+Highcharts.chart('container1', {
             chart: {
                 type: 'line'
             },
             title: {
-                text: 'Pendapatan di tahun ' +{{$tahun_ini}}
+                text: 'Pengeluaran di tahun ' +{{$tahun_ini}}
             },
             subtitle: {
-                text: 'Total profit RP ' +IDRFormatter(bilangan)
+                text: 'Total pengeluaran RP ' +IDRFormatter(bilangan)
             },
             xAxis: {
                 categories: {!!json_encode($bulans)!!},
@@ -333,7 +249,7 @@ Highcharts.chart('produk-laku', {
                 },
             },
             tooltip: {
-                headerFormat: '<span style="font-size:10px">Pendapatan di bulan {point.key}</span><table>',
+                headerFormat: '<span style="font-size:10px">Pengeluaran di bulan {point.key}</span><table>',
                 pointFormat: '<tr><td style="color:{series.color};padding:0"></td>' +
                     '<td style="padding:0"><b>{point.y:.1f} IDR</b></td></tr>',
                 footerFormat: '</table>',
@@ -347,69 +263,17 @@ Highcharts.chart('produk-laku', {
                 }
             },
             series: [{
-                name: 'Pendapatan Tahun 2019',
-                data: {!!json_encode($profit)!!}
+                name: 'Grafik Pengeluaran Di Tahun ' +{{$tahun_ini}},
+                data: {!!json_encode($pengeluaran)!!}
 
             }]
         });
-        </script>
-<script>
-    Highcharts.chart('chart-bulet', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: 'Produk Terjual Tahun' +{{$tahun_ini}}
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%'
-        }
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.y:.1f} pcs'
-            }
-        }
-    },
-    series: [{
-        name: 'Presentase',
-        colorByPoint: true,
-        data: {!!json_encode($penjualan2)!!}
-    }]
-});
+
+
 </script>
-<script>
-    $('#category_id').select2({
-    ajax:{
-        url: '{{route('categorySearch')}}',
-        processResults: function(data){
-            return {
-                results: data.map(function(item){
-                    return {
-                    id: item.id,
-                    text: item.name
-                    }
-                    })
-                }
-            }
-        }
-    });
-    </script>
 
 
-
-  <script type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function(){
  $('.input-daterange').datepicker({
   todayBtn:'linked',
@@ -421,12 +285,13 @@ $(document).ready(function(){
 
  function load_data(from_date = '', to_date = '')
  {
-    $('#tabel-penjualans').DataTable({
+
+     $('#tabel-pembelians').DataTable({
         aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: {
-    url:'{{ route('laporans.index')}}',
+    url:'{{ route('laporans2.index')}}',
     data:{from_date:from_date, to_date:to_date}
    },
         columns: [
@@ -436,7 +301,7 @@ $(document).ready(function(){
                 },width: '20'},
         {data: 'invoice_number', name: 'invoice_number'},
         {data: 'tanggal_transaksi', name: 'tanggal_transaksi'},
-        {data: 'customer.nama', name: 'customer.nama'},
+        {data: 'supplier.nama', name: 'supplier.nama'},
         {data: 'products[ | ].nama_produk', name: 'products[].nama_produk'},
         {data: 'total_harga', name: 'total_harga'},
         {data: 'status', name: 'status',width: '80'},
@@ -460,8 +325,8 @@ $(document).ready(function(){
     'excel', 'csv', 'pdf', 'copy'
    ],
    "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ]
-
     });
+
 }
 
 $('#filter').click(function(){
@@ -469,7 +334,7 @@ $('#filter').click(function(){
  var to_date = $('#to_date').val();
  if(from_date != '' &&  to_date != '')
  {
-  $('#tabel-penjualans').DataTable().destroy();
+  $('#tabel-pembelians').DataTable().destroy();
   load_data(from_date, to_date);
  }
  else

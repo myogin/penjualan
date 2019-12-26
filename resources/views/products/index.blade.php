@@ -39,14 +39,12 @@
                     <thead>
                     <tr>
                         <th>No</th>
+                        <th>Nama Ketegori</th>
                         <th>Kode Produk</th>
                         <th>Nama Produk</th>
-                        <th>Nama Ketegori</th>
-                        <th>Keterangan</th>
                         <th>Satuan</th>
                         <th>Harga Dasar</th>
                         <th>Harga Jual</th>
-                        <th>Gambar</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -56,14 +54,12 @@
                     <tfoot>
                     <tr>
                         <th>No</th>
+                        <th>Nama Ketegori</th>
                         <th>Kode Produk</th>
                         <th>Nama Produk</th>
-                        <th>Nama Ketegori</th>
-                        <th>Keterangan</th>
                         <th>Satuan</th>
                         <th>Harga Dasar</th>
                         <th>Harga Jual</th>
-                        <th>Gambar</th>
                         <th>Action</th>
                     </tr>
                     </tfoot>
@@ -183,6 +179,11 @@
                             <div class="input-group img-show">
                                     <img id="savatar" src="" width="120px" /><br>
                             </div>
+                            <h5>Harga Dasar</h5>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                <input type="text" id="sharga1" class="form-control" disabled="">
+                            </div>
                             <h5>Harga Jual</h5>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-money"></i></span>
@@ -229,6 +230,7 @@
 
 <script type="text/javascript">
     var table = $('#tabel-products').DataTable({
+        aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.product') }}",
@@ -237,14 +239,13 @@
                 render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
                 },width: '20'},
+
+        {data: 'category.name', name: 'category.name'},
         {data: 'kode_produk', name: 'kode_produk'},
         {data: 'nama_produk', name: 'nama_produk'},
-        {data: 'category.name', name: 'category.name'},
-        {data: 'keterangan', name: 'keterangan'},
         {data: 'satuan', name: 'satuan'},
         {data: 'harga_dasar', name: 'harga_dasar'},
         {data: 'harga_jual', name: 'harga_jual'},
-        {data: 'show_photo', name: 'show_photo'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '180px'}
         ]
     });
@@ -299,6 +300,8 @@
             $('#ssatuan').val(data.satuan);
             $('#sket').val(data.keterangan);
             $('#sharga').val(data.harga_jual);
+
+            $('#sharga1').val(data.harga_dasar);
             $('#sstok').val(data.stock.stok);
 
             document.getElementById("savatar").src = "{{asset('storage/')}}/"+data.gambar;

@@ -69,18 +69,18 @@ class PenjualanController extends Controller
 
 
         $new_penjualan = new \App\Penjualan;
-        $new_penjualan->user_id = \Auth::user()->id;
+        $new_penjualan->created_by = \Auth::user()->id;
         $new_penjualan->customer_id = $request->get('customer');
 
         $new_penjualan->tanggal_transaksi =
             date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
 
         $mytime = Carbon::now();
-        $invoice = \App\Penjualan::get('id')->last();
+        $invoice = \App\Penjualan::get('invoice_number')->last();
         if ($invoice === null) {
-            $invoice_no = $mytime->format('Ymd') . "0001";
+            $invoice_no = 7001;
         } else {
-            $invoice_no = $mytime->format('Ymd') . str_pad($invoice->id + 1, 4, '0', STR_PAD_LEFT);;
+            $invoice_no = $invoice->invoice_number + 1;
         }
         $new_penjualan->invoice_number = $invoice_no;
         $new_penjualan->status = $request->get('status');
@@ -198,7 +198,7 @@ class PenjualanController extends Controller
 
         $penjualan = \App\Penjualan::findOrFail($id);
         $penjualan->customer_id = $request->get('customer');
-
+        $penjualan->updated_by = \Auth::user()->id;
         $penjualan->tanggal_transaksi =
             date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
 

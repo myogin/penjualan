@@ -50,7 +50,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validation = \Validator::make($request->all(),[
-            "name" => "required|min:5|max:100|unique:categories",
+            "name" => "required|min:3|max:100|unique:categories",
             "image" => "required"
         ])->validate();
 
@@ -115,7 +115,7 @@ class CategoryController extends Controller
     {
         //
         $validation = \Validator::make($request->all(),[
-            "name" => "required|min:5|max:100|unique:categories"
+            "name" => "required|min:3|max:100|unique:categories,name,".$id,
         ])->validate();
 
         $name = $request->get('name');
@@ -170,7 +170,7 @@ class CategoryController extends Controller
 
     public function apicategory()
     {
-        $category = \App\Category::all();
+        $category = \App\Category::orderBy('id', 'DESC')->get();
         return Datatables::of($category)
             ->addColumn('show_photo', function($category){
                 if ($category->image == NULL){

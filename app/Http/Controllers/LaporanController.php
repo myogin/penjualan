@@ -20,7 +20,7 @@ class LaporanController extends Controller
     }
         $bulan_ini = Carbon::now()->format('m');
 
-        // chart profit tahunan
+        // chart pendapatan di tahun
         $bulans = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
         $profit = [];
 
@@ -29,6 +29,7 @@ class LaporanController extends Controller
             $penjualan_laba = \App\Penjualan::selectRaw('CAST(sum(profit) as UNSIGNED) as profit')
             ->selectRaw('YEAR(tanggal_transaksi) year, MONTH(tanggal_transaksi) month')
             ->whereMonth('tanggal_transaksi','=', $key+1 )
+            ->whereYear('tanggal_transaksi','=',$tahun_ini)
             ->groupby('year','month')
             ->first();
             if(!empty ( $penjualan_laba )){
@@ -38,7 +39,7 @@ class LaporanController extends Controller
             }
         }
 
-        // chart barang laku bulanan
+        // chart bulat barang laku bulanan
         $penjualan2 = DB::table('penjualans')
             ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
             ->join('products', 'products.id', '=', 'penjualan_product.product_id')
@@ -68,23 +69,11 @@ class LaporanController extends Controller
                 $penjualan = \App\Penjualan::with('customer')->with('products')
                 ->whereBetween('tanggal_transaksi', array($request->from_date, $request->to_date))
                 ->get();
-                return Datatables::of($penjualan)
-                    ->addColumn('show_photo', function ($penjualan) {
-                        if ($penjualan->gambar == NULL) {
-                            return 'No Image';
-                        }
-                        return '<img src="' . asset('storage/' . $penjualan->gambar) . '" width="120px" /><br>';
-                    })
-                    ->addColumn('action', function ($penjualan) {
-                        return '' .
-                        '<a  href="'.route('penjualans.edit', ['id' => $penjualan->id]).'" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '.
-                        '<a  href="'.route('invoiceTransaksi', ['id' => $penjualan->id]).'" class="btn bg-orange btn-flat btn-xs"><i class="fa fa-print"></i> Invoice</a> ';
-                    })
-                    ->rawColumns(['show_photo', 'action'])
-                    ->make(true);
+
             }else{
                 $penjualan = \App\Penjualan::with('customer')->with('products')->get();
-                return Datatables::of($penjualan)
+            }
+            return Datatables::of($penjualan)
                     ->addColumn('show_photo', function ($penjualan) {
                         if ($penjualan->gambar == NULL) {
                             return 'No Image';
@@ -98,7 +87,6 @@ class LaporanController extends Controller
                     })
                     ->rawColumns(['show_photo', 'action'])
                     ->make(true);
-            }
         }
 
         $product_name =[];
@@ -118,6 +106,7 @@ class LaporanController extends Controller
                         ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
                         ->where('products.nama_produk', $ps->nama_produk)
                         ->whereMonth('penjualans.tanggal_transaksi', $bulan )
+                        ->whereYear('penjualans.tanggal_transaksi', $tahun_ini )
                         ->groupBy('products.nama_produk')
                         ->get();
 
@@ -169,6 +158,86 @@ class LaporanController extends Controller
         'terjual' => $terjual_qty,
         'rank_customer' => $rank_customer,
         'rank_product' => $rank_product
+        ]);
+    }
+
+
+
+
+
+    public function laporanBeli(Request $request){
+
+        //datatables
+
+        if(request()->ajax())
+     {
+        if(!empty($request->from_date))
+            {
+                $pembelian = \App\Pembelian::with('supplier')->with('products')
+                ->whereBetween('tanggal_transaksi', array($request->from_date, $request->to_date))
+                ->get();
+            }else{
+                $pembelian = \App\Pembelian::with('supplier')->with('products')->get();
+            }
+
+            return Datatables::of($pembelian)
+            ->addColumn('action', function ($pembelian) {
+                return '' .
+                '<a  href="'.route('pembelians.edit', ['id' => $pembelian->id]).'" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
+            })
+            ->rawColumns(['action'])->make(true);
+        }
+
+        if($request->get('year') != ''){
+            $tahun_ini = $request->get('year');
+        }else{
+        $tahun_ini = Carbon::now()->format('Y');
+    }
+        $bulan_ini = Carbon::now()->format('m');
+
+        // chart pendapatan di tahun
+        $bulans = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        $pengeluaran = [];
+
+        foreach ($bulans as $key => $bulan) {
+
+            $pengeluaran_beli = \App\Pembelian::selectRaw('CAST(sum(total_harga) as UNSIGNED) as total_harga')
+            ->selectRaw('YEAR(tanggal_transaksi) year, MONTH(tanggal_transaksi) month')
+            ->whereMonth('tanggal_transaksi','=', $key+1 )
+            ->whereYear('tanggal_transaksi','=',$tahun_ini)
+            ->groupby('year','month')
+            ->first();
+            if(!empty ( $pengeluaran_beli )){
+                $pengeluaran[$key] = $pengeluaran_beli->total_harga;
+            }else{
+                $pengeluaran[$key] = 0;
+            }
+        }
+
+        //query pengeluaran tahun ini
+        $cari_pengeluaran = DB::table('pembelians')->selectRaw('sum(total_harga)as total_harga')
+        ->whereYear('tanggal_transaksi', $tahun_ini)
+        ->first();
+        $total_pengeluaran=$cari_pengeluaran->total_harga;
+
+        //cari supplier paling banyak mesen
+        $rank_supplier = DB::table('pembelians')
+            ->join('pembelian_product', 'pembelians.id', '=', 'pembelian_product.pembelian_id')
+            ->join('suppliers', 'suppliers.id', '=', 'pembelians.supplier_id')
+            ->select('suppliers.nama as name')
+            ->selectRaw('cast(sum(pembelian_product.qty)as UNSIGNED) as jumlah')
+            ->whereYear('pembelians.tanggal_transaksi', $tahun_ini )
+            ->groupBy('suppliers.nama')
+            ->orderBy('jumlah', 'desc')
+            ->limit(1)
+            ->get();
+
+        return view('laporans.index2',
+        ['tahun_ini' => $tahun_ini, 'bulan_ini' => $bulan_ini,
+        'bulans' => $bulans,
+        'pengeluaran' => $pengeluaran,
+        'total_pengeluaran' => $total_pengeluaran,
+        'rank_supplier' => $rank_supplier
         ]);
     }
 }

@@ -42,8 +42,7 @@
                         <th>Email</th>
                         <th>Perusahaan</th>
                         <th>Telepon</th>
-                        <th>Alamat</th>
-                        <th>Avatar</th>
+                        <th>Tanggal Daftar</th>
                         <th>status</th>
                         <th>Action</th>
                     </tr>
@@ -58,8 +57,7 @@
                         <th>Email</th>
                         <th>Perusahaan</th>
                         <th>Telepon</th>
-                        <th>Alamat</th>
-                        <th>Avatar</th>
+                        <th>Tanggal Daftar</th>
                         <th>status</th>
                         <th>Action</th>
                     </tr>
@@ -192,6 +190,7 @@
 @section('js')
 <script type="text/javascript">
     var table = $('#tabel-customers').DataTable({
+        aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.customer') }}",
@@ -204,12 +203,11 @@
         {data: 'email', name: 'email'},
         {data: 'perusahaan', name: 'perusahaan'},
         {data: 'phone', name: 'phone'},
-        {data: 'address', name: 'address'},
-        {data: 'show_photo', name: 'show_photo'},
+        {data: 'created_at', name: 'created_at'},
         {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
         ],
-        columnDefs: [{targets: 7,
+        columnDefs: [{targets: 6,
             render: function ( data, type, row ) {
             var css1 = 'black';
             if (data == 'ACTIVE') {

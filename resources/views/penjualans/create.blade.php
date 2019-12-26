@@ -70,7 +70,7 @@
                             <label for="Status">Status</label>
                             <select class="form-control select2"  name="status" id="Status"  style="width: 100%;">
                                 <option selected>Process</option>
-                                <option>Finish</option>
+                                <option >Finish</option>
                                 <option>Cancel</option>
                             </select>
                         </div>

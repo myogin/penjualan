@@ -143,6 +143,7 @@
 <script type="text/javascript">
 
     var table = $('#tabel-pembelians').DataTable({
+        aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.pembelian') }}",

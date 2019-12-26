@@ -431,6 +431,7 @@ class ComposerStaticInit364a96a37b9274eb5df7a1751325a3e3
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\CustomerController' => __DIR__ . '/../..' . '/app/Http/Controllers/CustomerController.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
+        'App\\Http\\Controllers\\LaporanController' => __DIR__ . '/../..' . '/app/Http/Controllers/LaporanController.php',
         'App\\Http\\Controllers\\PembelianController' => __DIR__ . '/../..' . '/app/Http/Controllers/PembelianController.php',
         'App\\Http\\Controllers\\PenjualanController' => __DIR__ . '/../..' . '/app/Http/Controllers/PenjualanController.php',
         'App\\Http\\Controllers\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductController.php',

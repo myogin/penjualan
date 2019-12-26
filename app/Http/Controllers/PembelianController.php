@@ -59,18 +59,18 @@ class PembelianController extends Controller
         ])->validate();
 
         $pembelian = new \App\Pembelian;
-        $pembelian->user_id = \Auth::user()->id;
+        $pembelian->created_by = \Auth::user()->id;
         $pembelian->supplier_id = $request->get('supplier');
 
         $pembelian->tanggal_transaksi =
             date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
 
         $mytime = Carbon::now();
-        $invoice = \App\Pembelian::get('id')->last();
+        $invoice = \App\Pembelian::get('invoice_number')->last();
         if ($invoice === null) {
-            $invoice_no = $mytime->format('Ymd') . "0001";
+            $invoice_no = 3001;
         } else {
-            $invoice_no = $mytime->format('Ymd') . str_pad($invoice->id + 1, 4, '0', STR_PAD_LEFT);;
+            $invoice_no = $invoice->invoice_number+1;
         }
         $pembelian->invoice_number = $invoice_no;
         $pembelian->status = $request->get('status');
@@ -88,7 +88,6 @@ class PembelianController extends Controller
 
 
             $product = \App\Product::find($request->get('product')[$key]);
-            $pembelian_product->harga_jual = $product->harga_jual;
             $pembelian_product->harga_beli = $product->harga_dasar;
             $pembelian_product->save();
 
@@ -156,7 +155,7 @@ class PembelianController extends Controller
 
         $pembelian = \App\Pembelian::findOrFail($id);
         $pembelian->supplier_id = $request->get('supplier');
-
+        $pembelian->updated_by = \Auth::user()->id;
         $pembelian->tanggal_transaksi =
             date('Y-m-d', strtotime($request->get('tanggal_transaksi')));
 
@@ -204,7 +203,6 @@ class PembelianController extends Controller
 
 
             $product = \App\Product::find($request->get('product')[$key]);
-            $detail_product->harga_jual = $product->harga_jual;
             $detail_product->harga_beli = $product->harga_dasar;
             $detail_product->save();
 

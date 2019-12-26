@@ -30,14 +30,16 @@ class HomeController extends Controller
         $tahun_ini = Carbon::now()->format('Y');
         $bulan_ini = Carbon::now()->format('m');
 
-        // chart profit tahunan
+
         $bulans = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
         $profit = [];
+        // total profit tahunan
         foreach ($bulans as $key => $bulan) {
 
-            $penjualan_laba = \App\Penjualan::selectRaw('CAST(sum(profit) as UNSIGNED) as profit')
+            $penjualan_laba = \App\Penjualan::selectRaw('CAST(sum(total_harga) as UNSIGNED) as profit')
             ->selectRaw('YEAR(tanggal_transaksi) year, MONTH(tanggal_transaksi) month')
             ->whereMonth('tanggal_transaksi','=', $key+1 )
+            ->whereYear('tanggal_transaksi', $tahun_ini )
             ->groupby('year','month')
             ->first();
             if(!empty ( $penjualan_laba )){
@@ -46,14 +48,31 @@ class HomeController extends Controller
                 $profit[$key] = 0;
             }
         }
+        $pengeluaran= [];
+        // total pengeluaran tahunan
+        foreach ($bulans as $key => $bulan) {
 
-        // chart barang laku bulanan
+            $pembelian_pengeluaran = \App\Pembelian::selectRaw('CAST(sum(total_harga) as UNSIGNED) as pengeluaran')
+            ->selectRaw('YEAR(tanggal_transaksi) year, MONTH(tanggal_transaksi) month')
+            ->whereMonth('tanggal_transaksi','=', $key+1 )
+            ->whereYear('tanggal_transaksi', $tahun_ini )
+            ->groupby('year','month')
+            ->first();
+            if(!empty ( $pembelian_pengeluaran )){
+                $pengeluaran[$key] = $pembelian_pengeluaran->pengeluaran;
+            }else{
+                $pengeluaran[$key] = 0;
+            }
+        }
+
+        // chart bulat product terjual bulan ini
         $penjualan2 = DB::table('penjualans')
             ->join('penjualan_product', 'penjualans.id', '=', 'penjualan_product.penjualan_id')
             ->join('products', 'products.id', '=', 'penjualan_product.product_id')
             ->select('products.nama_produk as name')
             ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
             ->whereMonth('penjualans.tanggal_transaksi', $bulan_ini )
+            ->whereYear('penjualans.tanggal_transaksi', $tahun_ini )
             ->groupBy('products.nama_produk')
             ->get();
 
@@ -63,9 +82,21 @@ class HomeController extends Controller
         ->first();
         $total_profit=$cari_profit->profit;
 
-        //query omset tahun ini
+        //query pengeluaran tahun ini
+        $cari_pengeluaran = DB::table('pembelians')->selectRaw('sum(total_harga)as total_harga')
+        ->whereYear('tanggal_transaksi', $tahun_ini)
+        ->first();
+        $total_pengeluaran=$cari_pengeluaran->total_harga;
+
+        //query pemasukan tahun ini
+        $cari_pemasukan = DB::table('penjualans')->selectRaw('sum(total_harga)as total_harga')
+        ->whereYear('tanggal_transaksi', $tahun_ini)
+        ->first();
+        $total_pemasukan=$cari_pemasukan->total_harga;
+
+        //query omset bulan ini
         $cari_omset = DB::table('penjualans')->selectRaw('sum(total_harga)as omset')
-        ->whereYear('penjualans.tanggal_transaksi', $tahun_ini)
+        ->whereMonth('penjualans.tanggal_transaksi', $bulan_ini)
         ->first();
         $total_omset=$cari_omset->omset;
 
@@ -80,9 +111,12 @@ class HomeController extends Controller
 
         return view('home',
         ['tahun_ini' => $tahun_ini,'bulan_ini' => $bulan_ini,
-        'bulans' => $bulans, 'profit' => $profit,'penjualan2' => $penjualan2,
+        'bulans' => $bulans,
+        'profit' => $profit,'pengeluaran' => $pengeluaran,
+        'penjualan2' => $penjualan2,
         'total_profit' =>$total_profit,
         'total_omset' =>$total_omset,
+        'total_pengeluaran' =>$total_pengeluaran, 'total_pemasukan' => $total_pemasukan,
         'transaksi_proses' => $cari_process,
         'stock' => $cari_stock,
         'customer' => $cari_customer
@@ -134,6 +168,28 @@ class HomeController extends Controller
                         ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
                         ->whereYear('penjualans.tanggal_transaksi',2019 )
                         ->get();
-        return $penjualan2;
+
+                        $tahun_ini = Carbon::now()->format('Y');
+                        $bulan_ini = Carbon::now()->format('m');
+
+
+                        $bulans = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+                        $profit = [];
+                        // total profit tahunan
+                        foreach ($bulans as $key => $bulan) {
+
+                            $penjualan_laba = \App\Penjualan::selectRaw('CAST(sum(total_harga) as UNSIGNED) as profit')
+                            ->selectRaw('YEAR(tanggal_transaksi) year, MONTH(tanggal_transaksi) month')
+                            ->whereMonth('tanggal_transaksi','=', $key+1 )
+                            ->whereYear('tanggal_transaksi', $tahun_ini )
+                            ->groupby('year','month')
+                            ->first();
+                            if(!empty ( $penjualan_laba )){
+                                $profit[$key] = $penjualan_laba->profit;
+                            }else{
+                                $profit[$key] = 0;
+                            }
+                        }
+        return $profit;
     }
 }

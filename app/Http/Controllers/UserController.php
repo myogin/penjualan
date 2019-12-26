@@ -53,7 +53,7 @@ class UserController extends Controller
             "name" => "required|min:5|max:100",
             "username" => "required|min:5|max:20|unique:users",
             "roles" => "required",
-            "phone" => "required|digits_between:10,12",
+            "phone" => "required|digits_between:9,12",
             "address" => "required|min:20|max:200",
             "avatar" => "required",
             "email" => "required|email|unique:users",
@@ -179,7 +179,7 @@ class UserController extends Controller
     }
     public function apiuser()
     {
-        $user = \App\User::all();
+        $user = \App\User::orderBy('id', 'DESC')->get();
         return Datatables::of($user)
             ->addColumn('show_photo', function($user){
                 if ($user->avatar == NULL){

@@ -38,9 +38,9 @@
                         <tr>
                             <th>No</th>
                             <th>Name</th>
-                            <th>Username</th>
                             <th>Email</th>
-                            <th>Avatar</th>
+                            <th>Terdaftar</th>
+                            <th>Phone</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -52,9 +52,9 @@
                         <tr>
                             <th>No</th>
                             <th>Name</th>
-                            <th>Username</th>
                             <th>Email</th>
-                            <th>Avatar</th>
+                            <th>Terdaftar</th>
+                            <th>Phone</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -236,6 +236,7 @@
 <script type="text/javascript">
 
     var table = $('#tabel-users').DataTable({
+        aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.user') }}",
@@ -245,9 +246,9 @@
                 return meta.row + meta.settings._iDisplayStart + 1;
                 },width: '20'},
         {data: 'name', name: 'name'},
-        {data: 'username', name: 'username'},
         {data: 'email', name: 'email'},
-        {data: 'show_photo', name: 'show_photo'},
+        {data: 'created_at', name: 'created_at'},
+        {data: 'phone', name: 'phone'},
         {data: 'status', name: 'status',width: '80px'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
         ],

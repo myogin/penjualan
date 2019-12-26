@@ -16,6 +16,7 @@
 
 <!-- Main content -->
 <section class="content">
+        @if (array_intersect(["ADMIN"], json_decode(Auth::user()->roles)))
     <!-- Small boxes (Stat box) -->
     <div class="row">
         <div class="col-lg-3 col-xs-6">
@@ -102,7 +103,20 @@
         <!-- right col -->
     </div>
     <!-- /.row (main row) -->
-
+    @else
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h2>Hallo !!</h2>
+                </div>
+                <div class="box-body">
+                    <p>Welcome to admin dashboard Balinesse Classic</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
     </section>
     <!-- /.content -->
 @endsection
@@ -130,16 +144,17 @@
     var tampilan_omset = {{$total_omset}};
     document.getElementById('tampilan_omset').innerHTML= 'Rp'+IDRFormatter(tampilan_omset);
 
-    var bilangan = {{$total_profit}};
+    var bilangan = {{$total_pemasukan}};
+    var bilangan2 = {{$total_pengeluaran}};
         Highcharts.chart('container1', {
             chart: {
                 type: 'line'
             },
             title: {
-                text: 'Pendapatan di tahun ' +{{$tahun_ini}}
+                text: 'Grafik perbandingan pengeluaran dan pemasukan ' +{{$tahun_ini}}
             },
             subtitle: {
-                text: 'Total profit RP ' +IDRFormatter(bilangan)
+                text: 'Total pemasukan RP ' +IDRFormatter(bilangan)+ ' || Total pengeluaran RP ' +IDRFormatter(bilangan2)
             },
             xAxis: {
                 categories: {!!json_encode($bulans)!!},
@@ -168,9 +183,12 @@
                 }
             },
             series: [{
-                name: 'Pendapatan Tahun 2019',
+                name: 'Pemasukan di Tahun 2019 ' +{{$tahun_ini}},
                 data: {!!json_encode($profit)!!}
 
+            },{
+                name: 'Pengeluaran di Tahun 2019 ' +{{$tahun_ini}},
+                data: {!!json_encode($pengeluaran)!!}
             }]
         });
         </script>

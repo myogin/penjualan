@@ -160,6 +160,7 @@
 <script type="text/javascript">
 
     var table = $('#tabel-penjualans').DataTable({
+        aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
         ajax: "{{ route('api.penjualan') }}",

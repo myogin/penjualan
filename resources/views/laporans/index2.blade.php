@@ -26,22 +26,14 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <!-- Left col -->
-            <section class="col-lg-9 connectedSortable">
-                    <div class="box box-primary">
-                        <figure class="highcharts-figure">
-                            <div id="container1"></div>
-                        </figure>
-                    </div>
-                </section>
-                <!-- /.Left col -->
-                <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <section class="col-lg-3 connectedSortable">
+
+             <!-- right col (We are only adding the ID to make the widgets sortable)-->
+            <section class="col-lg-12 connectedSortable">
                     <div class="box box-primary">
                         <form action="{{route('laporans2.index')}}" class="form-horizontal">
                             <div class="modal-body">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-4">
                                         <div class="input-group">
                                             <label> DATA TAHUN {{$tahun_ini}} </label>
                                         </div>
@@ -50,16 +42,16 @@
                                             <input type="text" id="datepicker" value='{{Request::get('year')}}' name='year' />
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </div>
-                                        <hr>
+                                    </div>
+                                    <div class="col-md-4">
                                         <div class="input-group">
                                             @foreach ($rank_supplier as $rcus)
                                             <h4>Peringkat Supplier</h4>
                                             <label>Nama Supplier : <u>{{$rcus->name}}</u> total dibeli tas sebanyak: <u>{{$rcus->jumlah}}</u></label>
                                             @endforeach
                                         </div>
-                                        <hr>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <h4>Pengeluaran</h4>
                                         <label>{{rupiah($total_pengeluaran)}}</label>
                                     </div>
@@ -69,6 +61,21 @@
                     </div>
                 </section>
                 <!-- right col -->
+        </div>
+        <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-12 connectedSortable">
+                    <div class="box box-primary">
+                        <figure class="highcharts-figure">
+                            <div id="container1"></div>
+                        </figure>
+                    </div>
+                </section>
+                <!-- /.Left col -->
+        </div>
+        <div class="row">
+
+
         <div class="col-xs-12">
             @if(session('status'))
             <div class="alert alert-success alert-dismissible">

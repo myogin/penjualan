@@ -23,7 +23,7 @@
             <!-- small box -->
             <div class="small-box bg-aqua">
             <div class="inner">
-                <h3 id="tampilan_omset"></h3>
+                <h4 style="font-size: 30px;" id="tampilan_omset"></h4>
 
                 <p>Omset Bulan ini</p>
             </div>
@@ -84,7 +84,7 @@
     <!-- Main row -->
     <div class="row">
         <!-- Left col -->
-        <section class="col-lg-7 connectedSortable">
+        <section class="col-lg-12 connectedSortable">
             <div class="box box-primary">
                 <figure class="highcharts-figure">
                     <div id="container1"></div>
@@ -93,7 +93,7 @@
         </section>
         <!-- /.Left col -->
         <!-- right col (We are only adding the ID to make the widgets sortable)-->
-        <section class="col-lg-5 connectedSortable">
+        <section class="col-lg-12 connectedSortable">
             <div class="box box-primary">
                 <figure class="highcharts-figure">
                     <div id="chart-bulet"></div>
@@ -183,11 +183,11 @@
                 }
             },
             series: [{
-                name: 'Pemasukan di Tahun 2019 ' +{{$tahun_ini}},
+                name: 'Pemasukan di Tahun ' +{{$tahun_ini}},
                 data: {!!json_encode($profit)!!}
 
             },{
-                name: 'Pengeluaran di Tahun 2019 ' +{{$tahun_ini}},
+                name: 'Pengeluaran di Tahun ' +{{$tahun_ini}},
                 data: {!!json_encode($pengeluaran)!!}
             }]
         });
@@ -195,37 +195,52 @@
 <script>
     Highcharts.chart('chart-bulet', {
     chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
+        type: 'column'
     },
     title: {
-        text: 'Produk Terjual Bulan ini'
+        text: 'Penjualan product bulan {{$bulan_ini_huruf}} ' ,
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        categories: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Jumlah (PCS)'
+        }
     },
     tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%'
-        }
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.0f} PCS</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
     },
     plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.y:.1f} pcs'
-            }
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
         }
     },
-    series: [{
-        name: 'Presentase',
-        colorByPoint: true,
-        data: {!!json_encode($penjualan2)!!}
-    }]
-});
+            series: {!!json_encode($chart_product)!!}
+        });
 </script>
 @endsection

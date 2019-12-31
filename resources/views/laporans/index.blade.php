@@ -25,24 +25,15 @@
     @endphp
     <!-- Main content -->
     <section class="content">
-        <!-- Main row -->
-    <div class="row">
-        <!-- Left col -->
-        <section class="col-lg-9 connectedSortable">
-                <div class="box box-primary">
-                    <figure class="highcharts-figure">
-                        <div id="produk-laku"></div>
-                    </figure>
-                </div>
-            </section>
-            <!-- /.Left col -->
-            <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <section class="col-lg-3 connectedSortable">
+
+         <div class="row">
+             <!-- right col (We are only adding the ID to make the widgets sortable)-->
+            <section class="col-md-12 connectedSortable">
                 <div class="box box-primary">
                     <form action="{{route('laporans.index')}}" class="form-horizontal">
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-4">
                                     <div class="input-group">
                                         <label> DATA TAHUN {{$tahun_ini}} </label>
                                     </div>
@@ -51,27 +42,26 @@
                                         <input type="text" id="datepicker" value='{{Request::get('year')}}' name='year' />
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
-                                    <hr>
+                                </div>
+                                <div class="col-md-3">
                                     <div class="input-group">
                                         @foreach ($rank_customer as $rcus)
                                         <h4>Peringkat Customer</h4>
                                         <label>Nama Customer : <u>{{$rcus->name}}</u> total tas dibeli sebanyak: <u>{{$rcus->jumlah}}</u></label>
                                         @endforeach
                                     </div>
-                                    <hr>
+                                </div>
+                                <div class="col-md-3">
                                     <div class="input-group">
                                         @foreach ($rank_product as $rpro)
                                         <h4>Peringkat Product</h4>
                                         <label>Nama Product : <u>{{$rpro->name}}</u> total terjual sebanyak: <u>{{$rpro->jumlah}}</u></label>
                                         @endforeach
                                     </div>
-                                    <hr>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-2">
                                     <h4>Laba</h4>
                                     <label>{{rupiah($total_profit)}}</label>
-                                </div>
-                                <div class="col-md-6">
                                         <h4>Omset</h4>
                                         <label>{{rupiah($total_omset)}}</label>
                                 </div>
@@ -81,8 +71,24 @@
                 </div>
             </section>
             <!-- right col -->
+         </div>
+
+        <!-- Main row -->
+    <div class="row">
+        <!-- Left col -->
+        <section class="col-lg-12 connectedSortable">
+                <div class="box box-primary">
+                    <figure class="highcharts-figure">
+                        <div id="produk-laku"></div>
+                    </figure>
+                </div>
+            </section>
+            <!-- /.Left col -->
+
+    </div>
+     <div class="row">
             <!-- Left col -->
-            <section class="col-lg-8 connectedSortable">
+            <section class="col-lg-7 connectedSortable">
                 <div class="box box-primary">
                     <figure class="highcharts-figure">
                         <div id="container1"></div>
@@ -91,7 +97,7 @@
             </section>
             <!-- /.Left col -->
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <section class="col-lg-4 connectedSortable">
+            <section class="col-lg-5 connectedSortable">
                 <div class="box box-primary">
                     <figure class="highcharts-figure">
                         <div id="chart-bulet"></div>
@@ -362,7 +368,7 @@ Highcharts.chart('produk-laku', {
         type: 'pie'
     },
     title: {
-        text: 'Produk Terjual Tahun' +{{$tahun_ini}}
+        text: 'Produk Terjual Tahun ' +{{$tahun_ini}}
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -405,11 +411,9 @@ Highcharts.chart('produk-laku', {
             }
         }
     });
-    </script>
+</script>
 
-
-
-  <script type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function(){
  $('.input-daterange').datepicker({
   todayBtn:'linked',
@@ -486,8 +490,6 @@ $('#refresh').click(function(){
 });
 
 });
-
-
         $("#datepicker").datepicker({
     format: "yyyy",
     viewMode: "years",

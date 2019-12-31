@@ -28,7 +28,7 @@
             <div class="box">
                     <div class="box-header">
                         <h4>User list
-                            <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Category</a>
+                            <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Users</a>
                         </h4>
                     </div>
                     <!-- /.box-header -->

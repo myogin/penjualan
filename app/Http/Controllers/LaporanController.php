@@ -181,7 +181,8 @@ class LaporanController extends Controller
             return Datatables::of($pembelian)
                 ->addColumn('action', function ($pembelian) {
                     return '' .
-                        '<a  href="' . route('pembelians.edit', ['id' => $pembelian->id]) . '" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
+                        '<a  href="' . route('pembelians.edit', ['id' => $pembelian->id]) . '" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '.
+                        '<a  href="'.route('invoiceTransaksi2', ['id' => $pembelian->id]).'" class="btn bg-orange btn-flat btn-xs"><i class="fa fa-print"></i> Invoice</a> ';
                 })
                 ->rawColumns(['action'])->make(true);
         }

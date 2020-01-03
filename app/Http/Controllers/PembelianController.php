@@ -115,7 +115,30 @@ class PembelianController extends Controller
     {
         //
     }
+    public function invoice($id)
+    {
+        //
+        $pembelian = \App\Pembelian::findOrFail($id);
+        $products = \App\Product::All();
+        $suppliers = \App\Supplier::All();
 
+        // $product = \App\Product::findOrFail($id);
+        // $customer = \App\Customer::findOrFail($id);
+        // , 'product' => $product, 'customer' => $customer
+        return view('pembelians.invoice', ['pembelian' => $pembelian, 'products' => $products, 'suppliers' => $suppliers]);
+    }
+    public function invoicePrint($id)
+    {
+        //
+        $pembelian = \App\Pembelian::findOrFail($id);
+        $products = \App\Product::All();
+        $suppliers = \App\Supplier::All();
+
+        // $product = \App\Product::findOrFail($id);
+        // $customer = \App\Customer::findOrFail($id);
+        // , 'product' => $product, 'customer' => $customer
+        return view('pembelians.invoice-print', ['pembelian' => $pembelian, 'products' => $products, 'suppliers' => $suppliers]);
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -247,7 +270,8 @@ class PembelianController extends Controller
             })
             ->addColumn('action', function ($pembelian) {
                 return '' .
-                '<a  href="'.route('pembelians.edit', ['id' => $pembelian->id]).'" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> ';
+                '<a  href="'.route('pembelians.edit', ['id' => $pembelian->id]).'" class="btn btn-info btn-flat btn-xs"><i class="glyphicon glyphicon-edit"></i> Edit</a> '.
+                '<a  href="'.route('invoiceTransaksi2', ['id' => $pembelian->id]).'" class="btn bg-orange btn-flat btn-xs"><i class="fa fa-print"></i> Invoice</a> ';
             })
             ->rawColumns(['show_photo', 'action'])->make(true);
     }

@@ -92,7 +92,7 @@ class HomeController extends Controller
                     ->selectRaw('cast(sum(penjualan_product.qty)as UNSIGNED) as y')
                     ->where('products.nama_produk', $ps->nama_produk)
                     ->whereMonth('penjualans.tanggal_transaksi', $bulan)
-                    ->whereYear('penjualans.tanggal_transaksi', 2019)
+                    ->whereYear('penjualans.tanggal_transaksi', $tahun_ini)
                     ->groupBy('products.nama_produk')
                     ->get();
 

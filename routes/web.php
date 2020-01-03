@@ -56,8 +56,11 @@ Route::get("/api/pembelian", "PembelianController@apipembelian")->name("api.pemb
 
 Route::get("/api/tes", "HomeController@apites")->name("api.tes");
 
-Route::get("penjualans/{id}/invoice","PenjualanController@invoice")->name("invoiceTransaksi");
-Route::get("penjualans/{id}/invoice-print","PenjualanController@invoicePrint")->name("invoicePrint");
+Route::get("penjualans/{id}/invoice","PenjualanController@invoice")->name("invoiceTransaksi")->middleware('auth');
+Route::get("penjualans/{id}/invoice-print","PenjualanController@invoicePrint")->name("invoicePrint")->middleware('auth');
 
-Route::get('laporan-penjualan', "LaporanController@index")->name("laporans.index");
-Route::get('laporan-pembelian', "LaporanController@laporanBeli")->name("laporans2.index");
+Route::get("pembelians/{id}/invoice","PembelianController@invoice")->name("invoiceTransaksi2")->middleware('auth');
+Route::get("pembelians/{id}/invoice-print","PembelianController@invoicePrint")->name("invoicePrint2")->middleware('auth');
+
+Route::get('laporan-penjualan', "LaporanController@index")->name("laporans.index")->middleware('auth');
+Route::get('laporan-pembelian', "LaporanController@laporanBeli")->name("laporans2.index")->middleware('auth');

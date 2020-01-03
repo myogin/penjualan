@@ -158,7 +158,7 @@
         {data: 'products[ | ].nama_produk', name: 'products[].nama_produk'},
         {data: 'total_harga', name: 'total_harga'},
         {data: 'status', name: 'status',width: '80'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,width: '80px'}
+        {data: 'action', name: 'action', orderable: false, searchable: false,width: '120px'}
         ],
         columnDefs: [{targets: 6,
             render: function ( data, type, row ) {

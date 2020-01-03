@@ -29,15 +29,11 @@
         </div>
         <div class="row">
             <div class="col-xs-8">
-            <div class="checkbox icheck">
-                <label>
-                <input type="checkbox"> Remember Me
-                </label>
-            </div>
+
             </div>
             <!-- /.col -->
             <div class="col-xs-4">
-            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
             </div>
             <!-- /.col -->
         </div>

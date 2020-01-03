@@ -97,14 +97,12 @@
         <!-- accepted payments column -->
         <div class="col-xs-6">
         <p class="lead">Payment Methods:</p>
-        <img src="../../dist/img/credit/visa.png" alt="Visa">
-        <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-        <img src="../../dist/img/credit/american-express.png" alt="American Express">
-        <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+        <img src="../../dist/img/credit/bca.png" alt="BCA" style="max-width: 80px;">
 
         <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-            Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg
-            dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+            Pembayaran bisa dilakukan pada rekening bca berikut : <br>
+            No Rek : 118941651684 <br>
+            A/N    : Made Yogi Nugraha
         </p>
         </div>
         <!-- /.col -->
@@ -141,19 +139,12 @@
     <!-- this row will not appear when printing -->
     <div class="row no-print">
         <div class="col-xs-12">
-        <a href="{{route('invoicePrint', ['id' => $penjualan->id])}}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>
-        <button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment
-        </button>
-        <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
-            <i class="fa fa-download"></i> Generate PDF
-        </button>
+        <a href="{{route('invoicePrint', ['id' => $penjualan->id])}}" target="_blank" class="btn btn-success pull-right"><i class="fa fa-print"></i> Print</a>
         </div>
     </div>
     </section>
     <!-- /.content -->
-    <div class="clearfix"></div>
-</div>
-<!-- /.content-wrapper -->
+
 @endsection
 @section('js')
 @endsection

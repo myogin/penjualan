@@ -11,6 +11,7 @@
         </h1>
         {{ Breadcrumbs::render('transaksi') }}
       </section>
+
 <!-- Main content -->
 <section class="invoice">
     <!-- title row -->
@@ -144,7 +145,6 @@
     </div>
     </section>
     <!-- /.content -->
-
 @endsection
 @section('js')
 @endsection

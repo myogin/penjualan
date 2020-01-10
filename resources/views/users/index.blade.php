@@ -247,7 +247,13 @@
                 },width: '20'},
         {data: 'name', name: 'name'},
         {data: 'email', name: 'email'},
-        {data: 'created_at', name: 'created_at'},
+        {data: 'created_at', render: function(data, type, row){
+                if(type === "sort" || type === "type"){
+                    return data;
+                }
+                return moment(data).format("DD-MM-YYYY HH:mm");
+            }
+        },
         {data: 'phone', name: 'phone'},
         {data: 'status', name: 'status',width: '80px'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}

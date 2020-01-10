@@ -41,9 +41,7 @@
                         <th>No</th>
                         <th>Invoice Number</th>
                         <th>Tanggal pesan</th>
-                        <th>Customer</th>
-                        <th>Produk</th>
-
+                        <th>Suppliers</th>
                         <th>Total</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -57,8 +55,7 @@
                         <th>No</th>
                         <th>Invoice Number</th>
                         <th>Tanggal pesan</th>
-                        <th>Customer</th>
-                        <th>Produk</th>
+                        <th>Suppliers</th>
                         <th>Total</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -155,12 +152,11 @@
         {data: 'invoice_number', name: 'invoice_number'},
         {data: 'tanggal_transaksi', name: 'tanggal_transaksi'},
         {data: 'supplier.nama', name: 'supplier.nama'},
-        {data: 'products[ | ].nama_produk', name: 'products[].nama_produk'},
         {data: 'total_harga', name: 'total_harga'},
         {data: 'status', name: 'status',width: '80'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '120px'}
         ],
-        columnDefs: [{targets: 6,
+        columnDefs: [{targets: 5,
             render: function ( data, type, row ) {
             var css1 = 'black';
             if (data == 'FINISH') {

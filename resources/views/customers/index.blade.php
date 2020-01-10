@@ -203,7 +203,13 @@
         {data: 'email', name: 'email'},
         {data: 'perusahaan', name: 'perusahaan'},
         {data: 'phone', name: 'phone'},
-        {data: 'created_at', name: 'created_at'},
+        {data: 'created_at', render: function(data, type, row){
+                if(type === "sort" || type === "type"){
+                    return data;
+                }
+                return moment(data).format("DD-MM-YYYY HH:mm");
+            }
+        },
         {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '115px'}
         ],

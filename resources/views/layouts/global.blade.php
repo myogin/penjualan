@@ -115,7 +115,7 @@ desired effect
                     <img src="{{asset('storage/'.Auth::user()->avatar)}}" class="img-circle" alt="User Image">
 
                     <p>
-                    {{Auth::user()->name}} - {{json_encode(Auth::user()->roles)}}
+                    {{Auth::user()->name}}
                     <small>Member since {{Auth::user()->created_at}}</small>
                     </p>
                 </li>

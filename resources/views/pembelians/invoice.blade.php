@@ -9,7 +9,7 @@
           Invoice
           <small>#{{$pembelian->invoice_number}}</small>
         </h1>
-        {{ Breadcrumbs::render('transaksi') }}
+        {{ Breadcrumbs::render('transaksi-beli') }}
       </section>
 <!-- Main content -->
 <section class="invoice">
@@ -81,9 +81,9 @@
                     <tr>
                     <td style="text-align: center;">{{$no++}}</td>
                     <td>{{$value->nama_produk}}</td>
-                    <td style="text-align: right;">{{rupiah($value->pivot->harga_jual)}}</td>
+                    <td style="text-align: right;">{{rupiah($value->pivot->harga_beli)}}</td>
                     <td style="text-align: center;">{{$value->pivot->qty}}</td>
-                    <td style="text-align: right;">{{rupiah($value->pivot->qty*$value->pivot->harga_jual)}}</td>
+                    <td style="text-align: right;">{{rupiah($value->pivot->qty*$value->pivot->harga_beli)}}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -129,7 +129,6 @@
     <div class="row no-print">
         <div class="col-xs-12">
         <a href="{{route('invoicePrint2', ['id' => $pembelian->id])}}" target="_blank" class="btn btn-success pull-right"><i class="fa fa-print"></i> Print</a>
-
         </div>
     </div>
     </section>

@@ -125,6 +125,7 @@ class HomeController extends Controller
         //query omset bulan ini
         $cari_omset = DB::table('penjualans')->selectRaw('sum(total_harga)as omset')
             ->whereMonth('penjualans.tanggal_transaksi', $bulan_ini)
+            ->whereYear('penjualans.tanggal_transaksi', $tahun_ini)
             ->first();
         $total_omset = $cari_omset->omset;
 

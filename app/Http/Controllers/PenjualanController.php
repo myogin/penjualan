@@ -120,7 +120,7 @@ class PenjualanController extends Controller
 
 
 
-        return redirect()->route('penjualans.create')->with('status', 'penjualan successfully created.');
+        return redirect()->route('invoiceTransaksi', ['id' => $penjualan_id])->with('status', 'penjualan successfully created.');
     }
 
     /**

@@ -54,7 +54,7 @@ class ProductController extends Controller
             "category_id" => "required",
             "keterangan" => "required|max:200",
             "satuan" => "required|max:100",
-            "harga_dasar" => "required",
+            "harga_dasar" => "required|integer|min:1",
             "harga_jual" => "required",
             "produk" => "required"
         ])->validate();

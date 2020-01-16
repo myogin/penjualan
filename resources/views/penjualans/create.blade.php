@@ -54,27 +54,6 @@
                                 <!-- /.input group -->
                             </div>
                             <!-- /.form group -->
-                        <div class="form-group {{$errors->first('customer') ? "has-error": ""}}">
-                                <label>Customer</label>
-                                <select class="form-control select2" name="customer" value="{{old('customer')}}" id="customer" style="width: 100%;" placeholder="Kategori Produk">
-
-                                </select>
-                                <span class="help-block"><strong>{{$errors->first('customer')}}</strong></span>
-                            </div>
-                            <div class="form-group {{$errors->first('shipping') ? "has-error": ""}}">
-                                <label for="shipping">shipping</label>
-                                <input type="number" class="form-control" id="shipping" name="shipping" placeholder="Harga Pengiriman" >
-                                <span class="help-block"><strong>{{$errors->first('shipping')}}</strong></span>
-                            </div>
-                        <div class="form-group">
-                            <label for="Status">Status</label>
-                            <select class="form-control select2"  name="status" id="Status"  style="width: 100%;">
-                                <option selected>Process</option>
-                                <option >Finish</option>
-                                <option>Cancel</option>
-                            </select>
-                        </div>
-
 
                     <div id="appendProduct">
 		                <div class="row" id="product" >
@@ -84,7 +63,7 @@
                                     <select class="form-control select2 selectproduct" name="product[]" style="width: 100%;" onchange="loadBarang(this)" placeholder="Kategori Produk" required>
                                         <option value="">Select Product</option>
                                         @foreach ($products as $product)
-                                        <option value="{{$product->id}}">{{$product->nama_produk}} || {{$product->kode_produk}}</option>
+                                        <option value="{{$product->id}}">{{$product->nama_produk}} || {{$product->kode_produk}} ( {{$product->stock->stok}} ) </option>
                                         @endforeach
                                     </select>
                                     <span class="help-block"><strong>{{$errors->first('product')}}</strong></span>
@@ -107,6 +86,28 @@
 			            </div>
 
                     </div>
+
+                    <div class="form-group {{$errors->first('customer') ? "has-error": ""}}">
+                        <label>Customer</label>
+                        <select class="form-control select2" name="customer" value="{{old('customer')}}" id="customer" style="width: 100%;" placeholder="Kategori Produk">
+
+                        </select>
+                        <span class="help-block"><strong>{{$errors->first('customer')}}</strong></span>
+                    </div>
+                    <div class="form-group {{$errors->first('shipping') ? "has-error": ""}}">
+                        <label for="shipping">shipping</label>
+                        <input type="number" class="form-control" id="shipping" name="shipping" placeholder="Harga Pengiriman" >
+                        <span class="help-block"><strong>{{$errors->first('shipping')}}</strong></span>
+                    </div>
+                <div class="form-group">
+                    <label for="Status">Status</label>
+                    <select class="form-control select2"  name="status" id="Status"  style="width: 100%;">
+                        <option selected>Process</option>
+                        <option >Finish</option>
+                        <option>Cancel</option>
+                    </select>
+                </div>
+
                     <div class="form-group">
                         <button type="button" class="btn btn-success" >Tambah Product</button>
                     </div>
@@ -158,7 +159,7 @@
                     <select class="form-control select2 selectproduct" name="product[]" style="width: 100%;" placeholder="Kategori Produk" onchange="loadBarang(this)" required>
                         <option value="">Select Product</option>
                         @foreach ($products as $product)
-                        <option value="{{$product->id}}">{{$product->nama_produk}} || {{$product->kode_produk}}</option>
+                        <option value="{{$product->id}}">{{$product->nama_produk}} || {{$product->kode_produk}} ( {{$product->stock->stok}} )</option>
                         @endforeach
                     </select>
                 </div>

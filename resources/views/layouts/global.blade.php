@@ -32,7 +32,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
+        @if (array_intersect(["ADMIN"], json_decode(Auth::user()->roles)))
     <link rel="stylesheet" href="{{asset('dist/css/skins/skin-black.min.css')}}">
+    @endif
+    @if (array_intersect(["KASIR"], json_decode(Auth::user()->roles)))
+    <link rel="stylesheet" href="{{asset('dist/css/skins/skin-yellow.min.css')}}">
+    @endif
+    @if (array_intersect(["GUDANG"], json_decode(Auth::user()->roles)))
+    <link rel="stylesheet" href="{{asset('dist/css/skins/skin-green.min.css')}}">
+    @endif
     <!-- jvectormap -->
     <link rel="stylesheet" href="{{asset('bower_components/jvectormap/jquery-jvectormap.css')}}">
     <!-- Date Picker -->
@@ -74,8 +82,15 @@ desired effect
 |               | sidebar-collapse                        |
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
--->
+-->@if (array_intersect(["ADMIN"], json_decode(Auth::user()->roles)))
 <body class="hold-transition skin-black sidebar-mini">
+    @endif
+    @if (array_intersect(["KASIR"], json_decode(Auth::user()->roles)))
+<body class="hold-transition skin-yellow sidebar-mini">
+    @endif
+    @if (array_intersect(["GUDANG"], json_decode(Auth::user()->roles)))
+<body class="hold-transition skin-green sidebar-mini">
+    @endif
 <div class="wrapper">
 
     <!-- Main Header -->
@@ -143,13 +158,22 @@ desired effect
         <section class="sidebar">
 
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel">
+        <div class="user-panel" style="min-height: 70px;">
             <div class="pull-left image">
             @if(\Auth::user())
             <img src="{{asset('storage/'.Auth::user()->avatar)}}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
             <p>{{Auth::user()->name}}</p>
+            <a href="#"><i class="fa fa-circle text-success"></i>
+                @if (array_intersect(["ADMIN"], json_decode(Auth::user()->roles)))
+                {{'Admin'}}
+                @elseif(array_intersect(["KASIR"], json_decode(Auth::user()->roles)))
+                {{'Kasir'}}
+                @elseif(array_intersect(["GUDANG"], json_decode(Auth::user()->roles)))
+                {{'Gudang'}}
+                @endif
+                </a><br>
             @endif
             <!-- Status -->
             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
@@ -194,8 +218,8 @@ desired effect
             </li>
             @endif
             @if (array_intersect(["ADMIN","GUDANG"], json_decode(Auth::user()->roles)))
-            <li class="{{Request::path() == 'stocks' ? 'active' :''}}">
-                <a href="{{route('stocks.index')}}"><i class="fa fa-cubes"></i> <span>Data Stok</span></a>
+            <li class="{{Request::path() == 'stockmaintains' ? 'active' :''}}">
+                <a href="{{route('stockmaintains.index')}}"><i class="fa fa-cubes"></i> <span>Update Stok</span></a>
             </li>
             @endif
             <li class="header">Transaksi</li>

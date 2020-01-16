@@ -54,7 +54,7 @@ class CustomerController extends Controller
 
         $validation = \Validator::make($request->all(),[
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'email' => 'required|string|email|max:255|unique:customers,email',
             'perusahaan' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -118,7 +118,7 @@ class CustomerController extends Controller
         //
         $validation = \Validator::make($request->all(),[
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'email' => 'required|string|email|max:255|unique:customers,email,'.$id,
             'perusahaan' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'address' => 'required|string|max:255'

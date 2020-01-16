@@ -24,10 +24,10 @@ class StockController extends Controller
     public function index()
     {
         //
-        $stocks = \App\Stock::rightjoin('products', 'products.id', '=', 'stocks.product_id')->paginate(10);
+        // $stocks = \App\Stock::rightjoin('products', 'products.id', '=', 'stocks.product_id')->paginate(10);
 
 
-        return view('stocks.index', ['stocks' => $stocks]);
+        // return view('stocks.index', ['stocks' => $stocks]);
     }
 
     /**
@@ -37,8 +37,8 @@ class StockController extends Controller
      */
     public function create()
     {
-        //
-        return view('stocks.create');
+        // //
+        // return view('stocks.create');
     }
 
     /**
@@ -53,6 +53,7 @@ class StockController extends Controller
         $name = $request->get('name');
         $new_Stock = new \App\Stock;
         $new_Stock->name = $name;
+
         if ($request->file('image')) {
             $image_path = $request->file('image')->store('Stock_images', 'public');
             $new_Stock->image = $image_path;

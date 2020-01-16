@@ -168,6 +168,12 @@ class HomeController extends Controller
             ->whereYear('penjualans.tanggal_transaksi', 2019)
             ->groupBy('categories.name')
             ->orderBy('products.nama_produk', 'asc')->get();
-        return $penjualan2;
+
+
+            $customers = \App\Product::with('stock')->get();
+
+
+            return $customers;
+
     }
 }

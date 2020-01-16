@@ -45,6 +45,9 @@ Route::resource("products", "ProductController")->middleware('auth');
 Route::get("/api/product", "ProductController@apiproduct")->name("api.product");
 
 Route::resource("stocks", "StockController")->middleware('auth');
+Route::resource("stockmaintains", "StockmaintainController")->middleware('auth');
+
+Route::get("/api/stockM", "StockmaintainController@apistockM")->name("api.stockM");
 Route::get("/api/stock", "StockController@apistock")->name("api.stock");
 
 Route::resource("penjualans", "PenjualanController")->middleware('auth');

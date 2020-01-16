@@ -175,12 +175,12 @@ class ProductController extends Controller
     public function productSearch(Request $request)
     {
         $keyword = $request->get('q');
-        $products = \App\Product::where("nama_produk", "LIKE", "%$keyword%")->get();
+        $products = \App\Product::with('stock')->where("nama_produk", "LIKE", "%$keyword%")->get();
         return $products;
     }
     public function apiproduct()
     {
-        $product = \App\Product::with('category')->get();
+        $product = \App\Product::with('category')->with('stock')->get();
         return Datatables::of($product)
             ->addColumn('show_photo', function($product){
                 if ($product->gambar == NULL){

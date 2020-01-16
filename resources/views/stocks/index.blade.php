@@ -28,7 +28,7 @@
             <div class="box">
                 <div class="box-header">
                     <h4>Stock list
-
+                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Edit Stock</a>
                     </h4>
                 </div>
                 <!-- /.box-header -->
@@ -38,8 +38,10 @@
                     <tr>
                             <th>No</th>
                         <th>Nama Produk</th>
-                        <th>Gambar</th>
-                        <th>Action</th>
+                        <th>Jumlah</th>
+                        <th>Keterangan</th>
+                        <th>Diedit Oleh</th>
+                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -48,9 +50,11 @@
                     <tfoot>
                     <tr>
                             <th>No</th>
-                        <th>Nama Produk</th>
-                        <th>Gambar</th>
-                        <th>Action</th>
+                            <th>Nama Produk</th>
+                            <th>Jumlah</th>
+                            <th>Keterangan</th>
+                            <th>Diedit Oleh</th>
+                            <th>Status</th>
                     </tr>
                     </tfoot>
                     </table>
@@ -68,18 +72,39 @@
                 <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Default Modal</h4>
             </div>
-            <form role="form" enctype="multipart/form-data" action="{{route('stocks.store')}}" method="POST">
+            <form role="form" enctype="multipart/form-data" action="{{route('stockmaintains.store')}}" method="POST">
             <div class="modal-body">
 
                 {{ csrf_field() }} {{ method_field('POST') }}
                 <input type="hidden" id="id" name="id">
                     <div class="form-group">
-                        <label for="name">Nama Produk</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="name">
+                        <label>Product</label>
+                        <select class="form-control select2" name="product" id="product" style="width: 100%;"
+                        placeholder="Produk">
+
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="stock">Stock</label>
                         <input type="text" class="form-control" id="stock" name="stock" placeholder="stock">
+                    </div>
+                    <div class="form-group">
+                        <label for="keterangan">Keterangan</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" placeholder="keterangan"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="tambah" checked="">
+                                Tambah
+                            </label>
+                        </div>
+                        <div class="radio">
+                                <label>
+                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="kurang">
+                                    Kurang
+                                </label>
+                            </div>
                     </div>
                     <!-- /.card-body -->
 
@@ -100,20 +125,40 @@
     <!-- /.content -->
 @endsection
 @section('js')
+<script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
+<script>
+   $('#product').select2({
+    ajax:{
+        url: '{{route('productSearch')}}',
+        processResults: function(data){
+            return {
+                results: data.map(function(item){
+                    return {
+                    id: item.id,
+                    text: item.nama_produk +" || "+ item.kode_produk +" ( "+ item.stock.stok + ")"
+                    }
+                    })
+                }
+            }
+        }
+    });
+</script>
 <script type="text/javascript">
     var table = $('#tabel-stocks').DataTable({
         aaSorting: [[0, "desc"]],
         processing: true,
         serverSide: true,
-        ajax: "{{ route('api.stock') }}",
+        ajax: "{{ route('api.stockM') }}",
         columns: [
         {data: 'id', sortable: true,
                 render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
                 },width: '20'},
         {data: 'nama_produk', name: 'nama_produk'},
-        {data: 'stok', name: 'stok'},
-        {data: 'action', name: 'action', orderable: false, searchable: false,width: '80px'}
+        {data: 'qty', name: 'stok'},
+        {data: 'keteranganM', name: 'stok'},
+        {data: 'username', name: 'stok'},
+        {data: 'statusM', name: 'stok'}
         ],
         columnDefs: [{targets: 2,
             render: function ( data, type, row ) {
@@ -196,8 +241,8 @@
             $('#modal-default form').validator().on('submit', function (e) {
                 if (!e.isDefaultPrevented()){
                     var id = $('#id').val();
-                    if (save_method == 'add') url = "{{ url('stocks') }}";
-                    else url = "{{ url('stocks') . '/' }}" + id;
+                    if (save_method == 'add') url = "{{ url('stockmaintains') }}";
+                    else url = "{{ url('stockmaintains') . '/' }}" + id;
 
                     $.ajax({
                         url : url,

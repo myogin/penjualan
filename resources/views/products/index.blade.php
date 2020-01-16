@@ -45,6 +45,7 @@
                         <th>Satuan</th>
                         <th>Harga Dasar</th>
                         <th>Harga Jual</th>
+                        <th>Stock</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -60,6 +61,7 @@
                         <th>Satuan</th>
                         <th>Harga Dasar</th>
                         <th>Harga Jual</th>
+                        <th>Stock</th>
                         <th>Action</th>
                     </tr>
                     </tfoot>
@@ -246,6 +248,7 @@
         {data: 'satuan', name: 'satuan'},
         {data: 'harga_dasar', name: 'harga_dasar'},
         {data: 'harga_jual', name: 'harga_jual'},
+        {data: 'stock.stok', name: 'stok'},
         {data: 'action', name: 'action', orderable: false, searchable: false,width: '180px'}
         ]
     });

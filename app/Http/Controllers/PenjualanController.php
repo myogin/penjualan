@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Datatables;
 use Illuminate\Support\Carbon;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
 class PenjualanController extends Controller
 {
     public function __construct()
@@ -36,7 +38,7 @@ class PenjualanController extends Controller
     public function create()
     {
         //
-        $products = \App\Product::All();
+        $products = \App\Product::with('stock')->get();
         $customers = \App\Customer::All();
         return view('penjualans.create', ['products' => $products, 'customers' => $customers]);
     }
@@ -119,6 +121,14 @@ class PenjualanController extends Controller
         $new_penjualan->save();
 
 
+        $data = array(
+            'id'        => $penjualan_id,
+            'name'      =>  "yes",
+            'message'   =>  "yes"
+        );
+        $cus = \App\Customer::find($request->get('customer'));
+
+        Mail::to($cus->email)->send(new SendMail($data));
 
         return redirect()->route('invoiceTransaksi', ['id' => $penjualan_id])->with('status', 'penjualan successfully created.');
     }
